@@ -1,6 +1,6 @@
 # 面向高校毕业生的中国就业态势感知与职业决策支持平台
 
-本项目是一个面向高校毕业生、就业指导老师和高校就业管理部门的智能化就业决策支持平台。系统提供“就业态势感知 + 城市评估 + 薪资预测 + 技能挖掘 + 职业推荐 + 数据治理”的完整毕业设计实现，后端使用 Python FastAPI，不使用 Java。当前仓库内置数据主要用于原型演示，真实数据来源、官网地址和替换要求见 `docs/data-source-verification.md`。
+本项目是一个面向高校毕业生、就业指导老师和高校就业管理部门的智能化就业决策支持平台。系统提供“就业态势感知 + 城市评估 + 薪资预测 + 技能挖掘 + 职业推荐 + 数据治理”的完整毕业设计实现，后端使用 Python FastAPI，不使用 Java。当前大屏数据已由 Kaggle 与中国公共招聘网真实岗位快照生成，真实数据来源、官网地址和校验方法见 `docs/data-source-verification.md`。
 
 ## 项目结构
 
@@ -24,9 +24,9 @@
 
 ## 数据覆盖
 
-前端演示数据、Python 后端演示接口和 MySQL 初始化样例均已覆盖 34 个省级行政区，并补充 38 个重点城市/省会城市指标，避免地图和省份表出现大量空白。
+当前真实数据快照为 `data-processing/data/project_jobs_real.csv`，合并了 Kaggle `China Jobs Data`、Kaggle `Job Posting Data in China` 和中国公共招聘网公开岗位列表，共 37772 条岗位记录，其中 37380 条有效薪资样本进入薪资分析和模型训练。中国公共招聘网样本发布时间范围为 2025-05-27 至 2026-05-19，近一年岗位占主体。
 
-演示数据只能用于答辩原型展示，不能作为真实统计结论或论文实验数据。正式论文实验应将真实岗位 CSV 放入 `data-processing/data/`，通过 `data-processing/pipeline.py` 重新清洗、聚合、训练并导入 MySQL。若真实数据中某个省份样本不足，系统应标注“样本不足/置信度较低”，不应直接留空。
+大陆 31 个省级区域均有真实岗位样本，香港有 Kaggle 样本；澳门、台湾暂无同口径岗位样本，系统显示“样本不足”，不使用虚构岗位数、薪资或热度补齐。
 
 数据真实性说明、官网地址、字段对应关系和校验方法见：`docs/data-source-verification.md`。
 
@@ -66,7 +66,11 @@ source database/seed.sql;
 ```bash
 cd data-processing
 pip install -r requirements.txt
-python pipeline.py --input data/jobs.csv --output output
+python prepare_kaggle_data.py
+python collect_mohrss_jobs.py --pages-per-province 80 --workers 8
+python build_project_dataset.py
+python pipeline.py --input data/project_jobs_real.csv --output output
+python export_dashboard_data.py
 ```
 
 ## 验证

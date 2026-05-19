@@ -44,7 +44,7 @@ function salaryOption(): EChartsOption {
     value: index === offset ? item.value + 3 : item.value
   }))
   return {
-    grid: { left: 42, right: 14, top: 12, bottom: 24 },
+    grid: { left: 46, right: 14, top: 12, bottom: 26 },
     xAxis: {
       type: 'category',
       data: data.map((item) => item.name),
@@ -60,7 +60,7 @@ function salaryOption(): EChartsOption {
     yAxis: {
       type: 'value',
       min: 0,
-      max: 40,
+      max: 70,
       interval: 10,
       splitLine: { lineStyle: { color: 'rgba(151, 203, 207, 0.13)' } },
       axisLabel: {

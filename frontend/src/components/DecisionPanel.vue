@@ -23,6 +23,8 @@
             <el-col :span="12">
               <el-form-item label="学历">
                 <el-select v-model="salaryForm.education" size="small">
+                  <el-option label="不限" value="不限" />
+                  <el-option label="大专" value="大专" />
                   <el-option label="本科" value="本科" />
                   <el-option label="硕士" value="硕士" />
                   <el-option label="博士" value="博士" />
@@ -32,9 +34,11 @@
             <el-col :span="12">
               <el-form-item label="经验">
                 <el-select v-model="salaryForm.experience" size="small">
+                  <el-option label="不限" value="不限" />
                   <el-option label="应届/不限" value="应届/不限" />
                   <el-option label="1-3年" value="1-3年" />
                   <el-option label="3-5年" value="3-5年" />
+                  <el-option label="5年以上" value="5年以上" />
                 </el-select>
               </el-form-item>
             </el-col>
@@ -83,27 +87,27 @@ import { predictSalary, recommendCareer } from '../services/dashboard'
 import type { CareerRecommendation, SalaryPrediction } from '../types/dashboard'
 
 const activeTab = ref('salary')
-const cities = ['深圳', '北京', '上海', '杭州', '广州', '成都', '武汉']
-const industries = ['互联网/电子商务', '人工智能', '软件服务', '金融科技', '智能制造']
-const skillOptions = ['SQL', 'Python', 'FastAPI', 'Vue', 'MySQL', '机器学习', '数据分析']
+const cities = ['西安', '北京', '重庆', '哈尔滨', '长春', '苏州', '大连', '西宁', '青岛', '常州']
+const industries = ['生产制造及有关人员', '专业技术人员', '销售人员', '机械冷加工人员', '社会生产服务和生活服务人员']
+const skillOptions = ['生产', '管理', '销售', '机械', '沟通', '安全', '质量', '会计', '电气', 'Excel']
 
 const salaryForm = reactive({
-  city: '深圳',
-  industry: '互联网/电子商务',
-  education: '本科',
-  experience: '应届/不限',
+  city: '西安',
+  industry: '生产制造及有关人员',
+  education: '大专',
+  experience: '不限',
   companySize: '500-999人',
-  jobCategory: '数据分析师',
-  skills: 'SQL,Python'
+  jobCategory: '生产制造与设备操作',
+  skills: '生产,安全,质量'
 })
 
 const careerForm = reactive({
-  major: '计算机科学与技术',
-  education: '本科',
-  skills: ['SQL', 'Python'],
-  expectedCities: ['深圳', '杭州', '成都'],
-  expectedIndustries: ['互联网/电子商务', '软件服务'],
-  expectedSalary: 12000
+  major: '机械设计制造及其自动化',
+  education: '大专',
+  skills: ['生产', '安全', '质量'],
+  expectedCities: ['西安', '重庆', '苏州'],
+  expectedIndustries: ['生产制造及有关人员', '专业技术人员'],
+  expectedSalary: 6000
 })
 
 const salaryResult = ref<SalaryPrediction>()

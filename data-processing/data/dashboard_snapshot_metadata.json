@@ -1,0 +1,11 @@
+{
+  "rows": 37772,
+  "salary_rows": 37380,
+  "covered_regions_with_samples": 32,
+  "regions_without_samples": [
+    "澳门",
+    "台湾"
+  ],
+  "covered_cities": 350,
+  "average_salary": 5681
+}

@@ -14,7 +14,7 @@
         </button>
       </nav>
       <div class="topbar__status">
-        <span>数据源：Kaggle China Jobs Data / Job Posting Data in China</span>
+        <span>数据源：中国公共招聘网 + Kaggle 公开岗位数据</span>
         <strong>{{ currentTime }}</strong>
       </div>
     </header>
@@ -153,16 +153,16 @@
         <ShellPanel title="技能提升建议" subtitle="面向毕业生">
           <div class="advice-list">
             <article>
-              <b>数据方向</b>
-              <span>SQL + Python + 可视化作品集，优先覆盖业务指标、A/B 分析和仪表盘项目。</span>
+              <b>生产制造方向</b>
+              <span>优先补齐安全规范、质量意识、设备基础和工艺流程，适合公共招聘网样本中的高频岗位。</span>
             </article>
             <article>
-              <b>后端方向</b>
-              <span>Python + FastAPI + MySQL + Redis，重点准备接口设计、部署和性能优化经验。</span>
+              <b>销售服务方向</b>
+              <span>强化沟通、客户跟进、基础办公和渠道执行能力，匹配销售人员与生活服务类岗位。</span>
             </article>
             <article>
-              <b>算法方向</b>
-              <span>机器学习基础模型 + 特征工程 + 模型评估，用应用型项目降低纯研究岗位门槛。</span>
+              <b>财务运营方向</b>
+              <span>补齐 Excel、Office、会计基础、采购和仓储流程，适合办事、财务与运营类岗位。</span>
             </article>
           </div>
         </ShellPanel>
@@ -220,7 +220,7 @@
       </template>
 
       <template v-if="activeModule === 'data'">
-        <ShellPanel title="数据治理与模型流水线" subtitle="Kaggle CSV 到平台指标库">
+        <ShellPanel title="数据治理与模型流水线" subtitle="公开岗位数据到平台指标库">
           <div class="pipeline">
             <article v-for="(step, index) in pipelineSteps" :key="step.title">
               <span>{{ index + 1 }}</span>
@@ -231,8 +231,8 @@
         </ShellPanel>
         <ShellPanel title="数据覆盖说明" subtitle="避免缺失省份影响答辩">
           <div class="coverage-note">
-            <p>平台演示数据已覆盖 34 个省级行政区，地图不再出现大量空白省份。当前数值用于原型演示；正式论文实验应使用 Kaggle 全量岗位数据，由 `data-processing/pipeline.py` 重新清洗、聚合、训练并导入 MySQL。</p>
-            <p>如果真实数据中某省岗位样本不足，应在论文中标注“样本不足/置信度较低”，而不是简单留空。</p>
+            <p>当前展示数据由 Kaggle China Jobs Data、Kaggle Job Posting Data in China 和中国公共招聘网公开岗位合并生成，共 37772 条岗位；公共招聘网样本时间范围为 2025-05-27 至 2026-05-19，已覆盖大陆 31 个省级区域。</p>
+            <p>样本不足地区在指标中显示“样本不足”，不再用虚构岗位数、薪资或热度补齐。</p>
           </div>
         </ShellPanel>
         <ShellPanel title="数据质量监控" subtitle="清洗后指标校验">
@@ -307,79 +307,87 @@ const activeProvinceLabel = computed(() => {
 const sortedProvinces = computed(() => [...provinceData.value].sort((a, b) => b.heatIndex - a.heatIndex))
 
 const salaryFactors = [
-  { title: '城市基准', text: '一线城市和强产业城市薪资基准更高，是预测模型的重要特征。' },
-  { title: '行业溢价', text: '人工智能、金融科技、云服务等行业对薪资有明显正向影响。' },
-  { title: '学历经验', text: '学历门槛和经验年限影响薪资区间，同时也影响应届生可投比例。' },
-  { title: '技能标签', text: 'Python、SQL、大数据、机器学习等技能会提高岗位匹配与薪资潜力。' }
+  { title: '城市样本', text: '城市岗位数量和公开薪资均值共同影响预测，不再按单一一线城市口径估算。' },
+  { title: '行业结构', text: '当前样本以生产制造、专业技术、销售服务、机械加工和生活服务岗位为主。' },
+  { title: '学历经验', text: '学历不限、大专、本科与经验不限岗位占比较高，适合分析毕业生可投范围。' },
+  { title: '技能标签', text: '生产、管理、销售、机械、沟通、安全、质量、会计等词是当前真实样本高频需求。' }
 ]
 
 const cityInsights = [
-  { title: '优先冲刺城市', text: '深圳、北京、上海岗位规模和薪资基准高，适合技术能力较强的学生集中投递。', metric: '高薪高竞争' },
-  { title: '稳妥承接城市', text: '杭州、成都、武汉、南京兼顾岗位数量和应届友好度，适合作为主投城市池。', metric: '机会均衡' },
-  { title: '区域发展城市', text: '合肥、西安、长沙、郑州增长快，适合结合产业方向做差异化选择。', metric: '增长潜力' },
-  { title: '样本不足处理', text: '低样本省份不直接留空，展示置信度提示并用相邻产业区域辅助解释。', metric: '答辩口径' }
+  { title: '样本规模城市', text: '西安、北京、重庆、哈尔滨、长春在当前真实样本中岗位规模靠前，适合优先观察。', metric: '规模优先' },
+  { title: '制造业承接城市', text: '苏州、常州、青岛、南京等城市兼具岗位数量和制造业、专业技术岗位基础。', metric: '产业匹配' },
+  { title: '应届友好城市', text: '西宁、大连、青岛等城市的经验门槛相对友好，可作为毕业生稳妥投递池。', metric: '门槛较低' },
+  { title: '样本不足处理', text: '澳门、台湾显示样本不足；低样本省份只展示真实记录，不用虚构热度补齐。', metric: '真实口径' }
 ]
 
 const salaryBenchmarks = [
-  { label: '本科应届目标', value: '10K-15K', note: '适合作为多数技术与数据岗位的合理期望区间。' },
-  { label: '重点城市冲刺', value: '15K-25K', note: '需要项目作品、实习经历和技能组合支撑。' },
-  { label: '算法高薪门槛', value: '25K+', note: '通常要求算法项目、论文竞赛或研究经历。' },
-  { label: '保底投递区间', value: '6K-10K', note: '适合补充行业广度，提高 offer 稳定性。' }
+  { label: '主体区间', value: '4K-6K', note: '当前清洗样本中占比最高，适合做毕业生保守薪资预期。' },
+  { label: '提升区间', value: '6K-10K', note: '约三成岗位落在该区间，需要结合城市、行业和岗位技能判断。' },
+  { label: '冲刺区间', value: '10K+', note: '占比较小，多出现在样本较少的一线城市或专业技术岗位。' },
+  { label: '全样本均值', value: '5681', note: '基于 37380 条有效薪资样本解析得到的平均月薪。' }
 ]
 
 const skillCombos = [
-  { title: '数据分析岗', skills: 'SQL / Python / BI / 指标体系', fit: '匹配 94%' },
-  { title: '后端开发岗', skills: 'Python / FastAPI / MySQL / Redis', fit: '匹配 88%' },
-  { title: 'AI 应用岗', skills: '机器学习 / PyTorch / 特征工程', fit: '匹配 82%' },
-  { title: '可视化开发岗', skills: 'Vue3 / TypeScript / ECharts', fit: '匹配 79%' }
+  { title: '生产制造岗', skills: '生产 / 安全 / 质量 / 工艺流程', fit: '高频组合' },
+  { title: '销售服务岗', skills: '销售 / 沟通 / 客户服务 / Office', fit: '稳定需求' },
+  { title: '机械电气岗', skills: '机械 / 电气 / 设备维护 / 质检', fit: '技术基础' },
+  { title: '财务运营岗', skills: '会计 / 财务 / Excel / 采购仓储', fit: '职能岗位' }
 ]
 
 const careerPaths = [
-  { score: 94, title: '数据分析与商业智能', text: '适合统计、信管、计算机等专业，优先城市为深圳、杭州、上海。' },
-  { score: 88, title: 'Python 后端与平台开发', text: '适合有项目经验的计算机类毕业生，强调 FastAPI、MySQL、Redis 和部署。' },
-  { score: 82, title: 'AI 应用与算法工程', text: '薪资潜力高，但要求项目和数学基础，建议以应用型算法岗切入。' },
-  { score: 79, title: '前端数据可视化', text: '适合对交互和可视化敏感的学生，重点准备 Vue3、TypeScript、ECharts。' }
+  { score: 92, title: '生产制造与设备操作', text: '适合工科、机电、材料和应用技术类毕业生，重点关注安全、质量和设备基础。' },
+  { score: 86, title: '销售与客户服务', text: '适合管理、营销、商科和服务类专业，岗位数量稳定，核心能力是沟通和执行。' },
+  { score: 84, title: '机械电气与质量管理', text: '适合机械、电气、自动化相关专业，建议准备质检、维修和工艺改进经历。' },
+  { score: 79, title: '财务行政与运营支持', text: '适合财会、工商管理、物流和信息管理专业，重点准备办公软件和流程意识。' }
 ]
 
 const capabilityGaps = [
   {
-    target: '数据分析与商业智能',
-    required: 'SQL、Python、指标体系、BI 看板',
-    current: '当前准备度 78%',
-    action: '补 1 个 BI 看板项目，写清指标口径。',
+    target: '生产制造与设备操作',
+    required: '安全规范、质量意识、设备基础、倒班适应',
+    current: '当前准备度 76%',
+    action: '补充实训、证书或生产现场经历。',
     priority: '优先补强',
-    progress: 78
+    progress: 76
   },
   {
-    target: 'Python 后端与平台开发',
-    required: 'FastAPI、MySQL、接口设计、部署',
-    current: '当前准备度 71%',
-    action: '补接口测试与部署说明。',
+    target: '销售与客户服务',
+    required: '沟通表达、客户跟进、Office、抗压执行',
+    current: '当前准备度 72%',
+    action: '准备客户沟通案例和业绩复盘。',
     priority: '次优先',
-    progress: 71
+    progress: 72
+  },
+  {
+    target: '财务行政与运营支持',
+    required: 'Excel、会计基础、采购仓储、流程记录',
+    current: '当前准备度 68%',
+    action: '补一份可展示的台账或报表作品。',
+    priority: '补充项',
+    progress: 68
   }
 ]
 
 const actionItems = [
-  { week: '第 1 周', title: '定位岗位池', text: '确定 2 个主方向和 1 个备选方向，建立城市和行业投递清单。' },
-  { week: '第 2 周', title: '补齐作品集', text: '整理 1 个数据分析或后端项目，补充业务指标和部署说明。' },
-  { week: '第 3 周', title: '模拟面试', text: '围绕 SQL、Python、项目难点和薪资预期进行结构化复盘。' },
-  { week: '第 4 周', title: '集中投递', text: '按高匹配城市优先投递，并记录反馈迭代简历关键词。' }
+  { week: '第 1 周', title: '定位岗位池', text: '按生产制造、销售服务、机械电气、财务运营建立城市和行业清单。' },
+  { week: '第 2 周', title: '补齐证明材料', text: '整理实训、证书、实习、项目或报表作品，和目标岗位要求对应。' },
+  { week: '第 3 周', title: '模拟面试', text: '围绕安全质量、沟通服务、办公软件和薪资预期做结构化复盘。' },
+  { week: '第 4 周', title: '集中投递', text: '优先投递高样本城市，记录反馈后调整简历关键词和期望薪资。' }
 ]
 
 const pipelineSteps = [
+  { title: '真实采集', text: '下载 Kaggle 公开数据集，并采集中国公共招聘网省级岗位列表。' },
   { title: '字段映射', text: '统一岗位名称、城市、省份、薪资、学历、经验、行业、描述等字段。' },
   { title: '清洗标准化', text: '解析薪资区间，标准化学历经验，补全省份和经纬度。' },
   { title: '指标聚合', text: '生成省市就业热度、城市吸引力、应届友好度和行业排行。' },
-  { title: '模型训练', text: '训练随机森林薪资模型，输出 MAE、RMSE、R2 等评估结果。' },
-  { title: '接口服务', text: 'FastAPI 提供大屏、城市、技能、预测和推荐接口。' }
+  { title: '模型训练', text: '训练随机森林薪资模型，输出 MAE、RMSE、R2 等评估结果。' }
 ]
 
 const qualityMetrics = [
-  { label: '省级覆盖', value: '34/34', note: '演示口径覆盖全国省级行政区。' },
-  { label: '重点城市', value: '38', note: '覆盖省会、直辖市和核心就业城市。' },
-  { label: '字段完整率', value: '96.8%', note: '岗位、城市、薪资、学历经验字段通过清洗校验。' },
-  { label: '模型可解释', value: '5 因子', note: '城市、行业、学历、经验、技能共同解释预测。' }
+  { label: '省级样本覆盖', value: '32/34', note: '大陆 31 个省级区域均有真实岗位样本，香港有 Kaggle 样本。' },
+  { label: '覆盖城市', value: '350', note: '来自合并后的真实岗位记录。' },
+  { label: '有效薪资样本', value: '37380', note: '用于薪资分布和薪资模型训练。' },
+  { label: '模型 MAE', value: '1561', note: '基于最新真实样本训练得到的平均绝对误差。' }
 ]
 
 async function loadDashboard() {

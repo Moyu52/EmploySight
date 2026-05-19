@@ -1,0 +1,29 @@
+{
+  "generated_at": "2026-05-19T17:19:11+08:00",
+  "combined_csv": "data-processing\\data\\kaggle_jobs_combined.csv",
+  "combined_sha256": "8F15596900676AB67B9952C13C9F22865898528DD02AEAADEA5CDC738737CACB",
+  "combined_rows": 1374,
+  "salary_non_empty_rows": 991,
+  "sources": [
+    {
+      "name": "Kaggle China Jobs Data",
+      "ref": "polartech/china-jobs-data",
+      "url": "https://www.kaggle.com/datasets/polartech/china-jobs-data",
+      "local_zip": "data-processing\\raw\\kaggle_china_jobs_data.zip",
+      "zip_sha256": "DD9BA4C811D589C93785E993FE692494EC2A99F01AF8171F1D474A88169FE8B3",
+      "csv_file": "china jobs data samples.csv",
+      "raw_rows": 999
+    },
+    {
+      "name": "Kaggle Job Posting Data in China",
+      "ref": "techsalerator/job-posting-data-in-china",
+      "url": "https://www.kaggle.com/datasets/techsalerator/job-posting-data-in-china",
+      "local_zip": "data-processing\\raw\\kaggle_job_posting_data_in_china.zip",
+      "zip_sha256": "FF64CEAB6FF1538FC21451BC836AD2F45239C503FD5316A7FD01AAA12A93E9FF",
+      "csv_file": "Job Posting.csv",
+      "raw_rows": 9919,
+      "china_rows": 375,
+      "note": "The original CSV contains global postings; only records with country=China are retained."
+    }
+  ]
+}

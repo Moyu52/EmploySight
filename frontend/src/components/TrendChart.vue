@@ -20,7 +20,7 @@ let timer = 0
 function option(): EChartsOption {
   const start = Math.max(0, props.trends.length - activeWindow.value)
   const view = props.trends.slice(start)
-  const colors = ['#e1b75c', '#5fd0c8', '#8aa7ff']
+  const colors = ['#e1b75c', '#5fd0c8', '#cf7d5a']
   return {
     color: colors,
     grid: { left: 46, right: 18, top: 24, bottom: 28 },
@@ -52,7 +52,7 @@ function option(): EChartsOption {
     series: [
       line('岗位总量', view.map((item) => item.jobs), colors[0]),
       line('应届岗位', view.map((item) => item.freshJobs), colors[1]),
-      line('AI岗位', view.map((item) => item.aiJobs), colors[2])
+      line('算法/AI岗位', view.map((item) => item.aiJobs), colors[2])
     ],
     animationDurationUpdate: 850,
     animationEasingUpdate: 'quarticOut'

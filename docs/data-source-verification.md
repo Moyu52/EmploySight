@@ -2,16 +2,22 @@
 
 本文档用于说明本项目使用或计划接入的数据来源、官网地址、字段用途、验证方法和当前数据真实性状态。
 
-结论先写清楚：当前仓库中的 `frontend/src/services/mockData.ts`、`backend/app/services/demo_data.py`、`database/seed.sql`、`data-processing/sample_jobs.csv` 都是演示数据或样例数据，不能作为论文实验结论、真实统计结论或答辩中的“真实采集数据”使用。若项目要求“数据必须真实、不可以虚构”，必须使用下表中的真实来源重新下载、清洗、聚合、训练并替换当前演示数据。
+结论先写清楚：2026-05-19 已下载 Kaggle `China Jobs Data`、Kaggle `Job Posting Data in China`，并补充采集中国公共招聘网公开岗位列表，合并生成 `data-processing/data/project_jobs_real.csv`。当前前后端大屏数据已由该真实数据快照生成；`data-processing/sample_jobs.csv` 仍然只是 pipeline 测试样例，`database/seed.sql` 仍然只是数据库初始化样例。
+
+当前真实快照覆盖 37772 条岗位记录，其中 37380 条进入薪资模型和薪资分布分析；大陆 31 个省级区域均有真实岗位样本，香港有少量 Kaggle 样本，澳门和台湾暂无同口径岗位样本，页面应显示“样本不足”，不能用虚构数值补齐。中国公共招聘网样本发布时间范围为 2025-05-27 至 2026-05-19，近一年岗位占主体。
 
 ## 1. 当前项目内数据状态
 
 | 文件/模块 | 当前用途 | 是否真实原始数据 | 处理要求 |
 | --- | --- | --- | --- |
-| `frontend/src/services/mockData.ts` | 前端接口失败时的兜底展示数据 | 否 | 只能用于页面演示，不能作为真实数据说明 |
-| `backend/app/services/demo_data.py` | FastAPI 后端演示接口数据 | 否 | 后续应替换为数据库查询结果 |
+| `frontend/src/services/mockData.ts` | 前端接口失败时的兜底展示数据 | 是，已由真实快照生成 | 文件名保留为接口兜底兼容，内容来自 `project_jobs_real.csv` |
+| `backend/app/services/demo_data.py` | FastAPI 后端大屏接口数据 | 是，已由真实快照生成 | 文件名保留为接口兼容，内容来自 `project_jobs_real.csv` |
 | `database/seed.sql` | MySQL 初始化样例数据 | 否 | 只能用于建表和演示导入流程 |
 | `data-processing/sample_jobs.csv` | 数据处理脚本测试样例 | 否 | 只用于验证 pipeline 能运行 |
+| `data-processing/raw/kaggle_china_jobs_data.zip` | Kaggle 原始下载包 | 是 | `China Jobs Data` 原始压缩包 |
+| `data-processing/raw/kaggle_job_posting_data_in_china.zip` | Kaggle 原始下载包 | 是 | `Job Posting Data in China` 原始压缩包 |
+| `data-processing/data/mohrss_public_jobs.csv` | 中国公共招聘网公开岗位采集结果 | 是 | 用于补足大陆省级覆盖 |
+| `data-processing/data/project_jobs_real.csv` | 项目真实岗位合并数据 | 是 | 当前前后端与 pipeline 的主数据输入 |
 | `frontend/src/assets/china.geo.json` | 中国地图边界 GeoJSON | 是地图可视化底图数据，但非招聘数据 | 需要在论文中单独说明地图来源 |
 | `data-processing/pipeline.py` | 真实 CSV 清洗、聚合和建模脚本 | 脚本本身不含数据 | 应使用真实 CSV 重新运行 |
 
@@ -27,6 +33,21 @@
 | 中国公共招聘网 - 招聘岗位页 | https://job.mohrss.gov.cn/cjobs/jobinfolist/listJobinfolistIndex | 岗位检索入口 | 可用于人工抽样核验岗位是否存在 |
 
 说明：Kaggle 是公开数据集平台，不等同于政府官网。若论文要求“官方数据”，建议以中国公共招聘网、国家大学生就业服务平台等官方平台为主；若使用 Kaggle，应在论文中写成“公开数据集”，不能写成政府官方统计数据。
+
+## 2.1.1 当前真实快照记录
+
+| 项目 | 记录 |
+| --- | --- |
+| 生成时间 | 2026-05-19 18:44:21 +08:00 |
+| 合并文件 | `data-processing/data/project_jobs_real.csv` |
+| 合并文件 SHA256 | `5863A680538482C7AA9A851B08B397B301EC40A9ED42980E479F8E143864D45E` |
+| 总岗位记录 | 37772 |
+| 有薪资记录 | 37389，pipeline 清洗后有效薪资样本 37380 |
+| 数据源构成 | Kaggle China Jobs Data 999 条；Kaggle Job Posting Data in China 中国岗位 375 条；中国公共招聘网 36398 条 |
+| 最新公共招聘数据时间范围 | 2025-05-27 至 2026-05-19，其中 2026 年岗位 33549 条 |
+| 区域覆盖 | 大陆 31 个省级区域均有样本；香港 5 条；澳门、台湾暂无同口径岗位样本 |
+| 模型训练指标 | MAE 1560.88；RMSE 2678.21；R2 0.4431 |
+| 隐私处理 | 中国公共招聘网页面中的联系人、电话等字段未导出到项目数据 |
 
 ### 2.2 工资、行业和就业统计校验数据
 
@@ -98,8 +119,8 @@ python pipeline.py --input data/jobs.csv --output output
 | `output/model_metrics.json` | 薪资预测模型评估结果 |
 | `output/salary_model.joblib` | 薪资预测模型 |
 
-5. 将输出文件导入 MySQL 或改造 FastAPI 服务读取输出文件。
-6. 删除或禁用 `mockData.ts` 和 `demo_data.py` 的演示数据兜底，避免真实项目误用虚构数据。
+5. 使用 `export_dashboard_data.py` 将输出指标同步到 FastAPI 聚合快照和前端接口兜底数据。
+6. `mockData.ts` 和 `demo_data.py` 文件名保留为接口兼容，内容已由真实快照生成；`sample_jobs.csv` 和 `seed.sql` 仍只作为测试/初始化样例。
 
 ## 5. 数据真实性校验方法
 
@@ -154,15 +175,15 @@ Get-FileHash data-processing\data\jobs.csv -Algorithm SHA256
 
 > 本项目当前前端 mock 数据、后端 demo 数据和 seed.sql 中的数值全部来源于真实官网。
 
-因为当前仓库内的这些数据是演示数据，不具备可追溯的官网原始记录。
+因为 `seed.sql` 和 `sample_jobs.csv` 只是测试/初始化样例；前端 `mockData.ts` 与后端 `demo_data.py` 虽然文件名保留为兼容旧接口，但内容已由真实快照生成，应在论文中单独说明。
 
-## 7. 当前必须整改的问题
+## 7. 当前已完成的真实数据整改
 
-若老师要求所有展示数据必须真实，当前项目还需要完成以下整改：
+当前项目已经完成以下真实数据整改：
 
-1. 下载真实岗位 CSV，并保存原始文件、下载地址、下载日期和 SHA256。
-2. 使用 `data-processing/pipeline.py` 重新生成所有聚合指标。
-3. 后端接口改为读取真实数据库或真实输出文件。
-4. 前端移除或显式标记 `mockData.ts` 为“接口失败演示兜底”，避免被误认为真实数据。
-5. 更新 `README.md`、答辩 PPT 和论文，不再把当前演示数据描述成真实数据。
-6. 将本文件作为数据真实性证明材料随项目一起提交。
+1. 下载 Kaggle 原始压缩包，并保存 Kaggle 页面 HTML 与元数据。
+2. 采集中国公共招聘网公开岗位列表，保存采集 CSV、采集时间、记录数和 SHA256。
+3. 使用 `data-processing/pipeline.py` 重新生成清洗数据、聚合指标、技能关键词和薪资模型。
+4. 使用 `data-processing/export_dashboard_data.py` 重新生成前端兜底数据和后端聚合快照。
+5. 页面中澳门、台湾显示“样本不足”，不使用虚构岗位数、薪资或热度补齐。
+6. 保留 `data-processing/sample_jobs.csv` 与 `database/seed.sql` 为测试/初始化样例，不作为真实分析数据。

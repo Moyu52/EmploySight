@@ -22,4 +22,4 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 - `POST /api/predict/salary`
 - `POST /api/recommend/career`
 
-当前服务默认返回演示聚合数据，便于答辩展示。接入 MySQL 时，可在 `app/core/config.py` 中配置数据库连接，并将 `app/services/demo_data.py` 替换为 SQLAlchemy 查询。
+当前服务默认返回由 `data-processing/data/project_jobs_real.csv` 生成的真实聚合快照。接入 MySQL 时，可在 `app/core/config.py` 中配置数据库连接，并将 `app/services/demo_data.py` 替换为 SQLAlchemy 查询。

@@ -1,9 +1,10 @@
 # 数据处理与模型训练
 
-该目录用于处理 Kaggle 中国招聘岗位数据：
+该目录用于处理真实招聘岗位数据：
 
 - `China Jobs Data`
 - `Job Posting Data in China`
+- 中国公共招聘网公开岗位列表
 
 脚本会完成字段映射、薪资解析、学历经验标准化、城市吸引力指数、应届生友好度、技能关键词热度和薪资预测模型训练。
 
@@ -11,8 +12,14 @@
 
 ```bash
 pip install -r requirements.txt
-python pipeline.py --input data/jobs.csv --output output
+python prepare_kaggle_data.py
+python collect_mohrss_jobs.py --pages-per-province 80 --workers 8
+python build_project_dataset.py
+python pipeline.py --input data/project_jobs_real.csv --output output
+python export_dashboard_data.py
 ```
+
+当前真实快照由 `data/project_jobs_real.csv` 提供，包含 Kaggle 两个数据集和中国公共招聘网采集结果，共 37772 条岗位记录，其中中国公共招聘网 36398 条。大陆 31 个省级区域均有真实岗位样本；澳门、台湾暂无同口径岗位样本，页面显示为样本不足，不用虚构数据补齐。
 
 输出文件：
 

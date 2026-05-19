@@ -2,14 +2,21 @@ from app.schemas import SalaryPrediction, SalaryPredictionRequest
 
 
 CITY_BASE = {
-    "北京": 19000,
-    "上海": 18200,
-    "深圳": 18600,
-    "杭州": 16800,
-    "广州": 15100,
-    "南京": 13900,
-    "成都": 12600,
-    "武汉": 11900,
+    "北京": 11869,
+    "上海": 14004,
+    "深圳": 9160,
+    "广州": 20040,
+    "南京": 9633,
+    "苏州": 6972,
+    "常州": 7077,
+    "重庆": 5643,
+    "西安": 4710,
+    "哈尔滨": 5543,
+    "长春": 6023,
+    "大连": 4535,
+    "西宁": 5447,
+    "青岛": 5144,
+    "武汉": 7529,
 }
 
 
@@ -21,12 +28,32 @@ def factor(source: str, rules: list[tuple[str, float]]) -> float:
 
 
 def predict_salary(payload: SalaryPredictionRequest) -> SalaryPrediction:
-    base = CITY_BASE.get(payload.city, 11000)
-    industry_factor = factor(payload.industry, [("人工智能", 1.22), ("金融科技", 1.15), ("互联网", 1.10)])
-    education_factor = factor(payload.education, [("博士", 1.35), ("硕士", 1.18), ("本科", 1.0)])
-    experience_factor = factor(payload.experience, [("5年以上", 1.45), ("3-5年", 1.28), ("1-3年", 1.10)])
-    category_factor = factor(payload.jobCategory, [("算法", 1.25), ("数据", 1.12), ("后端", 1.08)])
-    skill_factor = 1.05 if "Python" in payload.skills else 1.0
+    base = CITY_BASE.get(payload.city, 5681)
+    industry_factor = factor(
+        payload.industry,
+        [
+            ("专业技术", 1.12),
+            ("机械", 1.08),
+            ("电气", 1.08),
+            ("生产制造", 1.02),
+            ("销售", 1.00),
+            ("服务", 0.96),
+        ],
+    )
+    education_factor = factor(payload.education, [("博士", 1.30), ("硕士", 1.18), ("本科", 1.08), ("大专", 1.0)])
+    experience_factor = factor(payload.experience, [("5年以上", 1.28), ("3-5年", 1.15), ("1-3年", 1.06)])
+    category_factor = factor(
+        payload.jobCategory,
+        [
+            ("质量", 1.08),
+            ("设备", 1.06),
+            ("机械", 1.06),
+            ("电气", 1.06),
+            ("财务", 1.04),
+            ("销售", 1.00),
+        ],
+    )
+    skill_factor = 1.04 if any(skill in payload.skills for skill in ["质量", "安全", "电气", "机械", "Excel"]) else 1.0
 
     predicted_avg = round(base * industry_factor * education_factor * experience_factor * category_factor * skill_factor)
     predicted_min = round(predicted_avg * 0.82)
@@ -36,12 +63,12 @@ def predict_salary(payload: SalaryPredictionRequest) -> SalaryPrediction:
         predictedMin=predicted_min,
         predictedMax=predicted_max,
         predictedAvg=predicted_avg,
-        confidence=86.5,
-        modelName="RandomForestRegressor",
-        explanation="演示服务按城市、行业、学历、经验、岗位类别和技能因子估算薪资；真实部署时由 data-processing 训练模型文件提供预测。",
+        confidence=82.0,
+        modelName="RealDataHeuristic",
+        explanation="按最新真实岗位快照的城市薪资基准、行业、学历、经验、岗位类别和技能因子估算薪资；训练指标见 data-processing/output/model_metrics.json。",
         influenceFactors=[
             f"城市薪资基准：{payload.city}",
-            f"行业溢价：{payload.industry}",
+            f"行业结构：{payload.industry}",
             f"学历门槛：{payload.education}",
             f"经验要求：{payload.experience}",
             f"岗位类别：{payload.jobCategory}",

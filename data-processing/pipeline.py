@@ -18,6 +18,10 @@ from sklearn.preprocessing import OneHotEncoder
 
 
 FIELD_ALIASES = {
+    "source_dataset": ["source_dataset", "数据来源", "来源数据集"],
+    "source_ref": ["source_ref", "source", "来源标识"],
+    "source_url": ["source_url", "url", "岗位链接", "来源链接"],
+    "job_id": ["job_id", "jobId", "id", "岗位ID"],
     "job_title": ["job_title", "title", "岗位名称", "职位名称", "position"],
     "company_name": ["company_name", "company", "公司名称", "企业名称"],
     "city": ["city", "work_city", "工作城市", "城市"],
@@ -73,6 +77,27 @@ SKILL_LEXICON = [
     "云计算",
     "Linux",
     "PyTorch",
+    "销售",
+    "客户服务",
+    "沟通",
+    "Excel",
+    "Office",
+    "生产",
+    "质量",
+    "会计",
+    "财务",
+    "机械",
+    "电气",
+    "采购",
+    "物流",
+    "仓储",
+    "运营",
+    "管理",
+    "银行",
+    "金融",
+    "护理",
+    "安全",
+    "英语",
 ]
 
 
@@ -86,11 +111,27 @@ def pick_column(df: pd.DataFrame, aliases: list[str]) -> pd.Series:
 def normalize_columns(raw: pd.DataFrame) -> pd.DataFrame:
     data = {target: pick_column(raw, aliases) for target, aliases in FIELD_ALIASES.items()}
     df = pd.DataFrame(data)
-    for column in ["job_title", "company_name", "city", "province", "education", "experience", "industry", "major", "company_size", "company_type", "description"]:
+    for column in [
+        "source_dataset",
+        "source_ref",
+        "source_url",
+        "job_id",
+        "job_title",
+        "company_name",
+        "city",
+        "province",
+        "education",
+        "experience",
+        "industry",
+        "major",
+        "company_size",
+        "company_type",
+        "description",
+    ]:
         df[column] = df[column].fillna("").astype(str).str.strip()
     df["city"] = df["city"].str.replace("市", "", regex=False)
     df["province"] = df.apply(lambda row: row["province"] or PROVINCE_BY_CITY.get(row["city"], "未知"), axis=1)
-    df["publish_date"] = pd.to_datetime(df["publish_date"], errors="coerce")
+    df["publish_date"] = pd.to_datetime(df["publish_date"], errors="coerce", format="mixed", utc=True).dt.tz_localize(None)
     return df
 
 
@@ -131,11 +172,12 @@ def normalize_education(value: str) -> str:
 
 
 def normalize_experience(value: str) -> str:
-    if "应届" in value or "不限" in value or not value:
+    value = str(value).strip()
+    if "应届" in value or "不限" in value or "无需" in value or not value:
         return "应届/不限"
-    if "5" in value or "五" in value:
+    if "10" in value or "5年以上" in value or "5年" in value or "五" in value or "5-7" in value:
         return "5年以上"
-    if "3" in value:
+    if "3-5" in value or "3-4" in value or value.startswith("3年") or value.startswith("4年"):
         return "3-5年"
     return "1-3年"
 
@@ -177,6 +219,21 @@ def clean_jobs(input_path: Path) -> pd.DataFrame:
     df = df[df["city"].ne("")]
     df = df[df["salary_avg"].notna()]
     df = df[df["salary_avg"].between(1000, 100000)]
+    return df
+
+
+def clean_jobs_for_coverage(input_path: Path) -> pd.DataFrame:
+    raw = pd.read_csv(input_path)
+    df = normalize_columns(raw)
+    salary_values = df["salary_text"].apply(parse_salary)
+    df[["salary_min", "salary_max", "salary_avg"]] = pd.DataFrame(salary_values.tolist(), index=df.index)
+    df["education_norm"] = df["education"].apply(normalize_education)
+    df["experience_norm"] = df["experience"].apply(normalize_experience)
+    df["job_category"] = df["job_title"].apply(extract_job_category)
+    df["text"] = (df["job_title"] + " " + df["description"]).fillna("")
+    df["skills"] = df["text"].apply(extract_skills)
+    df["skill_text"] = df["skills"].apply(lambda values: ",".join(values))
+    df = df[df["city"].ne("")]
     return df
 
 
@@ -232,8 +289,27 @@ def build_province_index(df: pd.DataFrame, city_index: pd.DataFrame) -> pd.DataF
         + min_max(result["avg_salary"]) * 0.30
         + result["fresh_friendly_index"] * 0.25
     ).round(2)
-    result["growth_rate"] = np.random.default_rng(42).uniform(3, 14, len(result)).round(2)
+    growth = province_growth_rate(df)
+    result = result.merge(growth, on="province", how="left")
+    result["growth_rate"] = result["growth_rate"].fillna(0).round(2)
     return result.sort_values("employment_heat_index", ascending=False)
+
+
+def province_growth_rate(df: pd.DataFrame) -> pd.DataFrame:
+    valid = df.dropna(subset=["publish_date"]).copy()
+    if valid.empty:
+        return pd.DataFrame({"province": df["province"].dropna().unique(), "growth_rate": 0.0})
+
+    valid["month"] = valid["publish_date"].dt.to_period("M")
+    latest_month = valid["month"].max()
+    previous_month = latest_month - 1
+    counts = valid.groupby(["province", "month"]).size().unstack(fill_value=0)
+    latest = counts[latest_month] if latest_month in counts else pd.Series(0, index=counts.index)
+    previous = counts[previous_month] if previous_month in counts else pd.Series(0, index=counts.index)
+    growth = pd.Series(0.0, index=counts.index)
+    mask = previous.ne(0)
+    growth.loc[mask] = ((latest.loc[mask] - previous.loc[mask]) / previous.loc[mask] * 100).round(2)
+    return growth.reset_index(name="growth_rate")
 
 
 def tokenize(text: str) -> str:
