@@ -1,0 +1,96 @@
+:root {
+  color-scheme: dark;
+  --bg: oklch(16% 0.025 210);
+  --bg-deep: oklch(10% 0.022 220);
+  --panel: oklch(21% 0.031 202);
+  --panel-strong: oklch(25% 0.036 195);
+  --surface: oklch(27% 0.035 198);
+  --line: oklch(62% 0.08 190);
+  --text: oklch(88% 0.028 195);
+  --text-strong: oklch(96% 0.022 190);
+  --text-muted: oklch(72% 0.035 198);
+  --accent: oklch(75% 0.106 185);
+  --accent-warm: oklch(78% 0.13 78);
+  --danger: oklch(66% 0.15 32);
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --shadow-panel: 0 1rem 3rem rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  font-family: "Microsoft YaHei UI", "DengXian", "Bahnschrift", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  min-width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-deep);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  border: 0;
+}
+
+.el-select,
+.el-input {
+  width: 100%;
+}
+
+.el-input__wrapper,
+.el-select__wrapper {
+  min-height: 1.9rem;
+  border-radius: 6px;
+  background: color-mix(in oklch, var(--surface), transparent 10%);
+  box-shadow: 0 0 0 1px color-mix(in oklch, var(--line), transparent 48%) inset;
+}
+
+.el-input__inner,
+.el-select__placeholder,
+.el-select__selected-item {
+  color: var(--text);
+  font-size: 0.78rem;
+}
+
+.el-button--primary {
+  border: 0;
+  background: linear-gradient(135deg, color-mix(in oklch, var(--accent), black 10%), color-mix(in oklch, var(--accent-warm), black 10%));
+}
+
+.el-button {
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# Python packaging / generated artifacts
+*.egg-info/
+build/
+
+# Frontend dependencies and build output
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Local logs
+*.log
+backend/*.log
+frontend/*.log
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Generated data-processing outputs
+data-processing/output/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
