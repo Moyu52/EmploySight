@@ -190,6 +190,24 @@
             </article>
           </div>
         </ShellPanel>
+        <ShellPanel title="能力差距诊断" subtitle="目标岗位补强优先级">
+          <div class="gap-diagnosis">
+            <article v-for="item in capabilityGaps" :key="item.target">
+              <header>
+                <b>{{ item.target }}</b>
+                <span>{{ item.priority }}</span>
+              </header>
+              <p>{{ item.required }}</p>
+              <div class="gap-meter" :aria-label="`${item.target} 当前准备度 ${item.progress}%`">
+                <i :style="{ width: `${item.progress}%` }"></i>
+              </div>
+              <footer>
+                <em>{{ item.current }}</em>
+                <strong>{{ item.action }}</strong>
+              </footer>
+            </article>
+          </div>
+        </ShellPanel>
         <ShellPanel title="求职行动清单" subtitle="按 4 周准备节奏">
           <div class="action-list">
             <article v-for="item in actionItems" :key="item.week">
@@ -321,6 +339,25 @@ const careerPaths = [
   { score: 88, title: 'Python 后端与平台开发', text: '适合有项目经验的计算机类毕业生，强调 FastAPI、MySQL、Redis 和部署。' },
   { score: 82, title: 'AI 应用与算法工程', text: '薪资潜力高，但要求项目和数学基础，建议以应用型算法岗切入。' },
   { score: 79, title: '前端数据可视化', text: '适合对交互和可视化敏感的学生，重点准备 Vue3、TypeScript、ECharts。' }
+]
+
+const capabilityGaps = [
+  {
+    target: '数据分析与商业智能',
+    required: 'SQL、Python、指标体系、BI 看板',
+    current: '当前准备度 78%',
+    action: '补 1 个 BI 看板项目，写清指标口径。',
+    priority: '优先补强',
+    progress: 78
+  },
+  {
+    target: 'Python 后端与平台开发',
+    required: 'FastAPI、MySQL、接口设计、部署',
+    current: '当前准备度 71%',
+    action: '补接口测试与部署说明。',
+    priority: '次优先',
+    progress: 71
+  }
 ]
 
 const actionItems = [
@@ -519,6 +556,11 @@ onBeforeUnmount(() => {
   overflow: auto;
 }
 
+.workbench--career {
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  overflow: hidden;
+}
+
 .workbench--city > :first-child,
 .workbench--data > :first-child {
   grid-column: span 2;
@@ -582,6 +624,7 @@ onBeforeUnmount(() => {
 .benchmark-grid,
 .combo-grid,
 .action-list,
+.gap-diagnosis,
 .quality-grid {
   position: relative;
   z-index: 1;
@@ -607,6 +650,7 @@ onBeforeUnmount(() => {
 .benchmark-grid article,
 .combo-grid article,
 .action-list article,
+.gap-diagnosis article,
 .quality-grid article,
 .city-card {
   border: 1px solid color-mix(in oklch, var(--line), transparent 46%);
@@ -710,6 +754,8 @@ onBeforeUnmount(() => {
 .benchmark-grid em,
 .combo-grid span,
 .action-list em,
+.gap-diagnosis p,
+.gap-diagnosis em,
 .quality-grid em {
   margin: 0;
   color: var(--text-muted);
@@ -785,6 +831,7 @@ onBeforeUnmount(() => {
 .benchmark-grid,
 .combo-grid,
 .action-list,
+.gap-diagnosis,
 .quality-grid {
   display: grid;
   gap: var(--space-sm);
@@ -810,6 +857,7 @@ onBeforeUnmount(() => {
 .insight-list article,
 .benchmark-grid article,
 .combo-grid article,
+.gap-diagnosis article,
 .quality-grid article {
   display: grid;
   gap: var(--space-xs);
@@ -853,6 +901,89 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: var(--space-sm);
   padding: var(--space-sm) var(--space-md);
+}
+
+.workbench--career .path-grid,
+.workbench--career .action-list,
+.workbench--career .gap-diagnosis {
+  height: 100%;
+}
+
+.workbench--career .path-grid,
+.workbench--career .gap-diagnosis {
+  grid-auto-rows: minmax(0, 1fr);
+}
+
+.workbench--career .action-list {
+  align-content: stretch;
+  grid-auto-rows: minmax(0, 1fr);
+}
+
+.workbench--career .path-grid article {
+  padding: var(--space-sm) var(--space-md);
+}
+
+.gap-diagnosis article {
+  grid-template-columns: minmax(10rem, 0.9fr) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-xs) var(--space-md);
+  min-height: 0;
+  padding: var(--space-md);
+}
+
+.gap-diagnosis header,
+.gap-diagnosis footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.gap-diagnosis header {
+  grid-column: span 2;
+}
+
+.gap-diagnosis header b {
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.gap-diagnosis header span {
+  flex: 0 0 auto;
+  color: var(--accent-warm);
+  font-size: 0.72rem;
+}
+
+.gap-diagnosis footer strong {
+  color: var(--text);
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1.45;
+  text-align: right;
+}
+
+.gap-diagnosis em {
+  flex: 0 0 auto;
+  font-style: normal;
+}
+
+.gap-diagnosis p {
+  line-height: 1.35;
+}
+
+.gap-meter {
+  overflow: hidden;
+  height: 0.42rem;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--line), transparent 66%);
+}
+
+.gap-meter i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), var(--accent-warm));
 }
 
 .pipeline article {

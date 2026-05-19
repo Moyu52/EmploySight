@@ -151,7 +151,23 @@ export const analysis: DashboardAnalysis = {
     { skill: '数据分析', frequency: 33880, heatIndex: 86.5, category: '数据分析', trendScore: 80.1 },
     { skill: '机器学习', frequency: 24660, heatIndex: 85.6, category: '算法工程师', trendScore: 89.4 },
     { skill: 'Vue', frequency: 22640, heatIndex: 80.4, category: '前端开发', trendScore: 70.8 },
-    { skill: '云计算', frequency: 21980, heatIndex: 80.1, category: '云平台工程师', trendScore: 83.9 }
+    { skill: '云计算', frequency: 21980, heatIndex: 80.1, category: '云平台工程师', trendScore: 83.9 },
+    { skill: 'PyTorch', frequency: 20640, heatIndex: 79.6, category: '算法工程师', trendScore: 88.8 },
+    { skill: 'MySQL', frequency: 30180, heatIndex: 78.8, category: '后端开发', trendScore: 73.4 },
+    { skill: 'Redis', frequency: 18420, heatIndex: 76.9, category: '后端开发', trendScore: 75.6 },
+    { skill: 'Spark', frequency: 16980, heatIndex: 76.2, category: '数据开发', trendScore: 82.1 },
+    { skill: 'Hive', frequency: 14860, heatIndex: 74.8, category: '数据开发', trendScore: 77.5 },
+    { skill: 'TypeScript', frequency: 19850, heatIndex: 74.1, category: '前端开发', trendScore: 76.2 },
+    { skill: 'ECharts', frequency: 12680, heatIndex: 72.6, category: '可视化开发', trendScore: 79.4 },
+    { skill: 'BI', frequency: 21460, heatIndex: 72.2, category: '商业分析', trendScore: 74.3 },
+    { skill: '数据可视化', frequency: 19320, heatIndex: 71.8, category: '商业分析', trendScore: 77.1 },
+    { skill: 'Docker', frequency: 14240, heatIndex: 70.4, category: '平台部署', trendScore: 76.8 },
+    { skill: 'Linux', frequency: 16820, heatIndex: 69.8, category: '平台部署', trendScore: 71.5 },
+    { skill: 'Pandas', frequency: 15840, heatIndex: 68.6, category: '数据分析', trendScore: 72.9 },
+    { skill: 'ETL', frequency: 13280, heatIndex: 67.4, category: '数据治理', trendScore: 74.8 },
+    { skill: '统计分析', frequency: 15160, heatIndex: 66.8, category: '数据分析', trendScore: 70.6 },
+    { skill: 'NLP', frequency: 11620, heatIndex: 65.9, category: '算法工程师', trendScore: 81.2 },
+    { skill: 'scikit-learn', frequency: 10840, heatIndex: 64.7, category: '机器学习', trendScore: 70.1 }
   ]
 }
 

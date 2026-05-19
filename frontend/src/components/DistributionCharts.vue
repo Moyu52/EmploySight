@@ -33,8 +33,8 @@ function chartTextColor() {
 
 function render() {
   salaryChart.value?.setOption(salaryOption())
-  educationChart.value?.setOption(pieOption('学历要求', props.analysis.education))
-  experienceChart.value?.setOption(pieOption('经验要求', props.analysis.experience))
+  educationChart.value?.setOption(pieOption('学历要求', props.analysis.education, 'left'))
+  experienceChart.value?.setOption(pieOption('经验要求', props.analysis.experience, 'right'))
 }
 
 function salaryOption(): EChartsOption {
@@ -90,11 +90,12 @@ function salaryOption(): EChartsOption {
   }
 }
 
-function pieOption(title: string, data: { name: string; value: number }[]): EChartsOption {
+function pieOption(title: string, data: { name: string; value: number }[], titleSide: 'left' | 'right'): EChartsOption {
   return {
     title: {
       text: title,
-      left: 'center',
+      left: titleSide === 'left' ? 8 : undefined,
+      right: titleSide === 'right' ? 8 : undefined,
       top: 4,
       textStyle: { color: '#dbefff', fontSize: 12, fontWeight: 700 }
     },

@@ -20,7 +20,9 @@ let timer = 0
 function option(): EChartsOption {
   const start = Math.max(0, props.trends.length - activeWindow.value)
   const view = props.trends.slice(start)
+  const colors = ['#e1b75c', '#5fd0c8', '#8aa7ff']
   return {
+    color: colors,
     grid: { left: 46, right: 18, top: 24, bottom: 28 },
     legend: {
       right: 8,
@@ -48,9 +50,9 @@ function option(): EChartsOption {
       splitLine: { lineStyle: { color: 'rgba(151, 203, 207, 0.13)' } }
     },
     series: [
-      line('岗位总量', view.map((item) => item.jobs), '#e1b75c'),
-      line('应届岗位', view.map((item) => item.freshJobs), '#5fd0c8'),
-      line('AI岗位', view.map((item) => item.aiJobs), '#8aa7ff')
+      line('岗位总量', view.map((item) => item.jobs), colors[0]),
+      line('应届岗位', view.map((item) => item.freshJobs), colors[1]),
+      line('AI岗位', view.map((item) => item.aiJobs), colors[2])
     ],
     animationDurationUpdate: 850,
     animationEasingUpdate: 'quarticOut'
@@ -64,6 +66,8 @@ function line(name: string, data: number[], color: string): LineSeriesOption {
     smooth: true,
     showSymbol: false,
     data,
+    color,
+    itemStyle: { color },
     lineStyle: { width: 2, color },
     areaStyle: {
       color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
