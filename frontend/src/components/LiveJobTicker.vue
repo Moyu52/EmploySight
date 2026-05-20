@@ -1,7 +1,7 @@
 <template>
   <div class="live-ticker">
     <div class="live-ticker__track">
-      <article v-for="(item, index) in loopItems" :key="`${item.time}-${item.title}-${index}`" class="job-row">
+      <article v-for="(item, index) in jobs" :key="`${item.time}-${item.title}-${index}`" class="job-row">
         <time>{{ item.time }}</time>
         <strong>{{ item.city }}</strong>
         <div>
@@ -16,35 +16,26 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { JobLiveItem } from '../types/dashboard'
 
-const props = defineProps<{
+defineProps<{
   jobs: JobLiveItem[]
 }>()
-
-const loopItems = computed(() => [...props.jobs, ...props.jobs])
 </script>
 
 <style scoped>
 .live-ticker {
   position: relative;
   z-index: 1;
-  overflow: hidden;
-  height: 100%;
-  min-height: 0;
+  overflow: auto;
+  min-height: 12rem;
+  max-height: 22rem;
   padding: 0 var(--space-sm) var(--space-sm);
-  mask-image: linear-gradient(180deg, transparent, black 10%, black 88%, transparent);
 }
 
 .live-ticker__track {
   display: grid;
   gap: var(--space-xs);
-  animation: live-scroll 16s linear infinite;
-}
-
-.live-ticker:hover .live-ticker__track {
-  animation-play-state: paused;
 }
 
 .job-row {
@@ -56,7 +47,7 @@ const loopItems = computed(() => [...props.jobs, ...props.jobs])
   padding: 0 var(--space-sm);
   border: 1px solid color-mix(in oklch, var(--line), transparent 48%);
   border-radius: 6px;
-  background: color-mix(in oklch, var(--surface), transparent 16%);
+  background: color-mix(in oklch, var(--surface), white 2%);
 }
 
 .job-row time {
@@ -99,14 +90,5 @@ const loopItems = computed(() => [...props.jobs, ...props.jobs])
   font-size: 0.78rem;
   font-style: normal;
   text-align: right;
-}
-
-@keyframes live-scroll {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-50%);
-  }
 }
 </style>

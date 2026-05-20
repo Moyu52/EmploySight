@@ -71,9 +71,9 @@ function pillStyle(item: SkillKeyword, index: number) {
   border-radius: 7px;
   color: var(--text);
   background:
-    linear-gradient(135deg, color-mix(in oklch, var(--panel), transparent 16%), color-mix(in oklch, var(--surface), transparent 10%)),
-    radial-gradient(circle at 18% 0%, color-mix(in oklch, var(--accent-warm), transparent 72%), transparent 70%),
-    color-mix(in oklch, var(--accent), transparent calc(100% - (var(--pill-alpha) * 100%)));
+    linear-gradient(135deg, color-mix(in oklch, var(--accent), transparent 92%), color-mix(in oklch, var(--panel), white 2%)),
+    color-mix(in oklch, var(--accent), transparent calc(100% - (var(--pill-alpha) * 45%)));
+  box-shadow: 0 0.45rem 1rem rgba(42, 60, 95, 0.07);
   cursor: default;
   overflow: hidden;
   animation: skill-float 4.8s var(--ease-out-quint) infinite;

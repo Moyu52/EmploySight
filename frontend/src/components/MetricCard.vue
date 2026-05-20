@@ -7,6 +7,7 @@
       <span>{{ label }}</span>
       <strong>{{ formatted }}</strong>
       <small>{{ suffix }}</small>
+      <em v-if="detail">{{ detail }}</em>
     </div>
   </div>
 </template>
@@ -20,6 +21,7 @@ const props = defineProps<{
   label: string
   value: number
   suffix?: string
+  detail?: string
   icon: 'jobs' | 'salary' | 'city' | 'fresh'
   decimals?: number
 }>()
@@ -51,11 +53,20 @@ const formatted = computed(() => {
   gap: var(--space-sm);
   min-height: 5.2rem;
   padding: var(--space-sm);
-  border: 1px solid color-mix(in oklch, var(--line), transparent 24%);
+  border: 1px solid color-mix(in oklch, var(--line), transparent 58%);
   border-radius: 8px;
-  background:
-    linear-gradient(150deg, color-mix(in oklch, var(--panel-strong), transparent 4%), color-mix(in oklch, var(--surface), transparent 8%));
+  background: linear-gradient(150deg, color-mix(in oklch, var(--panel), white 2%), color-mix(in oklch, var(--surface), white 3%));
+  box-shadow: 0 0.55rem 1.4rem rgba(42, 60, 95, 0.07);
   contain: layout paint;
+  overflow: hidden;
+}
+
+.metric-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, color-mix(in oklch, var(--accent), transparent 44%), transparent);
 }
 
 .metric-card__icon {
@@ -63,10 +74,10 @@ const formatted = computed(() => {
   place-items: center;
   width: 2.3rem;
   height: 2.3rem;
-  border-radius: 50%;
-  color: var(--accent-warm);
-  background: color-mix(in oklch, var(--accent-warm), transparent 88%);
-  box-shadow: 0 0 1.4rem color-mix(in oklch, var(--accent-warm), transparent 78%);
+  border-radius: 8px;
+  color: oklch(98% 0.006 250);
+  background: linear-gradient(135deg, var(--accent), color-mix(in oklch, var(--accent), black 12%));
+  box-shadow: 0 0.45rem 0.95rem color-mix(in oklch, var(--accent), transparent 82%);
 }
 
 .metric-card__body {
@@ -82,7 +93,6 @@ const formatted = computed(() => {
 .metric-card strong {
   overflow: hidden;
   color: var(--text-strong);
-  font-family: "Bahnschrift", "Microsoft YaHei UI", sans-serif;
   font-size: 1.45rem;
   line-height: 1.05;
   text-overflow: ellipsis;
@@ -93,5 +103,14 @@ const formatted = computed(() => {
 .metric-card small {
   color: var(--accent);
   font-size: 0.72rem;
+}
+
+.metric-card em {
+  color: var(--text-muted);
+  font-size: 0.64rem;
+  font-style: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

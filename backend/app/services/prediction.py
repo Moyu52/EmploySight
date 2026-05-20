@@ -1,23 +1,13 @@
 from app.schemas import SalaryPrediction, SalaryPredictionRequest
+from app.services.demo_data import DATA
 
 
 CITY_BASE = {
-    "北京": 11869,
-    "上海": 14004,
-    "深圳": 9160,
-    "广州": 20040,
-    "南京": 9633,
-    "苏州": 6972,
-    "常州": 7077,
-    "重庆": 5643,
-    "西安": 4710,
-    "哈尔滨": 5543,
-    "长春": 6023,
-    "大连": 4535,
-    "西宁": 5447,
-    "青岛": 5144,
-    "武汉": 7529,
+    item["city"]: item["avgSalary"]
+    for item in DATA["CITY_METRICS"]
+    if item.get("avgSalary", 0) > 0
 }
+DEFAULT_AVERAGE_SALARY = DATA["OVERVIEW"]["averageSalary"]
 
 
 def factor(source: str, rules: list[tuple[str, float]]) -> float:
@@ -28,7 +18,7 @@ def factor(source: str, rules: list[tuple[str, float]]) -> float:
 
 
 def predict_salary(payload: SalaryPredictionRequest) -> SalaryPrediction:
-    base = CITY_BASE.get(payload.city, 5681)
+    base = CITY_BASE.get(payload.city, DEFAULT_AVERAGE_SALARY)
     industry_factor = factor(
         payload.industry,
         [

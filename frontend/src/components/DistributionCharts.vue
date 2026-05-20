@@ -28,7 +28,7 @@ let timer = 0
 let pulse = 0
 
 function chartTextColor() {
-  return '#b7cdd2'
+  return '#344b6e'
 }
 
 function render() {
@@ -44,11 +44,11 @@ function salaryOption(): EChartsOption {
     value: index === offset ? item.value + 3 : item.value
   }))
   return {
-    grid: { left: 46, right: 14, top: 12, bottom: 26 },
+    grid: { left: 52, right: 16, top: 16, bottom: 30 },
     xAxis: {
       type: 'category',
       data: data.map((item) => item.name),
-      axisLine: { lineStyle: { color: 'rgba(151, 203, 207, 0.24)' } },
+      axisLine: { lineStyle: { color: 'rgba(74, 101, 145, 0.34)' } },
       axisTick: { show: false },
       axisLabel: {
         color: chartTextColor(),
@@ -62,7 +62,7 @@ function salaryOption(): EChartsOption {
       min: 0,
       max: 70,
       interval: 10,
-      splitLine: { lineStyle: { color: 'rgba(151, 203, 207, 0.13)' } },
+      splitLine: { lineStyle: { color: 'rgba(74, 101, 145, 0.16)' } },
       axisLabel: {
         color: chartTextColor(),
         fontSize: 10,
@@ -79,8 +79,9 @@ function salaryOption(): EChartsOption {
         itemStyle: {
           borderRadius: [4, 4, 0, 0],
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: '#e1b75c' },
-            { offset: 1, color: '#45a8a3' }
+            { offset: 0, color: '#d29a2e' },
+            { offset: 0.48, color: '#2d5fbd' },
+            { offset: 1, color: '#41a980' }
           ])
         }
       }
@@ -91,34 +92,39 @@ function salaryOption(): EChartsOption {
 }
 
 function pieOption(title: string, data: { name: string; value: number }[], titleSide: 'left' | 'right'): EChartsOption {
+  const isRightChart = titleSide === 'right'
   return {
     title: {
       text: title,
       left: titleSide === 'left' ? 8 : undefined,
       right: titleSide === 'right' ? 8 : undefined,
       top: 4,
-      textStyle: { color: '#dbefff', fontSize: 12, fontWeight: 700 }
+      textStyle: { color: '#13233d', fontSize: 12, fontWeight: 800 }
     },
     tooltip: { trigger: 'item' },
     series: [
       {
         type: 'pie',
-        radius: ['42%', '68%'],
-        center: ['50%', '58%'],
+        radius: ['39%', '62%'],
+        center: [isRightChart ? '43%' : '48%', '58%'],
         padAngle: 2,
         data,
         label: {
           color: chartTextColor(),
-          fontSize: 9,
-          overflow: 'truncate',
-          width: 44
+          fontSize: 10,
+          overflow: 'break',
+          width: isRightChart ? 74 : 62
         },
-        labelLine: { length: 8, length2: 7 },
+        labelLayout: {
+          hideOverlap: true,
+          moveOverlap: 'shiftY'
+        },
+        labelLine: { length: 6, length2: isRightChart ? 4 : 6 },
         itemStyle: {
           borderWidth: 2,
-          borderColor: '#0c1b25'
+          borderColor: '#f7fbff'
         },
-        color: ['#e1b75c', '#59c7bd', '#7aa1ff', '#cf7d5a', '#8ad38c'],
+        color: ['#2d5fbd', '#d29a2e', '#d86b4a', '#41a980', '#7b86d9'],
         animationDurationUpdate: 850,
         animationEasingUpdate: 'quarticOut'
       }
@@ -177,7 +183,9 @@ onBeforeUnmount(() => {
 .chart {
   min-height: 0;
   border-radius: 6px;
-  background: color-mix(in oklch, var(--surface), transparent 18%);
+  border: 1px solid color-mix(in oklch, var(--line), transparent 68%);
+  background: linear-gradient(145deg, color-mix(in oklch, var(--surface), white 3%), color-mix(in oklch, var(--panel), white 2%));
+  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--line), transparent 80%);
 }
 
 .chart--salary,

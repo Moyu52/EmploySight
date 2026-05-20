@@ -16,6 +16,12 @@ export interface DashboardOverview {
   totalJobs: number
   averageSalary: number
   coveredCities: number
+  mappableCities: number
+  salarySampleRows: number
+  coveredRegions: number
+  totalRegions: number
+  publishStart: string
+  publishEnd: string
   freshFriendlyIndex: number
   hotCities: RankItem[]
   hotIndustries: RankItem[]
@@ -40,6 +46,7 @@ export interface CityMetric {
   freshFriendlyIndex: number
   attractionIndex: number
   rankNo: number
+  hasCoords: boolean
   longitude: number
   latitude: number
 }

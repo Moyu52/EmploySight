@@ -6,15 +6,15 @@
           <el-row :gutter="8">
             <el-col :span="12">
               <el-form-item label="城市">
-                <el-select v-model="salaryForm.city" size="small">
-                  <el-option v-for="city in cities" :key="city" :label="city" :value="city" />
+                <el-select v-model="salaryForm.city" size="small" filterable>
+                  <el-option v-for="city in cityOptions" :key="city" :label="city" :value="city" />
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="行业">
-                <el-select v-model="salaryForm.industry" size="small">
-                  <el-option v-for="industry in industries" :key="industry" :label="industry" :value="industry" />
+                <el-select v-model="salaryForm.industry" size="small" filterable>
+                  <el-option v-for="industry in industryOptions" :key="industry" :label="industry" :value="industry" />
                 </el-select>
               </el-form-item>
             </el-col>
@@ -81,15 +81,42 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { Activity, Route } from 'lucide-vue-next'
 import { predictSalary, recommendCareer } from '../services/dashboard'
-import type { CareerRecommendation, SalaryPrediction } from '../types/dashboard'
+import type { CareerRecommendation, CityMetric, RankItem, SalaryPrediction, SkillKeyword } from '../types/dashboard'
 
 const activeTab = ref('salary')
-const cities = ['西安', '北京', '重庆', '哈尔滨', '长春', '苏州', '大连', '西宁', '青岛', '常州']
-const industries = ['生产制造及有关人员', '专业技术人员', '销售人员', '机械冷加工人员', '社会生产服务和生活服务人员']
-const skillOptions = ['生产', '管理', '销售', '机械', '沟通', '安全', '质量', '会计', '电气', 'Excel']
+const props = defineProps<{
+  cities?: CityMetric[]
+  industries?: RankItem[]
+  skills?: SkillKeyword[]
+}>()
+
+const fallbackCities = ['西安', '北京', '重庆', '哈尔滨', '长春', '苏州', '大连', '西宁', '青岛', '常州']
+const fallbackIndustries = ['生产制造及有关人员', '专业技术人员', '销售人员', '机械冷加工人员', '社会生产服务和生活服务人员']
+const fallbackSkills = ['生产', '管理', '销售', '机械', '沟通', '安全', '质量', '会计', '电气', 'Excel']
+
+const cityOptions = computed(() => {
+  const names = (props.cities ?? [])
+    .map((item) => item.city)
+    .filter(Boolean)
+  return [...new Set(names.length ? names : fallbackCities)]
+})
+
+const industryOptions = computed(() => {
+  const names = (props.industries ?? [])
+    .map((item) => item.name)
+    .filter(Boolean)
+  return [...new Set(names.length ? names : fallbackIndustries)]
+})
+
+const skillOptions = computed(() => {
+  const names = (props.skills ?? [])
+    .map((item) => item.skill)
+    .filter(Boolean)
+  return [...new Set(names.length ? names : fallbackSkills)]
+})
 
 const salaryForm = reactive({
   city: '西安',
@@ -113,6 +140,32 @@ const careerForm = reactive({
 const salaryResult = ref<SalaryPrediction>()
 const recommendations = ref<CareerRecommendation[]>([])
 
+watch(cityOptions, (options) => {
+  if (options.length && !options.includes(salaryForm.city)) {
+    salaryForm.city = options[0]
+    careerForm.expectedCities = options.slice(0, 3)
+    runSalary()
+    runRecommend()
+  }
+}, { immediate: true })
+
+watch(industryOptions, (options) => {
+  if (options.length && !options.includes(salaryForm.industry)) {
+    salaryForm.industry = options[0]
+    careerForm.expectedIndustries = options.slice(0, 3)
+    runSalary()
+    runRecommend()
+  }
+}, { immediate: true })
+
+watch(skillOptions, (options) => {
+  const nextSkills = careerForm.skills.filter((item) => options.includes(item))
+  if (options.length && nextSkills.length !== careerForm.skills.length) {
+    careerForm.skills = nextSkills.length ? nextSkills : options.slice(0, 3)
+    runRecommend()
+  }
+}, { immediate: true })
+
 async function runSalary() {
   salaryResult.value = await predictSalary(salaryForm)
 }
@@ -129,9 +182,9 @@ runRecommend()
 .decision-panel {
   position: relative;
   z-index: 2;
-  height: 100%;
+  min-height: 100%;
   min-height: 0;
-  overflow: hidden;
+  overflow: visible;
   padding: 0 var(--space-md) var(--space-sm);
 }
 
@@ -181,8 +234,8 @@ runRecommend()
   display: grid;
   gap: var(--space-xs);
   margin-top: var(--space-xs);
-  max-height: 5.8rem;
-  overflow: hidden;
+  max-height: 12rem;
+  overflow: auto;
 }
 
 .recommend-item {
@@ -200,20 +253,20 @@ runRecommend()
 
 .recommend-item span {
   color: var(--text-muted);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
 }
 
 :deep(.el-tabs__item) {
   color: var(--text-muted);
-  font-size: 0.78rem;
+  font-size: 0.82rem;
 }
 
 :deep(.el-tabs__item.is-active) {
-  color: var(--accent-warm);
+  color: var(--accent);
 }
 
 :deep(.el-tabs__active-bar) {
-  background-color: var(--accent-warm);
+  background-color: var(--accent);
 }
 
 :deep(.el-tabs__nav-wrap::after) {
@@ -226,7 +279,7 @@ runRecommend()
 
 :deep(.el-form-item__label) {
   color: var(--text-muted);
-  font-size: 0.7rem;
+  font-size: 0.76rem;
   line-height: 1.2;
   margin-bottom: 0.16rem;
 }

@@ -1,8 +1,8 @@
 <template>
   <div class="auto-rank">
-    <div class="auto-rank__track" :style="{ animationDuration: `${duration}s` }">
-      <div v-for="(item, index) in loopItems" :key="`${item.name}-${index}`" class="rank-row">
-        <span class="rank-row__no">{{ (index % items.length) + 1 }}</span>
+    <div class="auto-rank__track">
+      <div v-for="(item, index) in items" :key="`${item.name}-${index}`" class="rank-row">
+        <span class="rank-row__no">{{ index + 1 }}</span>
         <div class="rank-row__main">
           <div class="rank-row__title">
             <b>{{ item.name }}</b>
@@ -19,17 +19,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { RankItem } from '../types/dashboard'
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   items: RankItem[]
   duration?: number
 }>(), {
   duration: 18
 })
-
-const loopItems = computed(() => [...props.items, ...props.items])
 
 function formatValue(value: number) {
   if (value >= 10000) {
@@ -43,21 +40,17 @@ function formatValue(value: number) {
 .auto-rank {
   position: relative;
   z-index: 1;
-  overflow: hidden;
+  overflow: auto;
   height: 100%;
   min-height: 0;
   padding: 0 var(--space-md) var(--space-sm);
-  mask-image: linear-gradient(180deg, transparent, black 10%, black 88%, transparent);
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklch, var(--accent), transparent 42%) transparent;
 }
 
 .auto-rank__track {
   display: grid;
   gap: var(--space-xs);
-  animation: rank-scroll linear infinite;
-}
-
-.auto-rank:hover .auto-rank__track {
-  animation-play-state: paused;
 }
 
 .rank-row {
@@ -135,15 +128,6 @@ function formatValue(value: number) {
   background: linear-gradient(90deg, var(--accent), var(--accent-warm));
   transform-origin: left center;
   animation: bar-in 900ms var(--ease-out-quint) both;
-}
-
-@keyframes rank-scroll {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-50%);
-  }
 }
 
 @keyframes bar-in {

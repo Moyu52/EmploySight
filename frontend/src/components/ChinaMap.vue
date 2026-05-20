@@ -60,20 +60,21 @@ function buildOption(): EChartsOption {
     topIndustry: item.topIndustry
   }))
 
-  const hotCities = props.cities.map((item) => ({
+  const mappableCities = props.cities.filter((item) => item.hasCoords && item.longitude && item.latitude)
+  const hotCities = mappableCities.map((item) => ({
     name: item.city,
     value: [item.longitude, item.latitude, item.attractionIndex],
     jobCount: item.jobCount,
     avgSalary: item.avgSalary
   }))
 
-  const flowTargets = props.cities.slice(1, 8).map((item) => ({
+  const flowTargets = mappableCities.slice(1, 8).map((item) => ({
     coords: [
-      [props.cities[0].longitude, props.cities[0].latitude],
+      [mappableCities[0].longitude, mappableCities[0].latitude],
       [item.longitude, item.latitude]
     ],
     value: item.attractionIndex
-  }))
+  })).filter(() => mappableCities.length > 1)
 
   return {
     animation: true,
@@ -81,9 +82,11 @@ function buildOption(): EChartsOption {
     animationEasingUpdate: 'quarticOut',
     tooltip: {
       trigger: 'item',
-      borderWidth: 0,
-      backgroundColor: 'rgba(11, 25, 34, 0.92)',
-      textStyle: { color: '#dbefff' },
+      borderWidth: 1,
+      borderColor: 'rgba(75, 102, 145, 0.34)',
+      backgroundColor: 'rgba(255, 255, 255, 0.96)',
+      textStyle: { color: '#13233d' },
+      extraCssText: 'box-shadow: 0 18px 38px rgba(42, 60, 95, 0.16); backdrop-filter: blur(8px);',
       formatter: (params: any) => {
         if (params.seriesType === 'map') {
           return `${params.name}<br/>就业热度：${params.value ?? '-'}<br/>岗位数：${params.data?.jobCount?.toLocaleString?.('zh-CN') ?? '-'}<br/>平均薪资：${params.data?.avgSalary ?? '-'} 元<br/>应届友好：${params.data?.freshFriendlyIndex ?? '-'}`
@@ -99,34 +102,42 @@ function buildOption(): EChartsOption {
       max: maxHeat,
       show: false,
       inRange: {
-        color: ['#173345', '#246f6d', '#d7a84f']
+        color: ['#e9f1fb', '#9bb9df', '#4d7fc6', '#d29a2e']
       }
     },
     geo: {
       map: 'china-employment',
       roam: false,
-      zoom: 1.34,
-      center: [112.4, 36.2],
+      zoom: 1.16,
+      center: [105.8, 36.2],
       itemStyle: {
-        areaColor: 'rgba(24, 80, 91, 0.46)',
-        borderColor: 'rgba(147, 221, 216, 0.65)',
-        borderWidth: 1
+        areaColor: 'rgba(176, 202, 234, 0.82)',
+        borderColor: 'rgba(52, 79, 122, 0.58)',
+        borderWidth: 1.08,
+        shadowBlur: 8,
+        shadowColor: 'rgba(74, 101, 145, 0.14)'
       },
       emphasis: {
         itemStyle: {
-          areaColor: '#d6a84e',
+          areaColor: '#ffbf5c',
           shadowBlur: 24,
-          shadowColor: 'rgba(215, 168, 79, 0.55)'
+          shadowColor: 'rgba(255, 207, 90, 0.64)'
         },
         label: {
-          color: '#f7fbff',
-          fontWeight: 700
+          color: '#071326',
+          fontWeight: 900,
+          textBorderColor: 'rgba(255, 244, 199, 0.94)',
+          textBorderWidth: 2,
+          textShadowBlur: 0
         }
       },
       label: {
         show: true,
-        color: 'rgba(222, 243, 245, 0.76)',
-        fontSize: 11
+        color: 'rgba(20, 35, 61, 0.86)',
+        fontSize: 11,
+        textBorderColor: 'rgba(255, 255, 255, 0.94)',
+        textBorderWidth: 3,
+        textShadowBlur: 0
       }
     },
     series: [
@@ -134,25 +145,50 @@ function buildOption(): EChartsOption {
         type: 'map',
         map: 'china-employment',
         geoIndex: 0,
-        data: mapData
+        data: mapData,
+        emphasis: {
+          label: {
+            color: '#071326',
+            fontWeight: 900,
+            textBorderColor: 'rgba(255, 244, 199, 0.94)',
+            textBorderWidth: 2,
+            textShadowBlur: 0
+          }
+        }
       },
       {
         name: '城市热点',
         type: 'effectScatter',
         coordinateSystem: 'geo',
         data: hotCities,
-        symbolSize: (value: number[]) => Math.max(8, value[2] / 6),
+        symbolSize: (value: number[]) => Math.max(6, value[2] / 8),
         rippleEffect: {
           brushType: 'stroke',
-          scale: 4.5,
-          period: 4
+          scale: 3.4,
+          period: 4.8
         },
         itemStyle: {
-          color: '#f0b54d',
-          shadowBlur: 18,
-          shadowColor: 'rgba(240, 181, 77, 0.8)'
+          color: 'rgba(210, 154, 46, 0.78)',
+          shadowBlur: 8,
+          shadowColor: 'rgba(210, 154, 46, 0.28)'
         },
-        zlevel: 3
+        zlevel: 2
+      },
+      {
+        name: '就业流向光轨',
+        type: 'lines',
+        coordinateSystem: 'geo',
+        data: flowTargets,
+        silent: true,
+        lineStyle: {
+          width: 1.6,
+          color: 'rgba(45, 95, 189, 0.16)',
+          opacity: 0.42,
+          curveness: 0.24,
+          shadowBlur: 6,
+          shadowColor: 'rgba(45, 95, 189, 0.2)'
+        },
+        zlevel: 1
       },
       {
         name: '就业流向',
@@ -161,18 +197,26 @@ function buildOption(): EChartsOption {
         data: flowTargets,
         effect: {
           show: true,
-          period: 5,
-          trailLength: 0.18,
-          symbol: 'arrow',
-          symbolSize: 8
+          period: 4.4,
+          trailLength: 0.16,
+          symbol: 'path://M0,-5 L12,0 L0,5 L3,0 Z',
+          symbolSize: 7,
+          color: 'rgba(31, 75, 148, 0.5)'
         },
         lineStyle: {
-          width: 1.2,
-          color: '#78d8d4',
-          opacity: 0.36,
-          curveness: 0.22
+          width: 0.9,
+          color: 'rgba(31, 75, 148, 0.34)',
+          opacity: 0.48,
+          curveness: 0.24,
+          shadowBlur: 0
         },
-        zlevel: 2
+        emphasis: {
+          lineStyle: {
+            width: 2.4,
+            opacity: 1
+          }
+        },
+        zlevel: 3
       }
     ]
   }
@@ -257,7 +301,8 @@ onBeforeUnmount(() => {
   width: min(23rem, 45%);
   height: min(16rem, 42%);
   pointer-events: none;
-  background: radial-gradient(ellipse at 76% 78%, color-mix(in oklch, var(--panel), black 8%) 0%, color-mix(in oklch, var(--panel), transparent 18%) 42%, transparent 76%);
+  opacity: 0.58;
+  background: radial-gradient(ellipse at 76% 78%, color-mix(in oklch, var(--panel), white 2%) 0%, color-mix(in oklch, var(--panel), transparent 45%) 42%, transparent 76%);
 }
 
 .map-chart {
@@ -275,10 +320,8 @@ onBeforeUnmount(() => {
   padding: var(--space-sm);
   border: 1px solid color-mix(in oklch, var(--accent), transparent 58%);
   border-radius: 8px;
-  background:
-    linear-gradient(135deg, color-mix(in oklch, var(--surface), black 8%), color-mix(in oklch, var(--panel), black 4%));
-  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.36), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
-  backdrop-filter: blur(10px);
+  background: linear-gradient(135deg, color-mix(in oklch, var(--panel), white 2%), color-mix(in oklch, var(--surface), white 2%));
+  box-shadow: 0 0.85rem 2rem rgba(42, 60, 95, 0.12);
 }
 
 .province-card span,
@@ -291,7 +334,7 @@ onBeforeUnmount(() => {
 .province-card strong {
   display: block;
   margin-top: 0.15rem;
-  color: var(--text-strong);
+  color: var(--accent);
   font-size: 1.22rem;
 }
 
@@ -309,7 +352,7 @@ onBeforeUnmount(() => {
 }
 
 .province-card b {
-  color: var(--accent-warm);
+  color: var(--accent);
   font-size: 0.92rem;
   font-variant-numeric: tabular-nums;
 }

@@ -189,12 +189,20 @@ def build_provinces(full_df: pd.DataFrame, salary_df: pd.DataFrame) -> list[dict
 
 
 def build_cities(full_df: pd.DataFrame, salary_df: pd.DataFrame) -> list[dict]:
-    grouped = full_df.groupby(["province", "city"], as_index=False).agg(
+    grouped = full_df.groupby("city", as_index=False).agg(
         jobCount=("job_title", "count"),
         freshFriendlyIndex=("experience_norm", lambda values: round(values.eq("应届/不限").mean() * 100, 1)),
     )
-    salary_group = salary_df.groupby(["province", "city"], as_index=False)["salary_avg"].mean()
-    grouped = grouped.merge(salary_group, on=["province", "city"], how="left")
+    province_counts = (
+        full_df.groupby(["city", "province"], as_index=False)
+        .size()
+        .sort_values(["city", "size"], ascending=[True, False])
+        .drop_duplicates("city")
+        .rename(columns={"province": "primaryProvince"})
+    )
+    salary_group = salary_df.groupby("city", as_index=False)["salary_avg"].mean()
+    grouped = grouped.merge(province_counts[["city", "primaryProvince"]], on="city", how="left")
+    grouped = grouped.merge(salary_group, on="city", how="left")
     grouped["avgSalary"] = grouped["salary_avg"].fillna(0)
     grouped["hasCoords"] = grouped["city"].astype(str).map(lambda city: city in CITY_COORDS)
     grouped["sampleScore"] = min_max(grouped["jobCount"]).clip(0, 100)
@@ -203,20 +211,21 @@ def build_cities(full_df: pd.DataFrame, salary_df: pd.DataFrame) -> list[dict]:
         + min_max(grouped["avgSalary"].replace(0, pd.NA).fillna(grouped["avgSalary"].mean())) * 0.25
         + grouped["freshFriendlyIndex"] * 0.20
     ).round(1)
-    grouped = grouped[grouped["hasCoords"]].sort_values("attractionIndex", ascending=False).head(60).reset_index(drop=True)
+    grouped = grouped.sort_values("attractionIndex", ascending=False).reset_index(drop=True)
     rows = []
     for index, row in grouped.iterrows():
         city = str(row["city"])
         longitude, latitude = CITY_COORDS.get(city, (0, 0))
         rows.append(
             {
-                "province": str(row["province"]),
+                "province": str(row["primaryProvince"]),
                 "city": city,
                 "jobCount": to_int(row["jobCount"]),
                 "avgSalary": to_int(row["avgSalary"]),
                 "freshFriendlyIndex": to_float(row["freshFriendlyIndex"]),
                 "attractionIndex": to_float(row["attractionIndex"]),
                 "rankNo": index + 1,
+                "hasCoords": bool(row["hasCoords"]),
                 "longitude": longitude,
                 "latitude": latitude,
             }
@@ -373,7 +382,7 @@ export const mockSalaryPrediction: SalaryPrediction = {{
 export const mockRecommendations: CareerRecommendation[] = [
   {{
     direction: '生产制造与设备操作方向',
-    city: cityMetrics[0]?.city ?? '西安',
+    city: cityMetrics.find((item) => item.hasCoords)?.city ?? cityMetrics[0]?.city ?? '西安',
     industry: '生产制造及有关人员',
     jobCategory: '生产制造与设备操作',
     matchScore: 82,
@@ -395,6 +404,7 @@ def main() -> None:
 
     provinces = build_provinces(full_df, salary_df)
     cities = build_cities(full_df, salary_df)
+    mappable_cities = [item for item in cities if item["hasCoords"]]
     trend = build_trend(full_df)
     hot_cities = [
         {"name": item["city"], "value": item["jobCount"], "score": item["attractionIndex"], "tag": item["province"]}
@@ -402,10 +412,17 @@ def main() -> None:
     ]
     total_jobs = int(len(full_df))
     average_salary = to_int(salary_df["salary_avg"].mean()) if not salary_df.empty else 0
+    publish_dates = full_df["publish_date"].dropna()
     overview = {
         "totalJobs": total_jobs,
         "averageSalary": average_salary,
         "coveredCities": int(full_df["city"].nunique()),
+        "mappableCities": len(mappable_cities),
+        "salarySampleRows": int(len(salary_df)),
+        "coveredRegions": int(sum(1 for item in provinces if item["jobCount"] > 0)),
+        "totalRegions": len(ALL_REGIONS),
+        "publishStart": publish_dates.min().strftime("%Y-%m-%d") if not publish_dates.empty else "",
+        "publishEnd": publish_dates.max().strftime("%Y-%m-%d") if not publish_dates.empty else "",
         "freshFriendlyIndex": round(full_df["experience_norm"].eq("应届/不限").mean() * 100, 1),
         "hotCities": hot_cities,
         "hotIndustries": build_hot_industries(full_df),
@@ -427,6 +444,7 @@ def main() -> None:
         "covered_regions_with_samples": int(sum(1 for item in provinces if item["jobCount"] > 0)),
         "regions_without_samples": [item["province"] for item in provinces if item["jobCount"] == 0],
         "covered_cities": overview["coveredCities"],
+        "mappable_cities": overview["mappableCities"],
         "average_salary": average_salary,
     }
     SNAPSHOT_META.write_text(json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8")

@@ -1,17 +1,19 @@
 :root {
-  color-scheme: dark;
-  --bg: oklch(16% 0.025 210);
-  --bg-deep: oklch(10% 0.022 220);
-  --panel: oklch(21% 0.031 202);
-  --panel-strong: oklch(25% 0.036 195);
-  --surface: oklch(27% 0.035 198);
-  --line: oklch(62% 0.08 190);
-  --text: oklch(88% 0.028 195);
-  --text-strong: oklch(96% 0.022 190);
-  --text-muted: oklch(72% 0.035 198);
-  --accent: oklch(75% 0.106 185);
-  --accent-warm: oklch(78% 0.13 78);
-  --danger: oklch(66% 0.15 32);
+  color-scheme: light;
+  --bg: oklch(96% 0.013 252);
+  --bg-deep: oklch(90% 0.025 248);
+  --panel: oklch(99% 0.006 248);
+  --panel-strong: oklch(94% 0.017 250);
+  --surface: oklch(97% 0.011 248);
+  --line: oklch(66% 0.06 248);
+  --text: oklch(22% 0.048 252);
+  --text-strong: oklch(14% 0.058 255);
+  --text-muted: oklch(35% 0.045 248);
+  --accent: oklch(43% 0.13 256);
+  --accent-warm: oklch(63% 0.135 74);
+  --accent-hot: oklch(56% 0.15 28);
+  --accent-green: oklch(52% 0.11 162);
+  --danger: oklch(55% 0.16 29);
   --space-xs: 0.5rem;
   --space-sm: 0.75rem;
   --space-md: 1rem;
@@ -19,8 +21,8 @@
   --space-xl: 2rem;
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
-  --shadow-panel: 0 1rem 3rem rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  font-family: "Microsoft YaHei UI", "DengXian", "Bahnschrift", sans-serif;
+  --shadow-panel: 0 1.2rem 2.8rem color-mix(in oklch, var(--accent), transparent 86%), 0 0.25rem 0.8rem rgba(38, 55, 92, 0.08);
+  font-family: "Source Han Sans SC", "Noto Sans CJK SC", "Microsoft YaHei UI", "DengXian", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -41,7 +43,7 @@ body,
 
 body {
   margin: 0;
-  background: var(--bg-deep);
+  background: var(--bg);
 }
 
 button,
@@ -62,22 +64,24 @@ button {
 
 .el-input__wrapper,
 .el-select__wrapper {
-  min-height: 1.9rem;
+  min-height: 2.15rem;
   border-radius: 6px;
-  background: color-mix(in oklch, var(--surface), transparent 10%);
-  box-shadow: 0 0 0 1px color-mix(in oklch, var(--line), transparent 48%) inset;
+  background: color-mix(in oklch, var(--panel), transparent 2%);
+  box-shadow: 0 0 0 1px color-mix(in oklch, var(--line), transparent 56%) inset, 0 0.35rem 0.9rem rgba(42, 60, 95, 0.05);
 }
 
 .el-input__inner,
 .el-select__placeholder,
 .el-select__selected-item {
   color: var(--text);
-  font-size: 0.78rem;
+  font-size: 0.82rem;
 }
 
 .el-button--primary {
   border: 0;
-  background: linear-gradient(135deg, color-mix(in oklch, var(--accent), black 10%), color-mix(in oklch, var(--accent-warm), black 10%));
+  color: oklch(98% 0.006 250);
+  background: linear-gradient(135deg, color-mix(in oklch, var(--accent), black 3%), color-mix(in oklch, var(--accent), var(--accent-warm) 28%));
+  box-shadow: 0 0.7rem 1.5rem color-mix(in oklch, var(--accent), transparent 76%);
 }
 
 .el-button {

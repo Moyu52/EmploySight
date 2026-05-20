@@ -27,6 +27,12 @@ class DashboardOverview(BaseModel):
     totalJobs: int
     averageSalary: float
     coveredCities: int
+    mappableCities: int = 0
+    salarySampleRows: int = 0
+    coveredRegions: int = 0
+    totalRegions: int = 0
+    publishStart: str = ""
+    publishEnd: str = ""
     freshFriendlyIndex: float
     hotCities: list[RankItem]
     hotIndustries: list[RankItem]
@@ -51,6 +57,7 @@ class CityMetric(BaseModel):
     freshFriendlyIndex: float
     attractionIndex: float
     rankNo: int
+    hasCoords: bool = False
     longitude: float
     latitude: float
 

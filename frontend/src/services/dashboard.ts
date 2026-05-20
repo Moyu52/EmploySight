@@ -43,8 +43,51 @@ async function request<T>(url: string, fallback: T, options?: RequestInit): Prom
   }
 }
 
+function isCurrentOverview(data: DashboardOverview) {
+  return typeof data.mappableCities === 'number'
+    && typeof data.salarySampleRows === 'number'
+    && typeof data.coveredRegions === 'number'
+    && typeof data.publishStart === 'string'
+}
+
+function isCurrentCityMetrics(data: CityMetric[]) {
+  return data.length >= cityMetrics.length
+    && data.some((item) => item.hasCoords)
+    && data.every((item) => typeof item.hasCoords === 'boolean')
+}
+
+function fallbackSalaryPrediction(payload: SalaryPredictionRequest): SalaryPrediction {
+  const city = cityMetrics.find((item) => item.city === payload.city)
+  const base = city?.avgSalary || overview.averageSalary
+  const educationFactor = payload.education.includes('博士') ? 1.3
+    : payload.education.includes('硕士') ? 1.18
+      : payload.education.includes('本科') ? 1.08
+        : 1
+  const experienceFactor = payload.experience.includes('5年以上') ? 1.28
+    : payload.experience.includes('3-5年') ? 1.15
+      : payload.experience.includes('1-3年') ? 1.06
+        : 1
+  const industryFactor = payload.industry.includes('专业技术') ? 1.12
+    : payload.industry.includes('机械') || payload.industry.includes('电气') ? 1.08
+      : payload.industry.includes('生产制造') ? 1.02
+        : payload.industry.includes('服务') ? 0.96
+          : 1
+  const predictedAvg = Math.round(base * educationFactor * experienceFactor * industryFactor)
+  return {
+    predictedMin: Math.round(predictedAvg * 0.82),
+    predictedMax: Math.round(predictedAvg * 1.24),
+    predictedAvg,
+    confidence: 72.5,
+    modelName: 'RealDataFallback',
+    explanation: '基于当前真实城市样本平均薪资生成的前端兜底预测。',
+    influenceFactors: [`城市薪资基准：${payload.city}`, `行业结构：${payload.industry}`, `学历门槛：${payload.education}`, `经验要求：${payload.experience}`]
+  }
+}
+
 export function fetchOverview() {
-  return request<DashboardOverview>('/api/dashboard/overview', overview)
+  return request<DashboardOverview>('/api/dashboard/overview', overview).then((data) => {
+    return isCurrentOverview(data) ? data : overview
+  })
 }
 
 export function fetchProvinces() {
@@ -52,7 +95,9 @@ export function fetchProvinces() {
 }
 
 export function fetchCities() {
-  return request<CityMetric[]>('/api/dashboard/cities/ranking', cityMetrics)
+  return request<CityMetric[]>('/api/dashboard/cities/ranking', cityMetrics).then((data) => {
+    return isCurrentCityMetrics(data) ? data : cityMetrics
+  })
 }
 
 export function fetchAnalysis() {
@@ -64,7 +109,7 @@ export function fetchLiveJobs() {
 }
 
 export function predictSalary(payload: SalaryPredictionRequest) {
-  return request<SalaryPrediction>('/api/predict/salary', mockSalaryPrediction, {
+  return request<SalaryPrediction>('/api/predict/salary', fallbackSalaryPrediction(payload), {
     method: 'POST',
     body: JSON.stringify(payload)
   })

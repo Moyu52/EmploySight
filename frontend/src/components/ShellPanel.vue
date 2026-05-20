@@ -29,23 +29,21 @@ defineProps<{
   flex-direction: column;
   overflow: hidden;
   min-height: 0;
-  border: 1px solid color-mix(in oklch, var(--line), transparent 28%);
+  border: 1px solid color-mix(in oklch, var(--line), transparent 58%);
   border-radius: 8px;
-  background:
-    linear-gradient(135deg, color-mix(in oklch, var(--panel), transparent 2%), color-mix(in oklch, var(--panel-strong), transparent 12%)),
-    radial-gradient(circle at 15% 0%, color-mix(in oklch, var(--accent), transparent 86%), transparent 34rem);
+  background: linear-gradient(135deg, color-mix(in oklch, var(--panel), white 1%), color-mix(in oklch, var(--surface), white 2%));
   box-shadow: var(--shadow-panel);
   min-width: 0;
 }
 
 .shell-panel::after {
-  content: "";
+  content: none;
   position: absolute;
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(90deg, transparent, color-mix(in oklch, var(--accent-warm), transparent 88%), transparent);
-  opacity: 0.32;
+    linear-gradient(90deg, transparent, color-mix(in oklch, var(--accent), transparent 86%), color-mix(in oklch, var(--accent-warm), transparent 90%), transparent);
+  opacity: 0.42;
   transform: translateX(-100%);
   animation: scan-panel 7s var(--ease-out-quint) infinite;
   contain: paint;
@@ -60,6 +58,7 @@ defineProps<{
   justify-content: space-between;
   gap: var(--space-md);
   padding: var(--space-md) var(--space-md) var(--space-sm);
+  border-bottom: 1px solid color-mix(in oklch, var(--line), transparent 70%);
 }
 
 .shell-panel__body {
@@ -86,9 +85,9 @@ defineProps<{
 
 .shell-panel h2 {
   margin: 0.1rem 0 0;
-  color: var(--text);
-  font-size: 0.98rem;
-  font-weight: 700;
+  color: var(--text-strong);
+  font-size: 1rem;
+  font-weight: 800;
 }
 
 @keyframes scan-panel {

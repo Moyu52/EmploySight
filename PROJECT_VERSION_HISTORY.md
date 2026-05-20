@@ -8,6 +8,23 @@
 | --- | --- | --- | --- |
 | 第一版 | `stable/v1` | `v1.0.0` | 当前就业态势感知平台第一版，包含态势大屏、城市评估、薪资预测、技能挖掘、职业推荐、数据治理和前后端演示数据。 |
 | 第二版 | `stable/v2` | `v2.0.0` | 扩充真实岗位数据到 37772 条，接入中国公共招聘网与 Kaggle 公开岗位数据，修正页面职业方向、薪资经验口径和数据真实性说明。 |
+| 第三版 | `stable/v3` | `v3.0.0` | 完善毕业设计系统形态，加入登录入口、平台首页、模型评估、报告中心和系统管理，并恢复态势大屏核心地图排版。 |
+
+## 回到第三版
+
+只想查看第三版：
+
+```powershell
+git fetch origin
+git switch stable/v3
+```
+
+如果要基于第三版重新开一个修复分支：
+
+```powershell
+git fetch origin
+git switch -c fix/from-v3 stable/v3
+```
 
 ## 回到第二版
 
@@ -60,3 +77,4 @@ git push --force-with-lease origin main
 | --- | --- | --- | --- | --- |
 | 2026-05-19 10:56:05 +08:00 | 第一版稳定点 | `main` -> `stable/v1` | `v1.0.0` | `origin` |
 | 2026-05-19 11:19:30 +08:00 | push | `main` | `483a102` | `https://github.com/Moyu52/New-project.git` |
+| 2026-05-19 20:06:51 +08:00 | push | `main` | `0391efc` | `https://github.com/Moyu52/New-project.git` |

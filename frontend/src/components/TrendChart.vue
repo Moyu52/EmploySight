@@ -20,14 +20,14 @@ let timer = 0
 function option(): EChartsOption {
   const start = Math.max(0, props.trends.length - activeWindow.value)
   const view = props.trends.slice(start)
-  const colors = ['#e1b75c', '#5fd0c8', '#cf7d5a']
+  const colors = ['#2d5fbd', '#b17a16', '#287c62']
   return {
     color: colors,
     grid: { left: 46, right: 18, top: 24, bottom: 28 },
     legend: {
       right: 8,
       top: 0,
-      textStyle: { color: '#a9bec4', fontSize: 10 },
+      textStyle: { color: '#344b6e', fontSize: 10 },
       itemWidth: 12,
       itemHeight: 8
     },
@@ -36,23 +36,23 @@ function option(): EChartsOption {
       type: 'category',
       boundaryGap: false,
       data: view.map((item) => item.month.slice(5)),
-      axisLine: { lineStyle: { color: 'rgba(151, 203, 207, 0.24)' } },
+      axisLine: { lineStyle: { color: 'rgba(45, 95, 189, 0.28)' } },
       axisTick: { show: false },
-      axisLabel: { color: '#a9bec4', fontSize: 10 }
+      axisLabel: { color: '#344b6e', fontSize: 10 }
     },
     yAxis: {
       type: 'value',
       axisLabel: {
-        color: '#a9bec4',
+        color: '#344b6e',
         fontSize: 10,
         formatter: (value: number) => `${Math.round(value / 10000)}万`
       },
-      splitLine: { lineStyle: { color: 'rgba(151, 203, 207, 0.13)' } }
+      splitLine: { lineStyle: { color: 'rgba(45, 95, 189, 0.12)' } }
     },
     series: [
       line('岗位总量', view.map((item) => item.jobs), colors[0]),
       line('应届岗位', view.map((item) => item.freshJobs), colors[1]),
-      line('算法/AI岗位', view.map((item) => item.aiJobs), colors[2])
+      line('算法相关岗位', view.map((item) => item.aiJobs), colors[2])
     ],
     animationDurationUpdate: 850,
     animationEasingUpdate: 'quarticOut'
@@ -68,7 +68,11 @@ function line(name: string, data: number[], color: string): LineSeriesOption {
     data,
     color,
     itemStyle: { color },
-    lineStyle: { width: 2, color },
+    lineStyle: {
+      width: 2.4,
+      color,
+      shadowBlur: 0
+    },
     areaStyle: {
       color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
         { offset: 0, color: `${color}55` },
