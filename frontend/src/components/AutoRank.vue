@@ -1,8 +1,8 @@
 <template>
   <div class="auto-rank">
-    <div class="auto-rank__track">
-      <div v-for="(item, index) in items" :key="`${item.name}-${index}`" class="rank-row">
-        <span class="rank-row__no">{{ index + 1 }}</span>
+    <div class="auto-rank__track" :class="{ 'is-looping': shouldLoop }" :style="{ animationDuration: `${duration}s` }">
+      <div v-for="(item, index) in loopItems" :key="`${item.name}-${index}`" class="rank-row">
+        <span class="rank-row__no">{{ rankNo(index) }}</span>
         <div class="rank-row__main">
           <div class="rank-row__title">
             <b>{{ item.name }}</b>
@@ -19,14 +19,22 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { RankItem } from '../types/dashboard'
 
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
   items: RankItem[]
   duration?: number
 }>(), {
   duration: 18
 })
+
+const shouldLoop = computed(() => props.items.length > 4)
+const loopItems = computed(() => shouldLoop.value ? [...props.items, ...props.items] : props.items)
+
+function rankNo(index: number) {
+  return props.items.length > 0 ? (index % props.items.length) + 1 : index + 1
+}
 
 function formatValue(value: number) {
   if (value >= 10000) {
@@ -40,17 +48,25 @@ function formatValue(value: number) {
 .auto-rank {
   position: relative;
   z-index: 1;
-  overflow: auto;
+  overflow: hidden;
   height: 100%;
   min-height: 0;
   padding: 0 var(--space-md) var(--space-sm);
-  scrollbar-width: thin;
-  scrollbar-color: color-mix(in oklch, var(--accent), transparent 42%) transparent;
+  mask-image: linear-gradient(180deg, transparent, black 10%, black 90%, transparent);
 }
 
 .auto-rank__track {
   display: grid;
   gap: var(--space-xs);
+}
+
+.auto-rank__track.is-looping {
+  animation: rank-scroll linear infinite;
+  will-change: transform;
+}
+
+.auto-rank:hover .auto-rank__track.is-looping {
+  animation-play-state: paused;
 }
 
 .rank-row {
@@ -136,6 +152,21 @@ function formatValue(value: number) {
   }
   to {
     transform: scaleX(1);
+  }
+}
+
+@keyframes rank-scroll {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auto-rank__track.is-looping {
+    animation: none;
   }
 }
 </style>

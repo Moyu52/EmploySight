@@ -1,7 +1,7 @@
 <template>
   <div class="live-ticker">
-    <div class="live-ticker__track">
-      <article v-for="(item, index) in jobs" :key="`${item.time}-${item.title}-${index}`" class="job-row">
+    <div class="live-ticker__track" :class="{ 'is-looping': shouldLoop }">
+      <article v-for="(item, index) in loopJobs" :key="`${item.time}-${item.title}-${index}`" class="job-row">
         <time>{{ item.time }}</time>
         <strong>{{ item.city }}</strong>
         <div>
@@ -16,26 +16,41 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { JobLiveItem } from '../types/dashboard'
 
-defineProps<{
+const props = defineProps<{
   jobs: JobLiveItem[]
 }>()
+
+const shouldLoop = computed(() => props.jobs.length > 3)
+const loopJobs = computed(() => shouldLoop.value ? [...props.jobs, ...props.jobs] : props.jobs)
 </script>
 
 <style scoped>
 .live-ticker {
   position: relative;
   z-index: 1;
-  overflow: auto;
-  min-height: 12rem;
-  max-height: 22rem;
+  overflow: hidden;
+  height: 100%;
+  min-height: 0;
+  max-height: none;
   padding: 0 var(--space-sm) var(--space-sm);
+  mask-image: linear-gradient(180deg, transparent, black 12%, black 88%, transparent);
 }
 
 .live-ticker__track {
   display: grid;
   gap: var(--space-xs);
+}
+
+.live-ticker__track.is-looping {
+  animation: job-scroll 22s linear infinite;
+  will-change: transform;
+}
+
+.live-ticker:hover .live-ticker__track.is-looping {
+  animation-play-state: paused;
 }
 
 .job-row {
@@ -90,5 +105,20 @@ defineProps<{
   font-size: 0.78rem;
   font-style: normal;
   text-align: right;
+}
+
+@keyframes job-scroll {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-ticker__track.is-looping {
+    animation: none;
+  }
 }
 </style>

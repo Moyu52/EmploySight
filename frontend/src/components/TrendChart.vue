@@ -23,13 +23,19 @@ function option(): EChartsOption {
   const colors = ['#2d5fbd', '#b17a16', '#287c62']
   return {
     color: colors,
-    grid: { left: 46, right: 18, top: 24, bottom: 28 },
+    grid: { left: 46, right: 34, top: 30, bottom: 26 },
     legend: {
+      left: 88,
       right: 8,
-      top: 0,
-      textStyle: { color: '#344b6e', fontSize: 10 },
-      itemWidth: 12,
-      itemHeight: 8
+      top: 2,
+      itemGap: 6,
+      textStyle: { color: '#344b6e', fontSize: 9 },
+      itemWidth: 10,
+      itemHeight: 7,
+      formatter: (name: string) => {
+        if (name === '算法相关岗位') return '算法岗位'
+        return name
+      }
     },
     tooltip: { trigger: 'axis' },
     xAxis: {

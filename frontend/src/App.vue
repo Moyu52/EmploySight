@@ -1481,10 +1481,34 @@ onBeforeUnmount(() => {
   gap: var(--space-sm);
 }
 
+.home-grid:not(.home-grid--narrow) {
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
 .home-grid--narrow {
   grid-column: span 2;
   grid-template-columns: minmax(24rem, 0.8fr) minmax(28rem, 1.2fr);
-  min-height: 15rem;
+  align-items: stretch;
+  height: clamp(25rem, 42vh, 28rem);
+  min-height: 25rem;
+  overflow: hidden;
+}
+
+.home-grid--narrow :deep(.shell-panel) {
+  height: 100%;
+  min-height: 0;
+}
+
+.home-grid--narrow :deep(.shell-panel__body) {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.home-grid--narrow :deep(.live-ticker) {
+  height: 100%;
+  min-height: 0;
+  max-height: none;
 }
 
 .home-longform {
@@ -1499,7 +1523,7 @@ onBeforeUnmount(() => {
   display: grid;
   align-content: start;
   gap: var(--space-xs);
-  min-height: 8.4rem;
+  min-height: 8.2rem;
   padding: var(--space-md);
   cursor: pointer;
   transition: transform 180ms var(--ease-out-quint), border-color 180ms var(--ease-out-quint);
@@ -1550,6 +1574,17 @@ onBeforeUnmount(() => {
 .workbench--career {
   grid-template-rows: auto auto;
   overflow: visible;
+}
+
+.workbench--salary {
+  grid-template-rows: minmax(19rem, 1.05fr) minmax(18rem, 1fr);
+  min-height: calc(100vh - 7.1rem);
+  align-content: stretch;
+}
+
+.workbench--salary :deep(.shell-panel) {
+  height: 100%;
+  min-height: 0;
 }
 
 .workbench--city > :first-child,
@@ -1608,7 +1643,7 @@ onBeforeUnmount(() => {
 .bottom-band {
   grid-area: bottom;
   display: grid;
-  grid-template-columns: minmax(24rem, 1.1fr) minmax(18rem, 0.7fr) minmax(30rem, 1.2fr);
+  grid-template-columns: minmax(25rem, 1.05fr) minmax(28rem, 1.05fr) minmax(23rem, 0.82fr);
   gap: var(--space-sm);
   min-height: 0;
 }
@@ -1676,12 +1711,12 @@ onBeforeUnmount(() => {
 
 .city-strip article {
   display: grid;
-  grid-template-columns: 1.8rem 1fr auto;
+  grid-template-columns: 1.55rem minmax(0, 1fr) 2.6rem;
   align-items: center;
-  gap: var(--space-xs);
+  gap: 0.38rem;
   min-width: 0;
   min-height: 3rem;
-  padding: 0 var(--space-sm);
+  padding: 0 0.52rem;
 }
 
 .city-strip span,
@@ -1698,8 +1733,8 @@ onBeforeUnmount(() => {
 }
 
 .city-strip span {
-  width: 1.45rem;
-  height: 1.45rem;
+  width: 1.35rem;
+  height: 1.35rem;
 }
 
 .city-strip b,
@@ -1724,6 +1759,11 @@ onBeforeUnmount(() => {
   overflow-wrap: anywhere;
 }
 
+.city-strip b {
+  font-size: 0.86rem;
+  line-height: 1.05;
+}
+
 .city-strip em,
 .province-table span,
 .skill-table strong,
@@ -1731,6 +1771,11 @@ onBeforeUnmount(() => {
   color: var(--accent);
   font-style: normal;
   font-variant-numeric: tabular-nums;
+}
+
+.city-strip em {
+  font-size: 0.82rem;
+  text-align: right;
 }
 
 .city-workbench {
@@ -1983,11 +2028,15 @@ onBeforeUnmount(() => {
 
 .progress-list {
   align-content: start;
+  height: 100%;
+  overflow: hidden;
+  gap: 0.55rem;
 }
 
 .progress-list article {
-  gap: 0.45rem;
-  padding: var(--space-sm) var(--space-md);
+  gap: 0.32rem;
+  min-height: 0;
+  padding: 0.55rem var(--space-md);
 }
 
 .acceptance-grid,

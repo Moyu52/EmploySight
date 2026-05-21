@@ -182,21 +182,33 @@ runRecommend()
 .decision-panel {
   position: relative;
   z-index: 2;
-  min-height: 100%;
   min-height: 0;
+  height: 100%;
   overflow: visible;
   padding: 0 var(--space-md) var(--space-sm);
+}
+
+.decision-panel :deep(.el-tabs) {
+  height: 100%;
+}
+
+.decision-panel :deep(.el-tabs__content),
+.decision-panel :deep(.el-tab-pane) {
+  height: calc(100% - 2.65rem);
+  min-height: 0;
 }
 
 .decision-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.3rem var(--space-xs);
+  gap: var(--space-sm);
+  align-content: start;
 }
 
 .decision-button {
   width: 100%;
   grid-column: span 2;
+  min-height: 2.15rem;
 }
 
 .decision-button :deep(span) {
@@ -210,8 +222,8 @@ runRecommend()
   grid-template-columns: 1fr auto;
   align-items: center;
   gap: 0.12rem var(--space-xs);
-  margin-top: var(--space-xs);
-  padding: 0.42rem var(--space-sm);
+  margin-top: var(--space-md);
+  padding: var(--space-md);
   border-radius: 7px;
   background: color-mix(in oklch, var(--surface), transparent 12%);
 }
@@ -226,7 +238,7 @@ runRecommend()
 .result-block strong {
   grid-row: span 2;
   color: var(--accent-warm);
-  font-size: 0.95rem;
+  font-size: clamp(1.15rem, 1.7vw, 1.65rem);
   font-variant-numeric: tabular-nums;
 }
 

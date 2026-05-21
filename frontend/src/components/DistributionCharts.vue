@@ -138,11 +138,16 @@ function resize() {
   experienceChart.value?.resize()
 }
 
+function resizeSoon() {
+  window.requestAnimationFrame(resize)
+}
+
 onMounted(() => {
   if (salaryRef.value) salaryChart.value = echarts.init(salaryRef.value)
   if (educationRef.value) educationChart.value = echarts.init(educationRef.value)
   if (experienceRef.value) experienceChart.value = echarts.init(experienceRef.value)
   render()
+  resizeSoon()
   timer = window.setInterval(() => {
     pulse += 1
     render()
@@ -166,11 +171,11 @@ onBeforeUnmount(() => {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-rows: minmax(6.5rem, 0.82fr) minmax(5.8rem, 0.64fr);
-  gap: var(--space-xs);
+  grid-template-rows: minmax(9.5rem, 1.1fr) minmax(8rem, 0.9fr);
+  gap: var(--space-sm);
   height: 100%;
   min-height: 0;
-  padding: 0 var(--space-sm) var(--space-xs);
+  padding: 0 var(--space-md) var(--space-md);
 }
 
 .chart-pair {
