@@ -6,7 +6,7 @@ services:
     container_name: employsight-backend
     labels:
       org.opencontainers.image.title: EmploySight Backend
-      org.opencontainers.image.version: 4.0.1
+      org.opencontainers.image.version: 5.0.0
     environment:
       APP_NAME: employsight
       DEMO_MODE: "true"
@@ -45,7 +45,7 @@ services:
     container_name: employsight-frontend
     labels:
       org.opencontainers.image.title: EmploySight Frontend
-      org.opencontainers.image.version: 4.0.1
+      org.opencontainers.image.version: 5.0.0
     depends_on:
       backend:
         condition: service_healthy

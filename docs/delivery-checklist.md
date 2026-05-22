@@ -97,6 +97,6 @@ python data-processing\pipeline.py --input data-processing\sample_jobs.csv --out
 
 前端支持后端接口不可用时回退到由真实快照生成的兜底数据；当前已验证前端能通过 Vite 代理调用 Python FastAPI 接口。当前真实快照覆盖 37772 条岗位记录，大陆 31 个省级区域均有样本，澳门和台湾显示“样本不足”，不使用虚构岗位数、薪资或热度补齐。
 
-`v4.0.1` 的 AI 能力和管理员安全能力都通过后端环境变量启用。真实密钥、`ADMIN_SECURITY_PEPPER`、`ADMIN_DELETE_PASSWORD_HASH`、`ADMIN_UNBAN_PASSWORD_HASH` 只放在本地 `backend/.env` 或部署用根目录 `.env`，不要提交到 Git。本版本只把普通用户和管理员两组平台登录测试账号展示在前端登录页，便于老师进入查看；管理员删除审计记录密码和解除封禁密码不能写入前端。OpenRouter 返回额度不足、限流或模型不可用时，职业推荐和薪资解释接口会保留本地规则结果。
+`v5.0.0` 的 AI 能力和管理员安全能力都通过后端环境变量启用。真实密钥、`ADMIN_SECURITY_PEPPER`、`ADMIN_DELETE_PASSWORD_HASH`、`ADMIN_UNBAN_PASSWORD_HASH` 只放在本地 `backend/.env` 或部署用根目录 `.env`，不要提交到 Git。本版本只把普通用户和管理员两组平台登录测试账号展示在前端登录页，便于老师进入查看；管理员删除审计记录密码和解除封禁密码不能写入前端。页面顶部时间和管理员审计时间统一显示为 `xxxx年xx月xx日 HH:mm:ss`，README 已按页面顺序放置 `docs/screenshots/v5/` 截图。OpenRouter 返回额度不足、限流或模型不可用时，职业推荐和薪资解释接口会保留本地规则结果。
 
 数据处理测试样例 `sample_jobs.csv` 只有 10 条记录，仅用于验证脚本能运行；真实论文实验应使用 `data-processing/data/project_jobs_real.csv` 和 `data-processing/output/` 下的最新输出。如果真实数据中某省岗位样本不足，应在页面和论文中标注“样本不足/置信度较低”，不应直接留空。

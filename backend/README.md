@@ -1,6 +1,6 @@
 # Python 后端接口
 
-本目录使用 FastAPI 实现就业态势感知平台后端，不使用 Java。当前版本为 `v4.0.1`，职业推荐和薪资解释支持通过 OpenRouter 调用 OpenAI-compatible Chat Completions，未配置或调用失败时自动回退本地规则。管理员侧提供登录审计、删除密码防爆破、临时封禁 IP 和解除封禁能力；前端登录页展示老师查看用的普通用户 `用户 / 123456` 和管理员 `admin / admin123` 两组测试账号。
+本目录使用 FastAPI 实现就业态势感知平台后端，不使用 Java。当前版本为 `v5.0.0`，职业推荐和薪资解释支持通过 OpenRouter 调用 OpenAI-compatible Chat Completions，未配置或调用失败时自动回退本地规则。管理员侧提供登录审计、删除密码防爆破、临时封禁 IP 和解除封禁能力；前端登录页展示老师查看用的普通用户 `用户 / 123456` 和管理员 `admin / admin123` 两组测试账号，页面时间统一显示为 `xxxx年xx月xx日 HH:mm:ss`。
 
 ## 启动
 

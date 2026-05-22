@@ -761,13 +761,7 @@ const moduleMeta: Record<ModuleKey, { title: string; group: string }> = {
 }
 
 const currentTime = computed(() => {
-  return new Intl.DateTimeFormat('zh-CN', {
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  }).format(now.value)
+  return formatFullDateTime(now.value)
 })
 
 const activeModuleMeta = computed(() => moduleMeta[activeModule.value])
@@ -1003,6 +997,11 @@ const accessRows = [
   { name: '平台管理', scope: '查看数据概览、模型评估、洞察报告和平台状态', permission: '统一开放' }
 ]
 
+function formatFullDateTime(date: Date) {
+  const pad = (value: number) => String(value).padStart(2, '0')
+  return `${date.getFullYear()}年${pad(date.getMonth() + 1)}月${pad(date.getDate())}日 ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
+}
+
 function auditSourceLabel(source: string) {
   return source === 'admin' ? '管理员' : '平台'
 }
@@ -1016,13 +1015,7 @@ function formatAuditTime(value: string) {
   if (Number.isNaN(date.getTime())) {
     return value
   }
-  return new Intl.DateTimeFormat('zh-CN', {
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  }).format(date)
+  return formatFullDateTime(date)
 }
 
 function formatBlockedUntil(value: string) {
