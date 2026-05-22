@@ -21,6 +21,11 @@ frontend/.vite/
 *.log
 backend/*.log
 frontend/*.log
+tmp-layout-report*.json
+
+# Local assistant/tooling state
+.claude/
+.learnings/
 
 # Environment files
 .env

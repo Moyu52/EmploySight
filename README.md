@@ -30,6 +30,10 @@
 
 数据真实性说明、官网地址、字段对应关系和校验方法见：`docs/data-source-verification.md`。
 
+服务器迁移、Nginx 配置、后端启动和真实数据接入流程见：`docs/server-migration-and-data-integration.md`。
+
+Docker 容器化部署、软件检测、Compose 启动、MySQL 容器和容器内数据刷新流程见：`docs/docker-deployment.md`。
+
 ## 快速启动
 
 ### 前端平台

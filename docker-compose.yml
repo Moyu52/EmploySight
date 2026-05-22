@@ -1,0 +1,70 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: employsight-backend
+    environment:
+      APP_NAME: employsight
+      DEMO_MODE: "true"
+      MODEL_VERSION: random-forest-real-snapshot-v1
+      MYSQL_URL: mysql+pymysql://employsight:employsight_password@mysql:3306/graduate_employment?charset=utf8mb4
+    ports:
+      - "127.0.0.1:8000:8000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3).read()"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: employsight-frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "80:80"
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0
+    container_name: employsight-mysql
+    profiles:
+      - mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_change_me
+      MYSQL_DATABASE: graduate_employment
+      MYSQL_USER: employsight
+      MYSQL_PASSWORD: employsight_password
+      TZ: Asia/Shanghai
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - employsight-mysql-data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    restart: unless-stopped
+
+  data-refresh:
+    image: python:3.11-slim
+    container_name: employsight-data-refresh
+    profiles:
+      - tools
+    working_dir: /workspace/data-processing
+    volumes:
+      - .:/workspace
+    command: >
+      sh -c "pip install --no-cache-dir -r requirements.txt
+      && python pipeline.py --input data/project_jobs_real.csv --output output
+      && python export_dashboard_data.py"
+
+volumes:
+  employsight-mysql-data:

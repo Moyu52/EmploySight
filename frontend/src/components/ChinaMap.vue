@@ -108,7 +108,9 @@ function buildOption(): EChartsOption {
     geo: {
       map: 'china-employment',
       roam: false,
-      zoom: 1.16,
+      layoutCenter: ['43%', '44%'],
+      layoutSize: '90%',
+      zoom: 1.08,
       center: [105.8, 36.2],
       itemStyle: {
         areaColor: 'rgba(198, 218, 242, 0.84)',
@@ -298,10 +300,10 @@ onBeforeUnmount(() => {
   right: 0;
   bottom: 0;
   z-index: 5;
-  width: min(23rem, 45%);
-  height: min(16rem, 42%);
+  width: min(17rem, 32%);
+  height: min(11rem, 30%);
   pointer-events: none;
-  opacity: 0.58;
+  opacity: 0.36;
   background: radial-gradient(ellipse at 76% 78%, color-mix(in oklch, var(--panel), white 2%) 0%, color-mix(in oklch, var(--panel), transparent 45%) 42%, transparent 76%);
 }
 
@@ -316,8 +318,8 @@ onBeforeUnmount(() => {
   z-index: 6;
   right: calc(var(--space-md) + 0.25rem);
   bottom: calc(var(--space-md) + 0.25rem);
-  width: min(18.25rem, calc(100% - 2.5rem));
-  padding: var(--space-sm);
+  width: min(15.6rem, calc(100% - 2.5rem));
+  padding: 0.68rem var(--space-sm);
   border: 1px solid color-mix(in oklch, var(--official-blue), transparent 58%);
   border-radius: 8px;
   background: linear-gradient(180deg, color-mix(in oklch, var(--panel), white 2%), color-mix(in oklch, var(--surface), white 2%));
@@ -335,7 +337,7 @@ onBeforeUnmount(() => {
   display: block;
   margin-top: 0.15rem;
   color: var(--official-blue);
-  font-size: 1.22rem;
+  font-size: 1.1rem;
 }
 
 .province-card__grid {
@@ -353,7 +355,7 @@ onBeforeUnmount(() => {
 
 .province-card b {
   color: var(--official-blue);
-  font-size: 0.92rem;
+  font-size: 0.84rem;
   font-variant-numeric: tabular-nums;
 }
 </style>
