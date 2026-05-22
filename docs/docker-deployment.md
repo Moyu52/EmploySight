@@ -44,7 +44,7 @@ MYSQL_PASSWORD: employsight_password
 
 当前后端默认不直接读取 MySQL，但不要把默认密码用于公开服务器的生产数据库。
 
-`v4.0.0` 起，后端继续支持通过 OpenRouter 生成 AI 职业推荐和薪资解释，并新增管理员登录审计、删除密码防爆破、临时封禁 IP 和解除封禁能力。AI 密钥、管理员安全 pepper 和密码哈希都只应通过后端环境变量传入，不能写入前端代码或提交真实值到 Git。
+`v4.0.1` 起，后端继续支持通过 OpenRouter 生成 AI 职业推荐和薪资解释，并保留管理员登录审计、删除密码防爆破、临时封禁 IP 和解除封禁能力。本版本同步 Dockerfile 镜像版本标签为 `4.0.1`，并在前端登录页展示老师查看用的普通用户 `用户 / 123456` 和管理员 `admin / admin123` 两组测试账号。AI 密钥、管理员安全 pepper 和密码哈希都只应通过后端环境变量传入，不能写入前端代码或提交真实值到 Git。
 
 ## 2. 服务器软件检测
 
@@ -246,6 +246,8 @@ docker compose up -d --build
 ```
 
 如果不填写 `AI_API_KEY`，或者 OpenRouter 返回额度不足、限流、模型不可用，后端会自动使用本地规则兜底，页面仍然可以正常使用。管理员删除和解除封禁操作依赖 `ADMIN_SECURITY_PEPPER`、`ADMIN_DELETE_PASSWORD_HASH` 和 `ADMIN_UNBAN_PASSWORD_HASH`；生产环境必须生成自己的值。
+
+登录页只展示普通用户和管理员两组平台登录测试账号；删除审计记录密码和解除封禁密码不应写入前端页面、Dockerfile 或公开文档。
 
 查看容器：
 
@@ -591,6 +593,7 @@ curl -s http://127.0.0.1/api/dashboard/overview
 - [ ] 如启用管理员删除审计记录，根目录 `.env` 已填写 `ADMIN_SECURITY_PEPPER`、`ADMIN_DELETE_PASSWORD_HASH`、`ADMIN_UNBAN_PASSWORD_HASH`，并确认没有提交真实值。
 - [ ] `POST /api/recommend/career` 返回 3 条职业推荐。
 - [ ] `admin` 账号可查看登录 IP 审计；删除密码输错 3 次会封禁 IP，解除封禁操作可用。
+- [ ] 登录页显示普通用户和管理员两组测试账号密码，且不展示删除审计记录密码或解除封禁密码。
 - [ ] 浏览器访问 `http://服务器IP/` 页面正常。
 - [ ] 首次访问先进入登录页，点击“进入平台”后进入系统。
 - [ ] 浏览器 Network 中 `/api/dashboard/*` 请求返回 200。

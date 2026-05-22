@@ -4,6 +4,9 @@ services:
       context: .
       dockerfile: backend/Dockerfile
     container_name: employsight-backend
+    labels:
+      org.opencontainers.image.title: EmploySight Backend
+      org.opencontainers.image.version: 4.0.1
     environment:
       APP_NAME: employsight
       DEMO_MODE: "true"
@@ -40,6 +43,9 @@ services:
       context: .
       dockerfile: frontend/Dockerfile
     container_name: employsight-frontend
+    labels:
+      org.opencontainers.image.title: EmploySight Frontend
+      org.opencontainers.image.version: 4.0.1
     depends_on:
       backend:
         condition: service_healthy

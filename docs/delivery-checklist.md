@@ -38,6 +38,7 @@
 | OpenRouter AI 接入 | `backend/app/services/ai_client.py`，`backend/app/core/config.py`，`docker-compose.yml` |
 | AI 不可用兜底 | `backend/app/services/prediction.py`，`backend/app/services/recommendation.py` |
 | 登录默认入口 | `frontend/src/App.vue`，默认 `isAuthenticated = false` |
+| 登录测试账号前端展示 | `frontend/src/App.vue` 登录页 `demo-credentials` 区域 |
 | 管理员登录审计与 IP 封禁 | `backend/app/routers/admin.py`，`backend/app/services/audit_log.py`，`frontend/src/App.vue` |
 | 管理员删除/解除封禁密码哈希 | `backend/app/core/passwords.py`，`backend/app/core/config.py` |
 | ECharts 中国地图、飞线、涟漪、轮播高亮 | `frontend/src/components/ChinaMap.vue`，`frontend/src/assets/china.geo.json` |
@@ -84,6 +85,7 @@ python data-processing\pipeline.py --input data-processing\sample_jobs.csv --out
 - `POST http://127.0.0.1:8000/api/recommend/career` 返回 3 条职业推荐；AI 账户不可用时自动使用本地规则兜底
 - `GET http://127.0.0.1:5173` 返回 `200`
 - 浏览器刷新首页默认进入登录页，点击“进入平台”后进入系统，点击“退出登录”后回到登录页
+- 登录页展示普通用户和管理员两组测试账号密码，不展示删除审计记录密码或解除封禁密码
 - 浏览器控制台无业务错误
 
 ## 当前本地服务
@@ -95,6 +97,6 @@ python data-processing\pipeline.py --input data-processing\sample_jobs.csv --out
 
 前端支持后端接口不可用时回退到由真实快照生成的兜底数据；当前已验证前端能通过 Vite 代理调用 Python FastAPI 接口。当前真实快照覆盖 37772 条岗位记录，大陆 31 个省级区域均有样本，澳门和台湾显示“样本不足”，不使用虚构岗位数、薪资或热度补齐。
 
-`v4.0.0` 的 AI 能力和管理员安全能力都通过后端环境变量启用。真实密钥、`ADMIN_SECURITY_PEPPER`、`ADMIN_DELETE_PASSWORD_HASH`、`ADMIN_UNBAN_PASSWORD_HASH` 只放在本地 `backend/.env` 或部署用根目录 `.env`，不要提交到 Git。OpenRouter 返回额度不足、限流或模型不可用时，职业推荐和薪资解释接口会保留本地规则结果。
+`v4.0.1` 的 AI 能力和管理员安全能力都通过后端环境变量启用。真实密钥、`ADMIN_SECURITY_PEPPER`、`ADMIN_DELETE_PASSWORD_HASH`、`ADMIN_UNBAN_PASSWORD_HASH` 只放在本地 `backend/.env` 或部署用根目录 `.env`，不要提交到 Git。本版本只把普通用户和管理员两组平台登录测试账号展示在前端登录页，便于老师进入查看；管理员删除审计记录密码和解除封禁密码不能写入前端。OpenRouter 返回额度不足、限流或模型不可用时，职业推荐和薪资解释接口会保留本地规则结果。
 
 数据处理测试样例 `sample_jobs.csv` 只有 10 条记录，仅用于验证脚本能运行；真实论文实验应使用 `data-processing/data/project_jobs_real.csv` 和 `data-processing/output/` 下的最新输出。如果真实数据中某省岗位样本不足，应在页面和论文中标注“样本不足/置信度较低”，不应直接留空。

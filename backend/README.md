@@ -1,6 +1,6 @@
 # Python 后端接口
 
-本目录使用 FastAPI 实现就业态势感知平台后端，不使用 Java。当前版本为 `v4.0.0`，职业推荐和薪资解释支持通过 OpenRouter 调用 OpenAI-compatible Chat Completions，未配置或调用失败时自动回退本地规则。管理员侧提供登录审计、删除密码防爆破、临时封禁 IP 和解除封禁能力。
+本目录使用 FastAPI 实现就业态势感知平台后端，不使用 Java。当前版本为 `v4.0.1`，职业推荐和薪资解释支持通过 OpenRouter 调用 OpenAI-compatible Chat Completions，未配置或调用失败时自动回退本地规则。管理员侧提供登录审计、删除密码防爆破、临时封禁 IP 和解除封禁能力；前端登录页展示老师查看用的普通用户 `用户 / 123456` 和管理员 `admin / admin123` 两组测试账号。
 
 ## 启动
 
@@ -48,6 +48,8 @@ AUDIT_BACKUP_DIR=data/admin_login_backups
 删除审计记录需要输入删除密码，后端只保存 `ADMIN_DELETE_PASSWORD_HASH`，不保存明文。删除密码连续错误达到 `ADMIN_DELETE_MAX_ATTEMPTS` 次后，当前请求 IP 会被临时封禁 `ADMIN_DELETE_BAN_MINUTES` 分钟，防止暴力破解删除密码。
 
 解除封禁 IP 需要输入独立的解除封禁密码，后端只保存 `ADMIN_UNBAN_PASSWORD_HASH`。当前示例哈希使用 PBKDF2-HMAC-SHA256、独立 salt、用途前缀和 `ADMIN_SECURITY_PEPPER` 进行校验；部署时建议重新生成 pepper 和哈希。
+
+前端登录页只展示平台登录测试账号，不展示删除审计记录密码或解除封禁密码。
 
 ## 核心接口
 

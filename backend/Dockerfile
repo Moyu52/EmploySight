@@ -1,8 +1,8 @@
 FROM python:3.11-slim
 
 LABEL org.opencontainers.image.title="EmploySight Backend"
-LABEL org.opencontainers.image.version="3.0.3"
-LABEL org.opencontainers.image.description="FastAPI backend with local fallback and optional OpenRouter AI insights"
+LABEL org.opencontainers.image.version="4.0.1"
+LABEL org.opencontainers.image.description="FastAPI backend with local fallback, optional OpenRouter AI insights, and admin audit security"
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
