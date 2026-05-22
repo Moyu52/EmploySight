@@ -58,6 +58,18 @@
           </div>
         </div>
       </div>
+      <div class="demo-credentials" aria-label="演示登录账号">
+        <article>
+          <span>普通用户</span>
+          <b>账号：用户</b>
+          <em>密码：123456</em>
+        </article>
+        <article>
+          <span>管理员</span>
+          <b>账号：admin</b>
+          <em>密码：admin123</em>
+        </article>
+      </div>
       <el-form class="login-form" label-position="top" @submit.prevent="handleLogin">
         <el-form-item label="账号">
           <el-input v-model="loginForm.username" size="large" placeholder="普通账号任意填写；管理员请输入 admin" />
@@ -1439,6 +1451,41 @@ onBeforeUnmount(() => {
 .identity-guide {
   display: grid;
   gap: var(--space-xs);
+}
+
+.demo-credentials {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-xs);
+}
+
+.demo-credentials article {
+  display: grid;
+  gap: 0.18rem;
+  padding: 0.75rem;
+  border: 1px solid color-mix(in oklch, var(--official-blue), transparent 70%);
+  border-radius: 7px;
+  background: linear-gradient(135deg, color-mix(in oklch, var(--official-blue-soft), white 2%), var(--panel));
+}
+
+.demo-credentials span {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.demo-credentials b,
+.demo-credentials em {
+  color: var(--official-blue-deep);
+  font-size: 0.86rem;
+  font-style: normal;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.demo-credentials em {
+  color: var(--official-blue);
+  font-weight: 800;
 }
 
 .identity-guide__row {
@@ -3365,6 +3412,7 @@ onBeforeUnmount(() => {
 
   .login-insights,
   .thesis-meta-grid,
+  .demo-credentials,
   .home-metrics,
   .audit-summary,
   .metric-grid,
