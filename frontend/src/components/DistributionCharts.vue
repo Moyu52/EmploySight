@@ -1,5 +1,5 @@
 <template>
-  <div class="charts-grid">
+  <div ref="chartsGridRef" class="charts-grid">
     <div ref="salaryRef" class="chart chart--salary"></div>
     <div class="chart-pair">
       <div ref="educationRef" class="chart chart--pie"></div>
@@ -18,6 +18,7 @@ const props = defineProps<{
   analysis: DashboardAnalysis
 }>()
 
+const chartsGridRef = ref<HTMLDivElement>()
 const salaryRef = ref<HTMLDivElement>()
 const educationRef = ref<HTMLDivElement>()
 const experienceRef = ref<HTMLDivElement>()
@@ -26,6 +27,7 @@ const educationChart = shallowRef<ECharts>()
 const experienceChart = shallowRef<ECharts>()
 let timer = 0
 let pulse = 0
+let resizeObserver: ResizeObserver | undefined
 
 function chartTextColor() {
   return '#344b6e'
@@ -152,6 +154,10 @@ onMounted(() => {
     pulse += 1
     render()
   }, 3600)
+  if (chartsGridRef.value) {
+    resizeObserver = new ResizeObserver(resizeSoon)
+    resizeObserver.observe(chartsGridRef.value)
+  }
   window.addEventListener('resize', resize)
 })
 
@@ -160,6 +166,7 @@ watch(() => props.analysis, render, { deep: true })
 onBeforeUnmount(() => {
   window.clearInterval(timer)
   window.removeEventListener('resize', resize)
+  resizeObserver?.disconnect()
   salaryChart.value?.dispose()
   educationChart.value?.dispose()
   experienceChart.value?.dispose()

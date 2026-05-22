@@ -44,6 +44,8 @@ MYSQL_PASSWORD: employsight_password
 
 当前后端默认不直接读取 MySQL，但不要把默认密码用于公开服务器的生产数据库。
 
+`v3.0.3` 起，后端支持通过 ZenMux 调用 Gemini 生成 AI 职业推荐和薪资解释。密钥只应通过后端环境变量传入，不能写入前端代码或提交到 Git。
+
 ## 2. 服务器软件检测
 
 先进入服务器，执行下面检测命令。
@@ -209,6 +211,30 @@ ls -lh data-processing/data/dashboard_snapshot_metadata.json
 cd /opt/employsight/EmploySight
 docker compose up -d --build
 ```
+
+如果要启用 AI 推荐，先在项目根目录创建 `.env`：
+
+```bash
+cp .env.example .env
+```
+
+然后编辑 `.env`，填写 ZenMux Key：
+
+```env
+AI_ENABLED=true
+ZENMUX_API_KEY=你的 ZenMux API Key
+ZENMUX_BASE_URL=https://zenmux.ai/api/v1
+ZENMUX_MODEL=google/gemini-3.5-flash-free
+AI_TIMEOUT_SECONDS=20
+```
+
+再启动容器：
+
+```bash
+docker compose up -d --build
+```
+
+如果不填写 `ZENMUX_API_KEY`，或者 ZenMux 返回余额不足、限流、模型不可用，后端会自动使用本地规则兜底，页面仍然可以正常使用。
 
 查看容器：
 
@@ -410,7 +436,26 @@ publishEnd = 2026-05-19
 
 如果这些值很小，通常说明你没有运行 `export_dashboard_data.py`，或者容器没有重新 build。
 
-### 8.3 看前端请求
+### 8.3 验证 AI 职业推荐接口
+
+配置 `ZENMUX_API_KEY` 后，可以测试职业推荐接口：
+
+```bash
+curl -s http://127.0.0.1:8000/api/recommend/career \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "major": "机械设计制造及其自动化",
+    "education": "本科",
+    "skills": ["生产", "安全", "质量"],
+    "expectedCities": ["西安", "重庆", "苏州"],
+    "expectedIndustries": ["生产制造及有关人员", "专业技术人员"],
+    "expectedSalary": 6000
+  }' | python3 -m json.tool
+```
+
+返回 `code = 200` 且 `data` 中有 3 条推荐即表示业务接口正常。是否真正走 AI，可查看后端日志；如果日志出现 `AI request failed; falling back to local rules`，说明接口已自动兜底。
+
+### 8.4 看前端请求
 
 浏览器打开：
 
@@ -531,5 +576,8 @@ curl -s http://127.0.0.1/api/dashboard/overview
 - [ ] `docker compose ps` 中 `frontend`、`backend` 为运行状态。
 - [ ] `curl http://127.0.0.1:8000/api/health` 正常。
 - [ ] `curl http://127.0.0.1/api/dashboard/overview` 返回真实岗位数量。
+- [ ] 如启用 AI，根目录 `.env` 已填写 `ZENMUX_API_KEY`，并确认没有提交真实密钥。
+- [ ] `POST /api/recommend/career` 返回 3 条职业推荐。
 - [ ] 浏览器访问 `http://服务器IP/` 页面正常。
+- [ ] 首次访问先进入登录页，点击“进入平台”后进入系统。
 - [ ] 浏览器 Network 中 `/api/dashboard/*` 请求返回 200。

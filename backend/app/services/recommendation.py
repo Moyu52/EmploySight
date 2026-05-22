@@ -1,4 +1,23 @@
 from app.schemas import CareerRecommendation, CareerRecommendationRequest
+from app.services.ai_client import request_ai_json
+
+
+CAREER_AI_PROMPT = """
+你是高校就业指导顾问。请基于真实招聘快照形成的本地基线推荐和学生画像，
+输出 3 个职业路径推荐。必须只输出 JSON 数组，不要 Markdown，不要解释。
+
+每个数组元素必须包含：
+direction, city, industry, jobCategory, matchScore, salaryPotential,
+reason, skillGaps, suggestions。
+
+约束：
+- matchScore 是 0 到 98 的数字。
+- salaryPotential 是月薪整数，单位为人民币元。
+- reason 用 1 句中文说明推荐依据，80 字以内。
+- skillGaps 最多 4 项。
+- suggestions 必须是 3 条可执行建议，每条 30 字以内。
+- 优先使用用户期望城市、期望行业和本地基线推荐，不要编造具体公司。
+""".strip()
 
 
 def contains(skills: list[str], target: str) -> bool:
@@ -57,3 +76,93 @@ def recommend_career(payload: CareerRecommendationRequest) -> list[CareerRecomme
             suggestions=["根据专业选择机械电气或财务运营分支", "准备证书、实训或报表作品", "优先核对岗位薪资、学历和经验要求"],
         ),
     ]
+
+
+def recommend_career_with_ai(payload: CareerRecommendationRequest) -> list[CareerRecommendation]:
+    baseline = recommend_career(payload)
+    ai_data = request_ai_json(
+        CAREER_AI_PROMPT,
+        {
+            "studentProfile": payload.model_dump(),
+            "baselineRecommendations": [item.model_dump() for item in baseline],
+        },
+    )
+    return normalize_ai_recommendations(ai_data, baseline) or baseline
+
+
+def normalize_ai_recommendations(
+    ai_data: object,
+    baseline: list[CareerRecommendation],
+) -> list[CareerRecommendation]:
+    if isinstance(ai_data, dict):
+        ai_data = ai_data.get("recommendations") or ai_data.get("items") or ai_data.get("data")
+    if not isinstance(ai_data, list):
+        return []
+
+    recommendations: list[CareerRecommendation] = []
+    for index, item in enumerate(ai_data[:3]):
+        if not isinstance(item, dict):
+            continue
+        fallback = baseline[min(index, len(baseline) - 1)]
+        try:
+            recommendations.append(
+                CareerRecommendation(
+                    direction=text_value(item.get("direction"), fallback.direction, 36),
+                    city=text_value(item.get("city"), fallback.city, 20),
+                    industry=text_value(item.get("industry"), fallback.industry, 60),
+                    jobCategory=text_value(item.get("jobCategory"), fallback.jobCategory, 50),
+                    matchScore=bounded_float(item.get("matchScore"), fallback.matchScore, 0, 98),
+                    salaryPotential=bounded_int(item.get("salaryPotential"), fallback.salaryPotential, 2500, 50000),
+                    reason=text_value(item.get("reason"), fallback.reason, 120),
+                    skillGaps=text_list(item.get("skillGaps"), fallback.skillGaps, 4, 20),
+                    suggestions=text_list(item.get("suggestions"), fallback.suggestions, 3, 30),
+                )
+            )
+        except (TypeError, ValueError):
+            continue
+
+    existing_directions = {item.direction for item in recommendations}
+    for fallback in baseline:
+        if len(recommendations) >= 3:
+            break
+        if fallback.direction not in existing_directions:
+            recommendations.append(fallback)
+    return recommendations[:3]
+
+
+def text_value(value: object, fallback: str, max_length: int) -> str:
+    text = str(value).strip() if value is not None else ""
+    return (text or fallback)[:max_length]
+
+
+def text_list(value: object, fallback: list[str], limit: int, max_length: int) -> list[str]:
+    if isinstance(value, list):
+        items = [str(item).strip()[:max_length] for item in value if str(item).strip()]
+    elif isinstance(value, str):
+        items = [item.strip()[:max_length] for item in value.replace("；", ";").split(";") if item.strip()]
+    else:
+        items = []
+
+    result = items[:limit]
+    for item in fallback:
+        if len(result) >= limit:
+            break
+        if item not in result:
+            result.append(item[:max_length])
+    return result
+
+
+def bounded_float(value: object, fallback: float, floor: float, ceiling: float) -> float:
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        number = fallback
+    return round(min(max(number, floor), ceiling), 1)
+
+
+def bounded_int(value: object, fallback: int, floor: int, ceiling: int) -> int:
+    try:
+        number = int(float(value))
+    except (TypeError, ValueError):
+        number = fallback
+    return min(max(number, floor), ceiling)

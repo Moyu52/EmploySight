@@ -46,6 +46,7 @@ const chartRef = ref<HTMLDivElement>()
 const chart = shallowRef<echarts.ECharts>()
 const activeIndex = ref(0)
 let timer = 0
+let resizeObserver: ResizeObserver | undefined
 
 const activeProvince = computed(() => props.provinces[activeIndex.value])
 
@@ -108,9 +109,9 @@ function buildOption(): EChartsOption {
     geo: {
       map: 'china-employment',
       roam: false,
-      layoutCenter: ['43%', '44%'],
-      layoutSize: '90%',
-      zoom: 1.08,
+      layoutCenter: ['45%', '42.5%'],
+      layoutSize: '100%',
+      zoom: 1,
       center: [105.8, 36.2],
       itemStyle: {
         areaColor: 'rgba(198, 218, 242, 0.84)',
@@ -269,7 +270,9 @@ onMounted(() => {
   render()
   focusProvince(0)
   startLoop()
-  window.addEventListener('resize', resize)
+  resizeObserver = new ResizeObserver(resizeSoon)
+  resizeObserver.observe(chartRef.value)
+  window.addEventListener('resize', resizeSoon)
 })
 
 watch(() => [props.provinces, props.cities], render, { deep: true })
@@ -278,9 +281,14 @@ function resize() {
   chart.value?.resize()
 }
 
+function resizeSoon() {
+  window.requestAnimationFrame(resize)
+}
+
 onBeforeUnmount(() => {
   window.clearInterval(timer)
-  window.removeEventListener('resize', resize)
+  window.removeEventListener('resize', resizeSoon)
+  resizeObserver?.disconnect()
   chart.value?.dispose()
 })
 </script>

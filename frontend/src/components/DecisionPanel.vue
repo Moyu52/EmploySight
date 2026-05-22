@@ -43,7 +43,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-button class="decision-button" size="small" type="primary" @click="runSalary">
+          <el-button class="decision-button" size="small" type="primary" :loading="salaryLoading" @click="runSalary">
             <Activity :size="15" />
             预测薪资
           </el-button>
@@ -51,7 +51,11 @@
         <div v-if="salaryResult" class="result-block">
           <span>预测月薪区间</span>
           <strong>{{ salaryResult.predictedMin.toLocaleString('zh-CN') }} - {{ salaryResult.predictedMax.toLocaleString('zh-CN') }}</strong>
-          <p>参考置信度 {{ salaryResult.confidence }}%</p>
+          <p>参考置信度 {{ salaryResult.confidence }}% · {{ salaryResult.modelName }}</p>
+          <p class="result-explanation">{{ salaryResult.explanation }}</p>
+          <ul class="factor-list">
+            <li v-for="factor in salaryResult.influenceFactors" :key="factor">{{ factor }}</li>
+          </ul>
         </div>
       </el-tab-pane>
       <el-tab-pane v-if="props.mode !== 'salary'" label="职业推荐" name="career">
@@ -64,15 +68,25 @@
               <el-option v-for="skill in skillOptions" :key="skill" :label="skill" :value="skill" />
             </el-select>
           </el-form-item>
-          <el-button class="decision-button" size="small" type="primary" @click="runRecommend">
+          <el-button class="decision-button" size="small" type="primary" :loading="recommendLoading" @click="runRecommend">
             <Route :size="15" />
             生成建议
           </el-button>
         </el-form>
         <div class="recommend-list">
           <article v-for="item in recommendations" :key="item.direction" class="recommend-item">
-            <b>{{ item.direction }}</b>
-            <span>{{ item.city }} · {{ item.jobCategory }} · 匹配 {{ item.matchScore }}%</span>
+            <div class="recommend-head">
+              <b>{{ item.direction }}</b>
+              <span>{{ item.matchScore }}%</span>
+            </div>
+            <span>{{ item.city }} · {{ item.jobCategory }} · {{ item.industry }}</span>
+            <p>{{ item.reason }}</p>
+            <div v-if="item.skillGaps.length" class="gap-tags">
+              <em v-for="gap in item.skillGaps" :key="gap">{{ gap }}</em>
+            </div>
+            <ul class="suggestion-list">
+              <li v-for="suggestion in item.suggestions" :key="suggestion">{{ suggestion }}</li>
+            </ul>
           </article>
         </div>
       </el-tab-pane>
@@ -142,6 +156,10 @@ const careerForm = reactive({
 
 const salaryResult = ref<SalaryPrediction>()
 const recommendations = ref<CareerRecommendation[]>([])
+const salaryLoading = ref(false)
+const recommendLoading = ref(false)
+let salaryRequestId = 0
+let recommendRequestId = 0
 
 watch(cityOptions, (options) => {
   if (options.length && !options.includes(salaryForm.city)) {
@@ -174,11 +192,38 @@ watch(() => props.mode, (mode) => {
 }, { immediate: true })
 
 async function runSalary() {
-  salaryResult.value = await predictSalary(salaryForm)
+  const requestId = ++salaryRequestId
+  salaryLoading.value = true
+  try {
+    const result = await predictSalary({ ...salaryForm })
+    if (requestId === salaryRequestId) {
+      salaryResult.value = result
+    }
+  } finally {
+    if (requestId === salaryRequestId) {
+      salaryLoading.value = false
+    }
+  }
 }
 
 async function runRecommend() {
-  recommendations.value = await recommendCareer(careerForm)
+  const requestId = ++recommendRequestId
+  recommendLoading.value = true
+  try {
+    const result = await recommendCareer({
+      ...careerForm,
+      skills: [...careerForm.skills],
+      expectedCities: [...careerForm.expectedCities],
+      expectedIndustries: [...careerForm.expectedIndustries]
+    })
+    if (requestId === recommendRequestId) {
+      recommendations.value = result
+    }
+  } finally {
+    if (requestId === recommendRequestId) {
+      recommendLoading.value = false
+    }
+  }
 }
 
 runSalary()
@@ -260,17 +305,35 @@ runRecommend()
   font-variant-numeric: tabular-nums;
 }
 
+.result-explanation,
+.factor-list {
+  grid-column: 1 / -1;
+}
+
+.result-explanation {
+  line-height: 1.45;
+}
+
+.factor-list,
+.suggestion-list {
+  margin: 0;
+  padding-left: 1rem;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  line-height: 1.45;
+}
+
 .recommend-list {
   display: grid;
   gap: var(--space-xs);
   margin-top: var(--space-xs);
-  max-height: 12rem;
+  max-height: min(20rem, 48vh);
   overflow: auto;
 }
 
 .recommend-item {
   display: grid;
-  gap: 0.2rem;
+  gap: 0.28rem;
   padding: 0.42rem var(--space-sm);
   border: 1px solid color-mix(in oklch, var(--line), transparent 48%);
   border-left: 3px solid color-mix(in oklch, var(--official-blue), transparent 32%);
@@ -278,14 +341,56 @@ runRecommend()
   background: color-mix(in oklch, var(--panel), white 1%);
 }
 
-.recommend-item b {
+.recommend-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+}
+
+.recommend-head b {
+  min-width: 0;
   color: var(--official-blue-deep);
   font-size: 0.78rem;
+}
+
+.recommend-head span {
+  flex: none;
+  color: var(--official-blue);
+  font-weight: 700;
+  font-size: 0.72rem;
 }
 
 .recommend-item span {
   color: var(--text-muted);
   font-size: 0.72rem;
+}
+
+.recommend-item .recommend-head span {
+  color: var(--official-blue);
+  font-weight: 700;
+}
+
+.recommend-item p {
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.gap-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.gap-tags em {
+  padding: 0.1rem 0.36rem;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--official-blue-soft), white 8%);
+  color: var(--official-blue-deep);
+  font-size: 0.66rem;
+  font-style: normal;
 }
 
 :deep(.el-tabs__item) {

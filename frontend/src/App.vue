@@ -594,7 +594,7 @@ const modules = [
   { key: 'report' as ModuleKey, label: '洞察报告', icon: FileChartColumnIncreasing }
 ]
 
-const isAuthenticated = ref(true)
+const isAuthenticated = ref(false)
 const loginForm = ref({
   username: '访客',
   password: '123456',
@@ -2557,6 +2557,10 @@ onBeforeUnmount(() => {
   gap: 0.85rem;
 }
 
+.dashboard-shell.sidebar-collapsed .screen-grid {
+  grid-template-columns: minmax(18rem, 21.5rem) minmax(32rem, 1fr) minmax(23.5rem, 0.42fr);
+}
+
 .left-column,
 .right-column,
 .bottom-band {
@@ -2619,70 +2623,65 @@ onBeforeUnmount(() => {
 }
 
 @media (min-width: 1281px) {
-  .dashboard-shell:not(.sidebar-collapsed) .platform-main {
+  .dashboard-shell .platform-main {
     --main-scale: 0.86;
     zoom: var(--main-scale);
   }
 
-  .dashboard-shell.sidebar-collapsed .platform-main {
-    width: auto;
-    zoom: 1;
-  }
-
-  .dashboard-shell:not(.sidebar-collapsed) .screen-grid {
+  .dashboard-shell .screen-grid {
     height: calc(116.28vh - 8.26rem);
   }
 
-  .dashboard-shell:not(.sidebar-collapsed) .workbench {
+  .dashboard-shell .workbench {
     min-height: calc(116.28vh - 8.26rem);
   }
 
-  .dashboard-shell:not(.sidebar-collapsed) .workbench--salary {
+  .dashboard-shell .workbench--salary {
     min-height: calc(116.28vh - 8.26rem);
   }
 }
 
 @media (min-width: 1500px) {
-  .dashboard-shell:not(.sidebar-collapsed) .platform-main {
+  .dashboard-shell .platform-main {
     --main-scale: 0.88;
   }
 
-  .dashboard-shell:not(.sidebar-collapsed) .screen-grid {
+  .dashboard-shell .screen-grid {
     height: calc(113.64vh - 8.07rem);
   }
 
-  .dashboard-shell:not(.sidebar-collapsed) .workbench,
-  .dashboard-shell:not(.sidebar-collapsed) .workbench--salary {
+  .dashboard-shell .workbench,
+  .dashboard-shell .workbench--salary {
     min-height: calc(113.64vh - 8.07rem);
   }
 }
 
 @media (min-width: 1800px) {
-  .dashboard-shell:not(.sidebar-collapsed) .platform-main {
+  .dashboard-shell .platform-main {
     --main-scale: 0.9;
   }
 
-  .dashboard-shell:not(.sidebar-collapsed) .screen-grid {
+  .dashboard-shell .screen-grid {
     height: calc(111.11vh - 7.89rem);
   }
 
-  .dashboard-shell:not(.sidebar-collapsed) .workbench,
-  .dashboard-shell:not(.sidebar-collapsed) .workbench--salary {
+  .dashboard-shell .workbench,
+  .dashboard-shell .workbench--salary {
     min-height: calc(111.11vh - 7.89rem);
   }
 }
 
 @media (min-width: 2200px) {
-  .dashboard-shell:not(.sidebar-collapsed) .platform-main {
+  .dashboard-shell .platform-main {
     --main-scale: 0.92;
   }
 
-  .dashboard-shell:not(.sidebar-collapsed) .screen-grid {
+  .dashboard-shell .screen-grid {
     height: calc(108.7vh - 7.72rem);
   }
 
-  .dashboard-shell:not(.sidebar-collapsed) .workbench,
-  .dashboard-shell:not(.sidebar-collapsed) .workbench--salary {
+  .dashboard-shell .workbench,
+  .dashboard-shell .workbench--salary {
     min-height: calc(108.7vh - 7.72rem);
   }
 }

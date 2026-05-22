@@ -9,6 +9,11 @@ services:
       DEMO_MODE: "true"
       MODEL_VERSION: random-forest-real-snapshot-v1
       MYSQL_URL: mysql+pymysql://employsight:employsight_password@mysql:3306/graduate_employment?charset=utf8mb4
+      AI_ENABLED: "${AI_ENABLED:-true}"
+      ZENMUX_API_KEY: "${ZENMUX_API_KEY:-}"
+      ZENMUX_BASE_URL: "${ZENMUX_BASE_URL:-https://zenmux.ai/api/v1}"
+      ZENMUX_MODEL: "${ZENMUX_MODEL:-google/gemini-3.5-flash-free}"
+      AI_TIMEOUT_SECONDS: "${AI_TIMEOUT_SECONDS:-20}"
     ports:
       - "127.0.0.1:8000:8000"
     restart: unless-stopped
