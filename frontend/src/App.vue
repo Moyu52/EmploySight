@@ -2,21 +2,21 @@
   <main v-if="!isAuthenticated" class="login-shell">
     <div class="backdrop" aria-hidden="true"></div>
     <section class="login-hero">
-      <span>Graduation Project 2026</span>
-      <h1>高校毕业生就业态势感知与职业决策支持系统</h1>
-      <p>本科毕业设计课题系统，围绕真实招聘岗位数据完成数据采集、预处理、可视化分析、薪资预测模型、职业推荐和答辩报告组织。</p>
+      <span>Spark Career Intelligence</span>
+      <h1>中国就业趋势洞察与职业决策平台</h1>
+      <p>面向求职者、就业服务机构和人才运营团队，提供岗位热度、城市机会、薪资参考、技能趋势和职业路径建议。</p>
       <div class="thesis-card">
         <div>
-          <span>课题名称</span>
-          <b>基于公开招聘数据的毕业生就业分析与职业决策支持平台</b>
+          <span>核心价值</span>
+          <b>用岗位数据帮助用户更快判断城市、行业和职业方向</b>
         </div>
         <div>
-          <span>技术路线</span>
-          <b>Python 数据处理 · FastAPI · Vue3 · ECharts · 随机森林回归</b>
+          <span>服务对象</span>
+          <b>求职者、转岗人群、就业指导人员与区域人才服务团队</b>
         </div>
         <div>
-          <span>答辩重点</span>
-          <b>真实数据来源、模型可解释性、平台完整功能、可视化交互</b>
+          <span>决策场景</span>
+          <b>机会发现、薪资预估、技能补强、投递城市筛选</b>
         </div>
       </div>
       <div class="login-insights">
@@ -38,40 +38,40 @@
       <div class="login-card__head">
         <LockKeyhole :size="22" />
         <div>
-          <span>毕业设计系统登录</span>
-          <h2>毕业设计演示入口</h2>
+          <span>平台访问</span>
+          <h2>进入职业洞察平台</h2>
         </div>
       </div>
       <el-form class="login-form" label-position="top" @submit.prevent="handleLogin">
         <el-form-item label="账号">
-          <el-input v-model="loginForm.username" size="large" placeholder="admin / teacher / student" />
+          <el-input v-model="loginForm.username" size="large" placeholder="请输入访问账号" />
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="loginForm.password" size="large" type="password" show-password placeholder="任意非空密码可进入演示系统" />
+          <el-input v-model="loginForm.password" size="large" type="password" show-password placeholder="请输入访问密码" />
         </el-form-item>
         <el-form-item label="登录角色">
           <el-select v-model="loginForm.role" size="large">
-            <el-option label="就业指导教师" value="就业指导教师" />
-            <el-option label="毕业生用户" value="毕业生用户" />
-            <el-option label="系统管理员" value="系统管理员" />
+            <el-option label="公开访客" value="公开访客" />
+            <el-option label="求职用户" value="求职用户" />
+            <el-option label="机构用户" value="机构用户" />
           </el-select>
         </el-form-item>
         <el-button class="login-button" type="primary" size="large" native-type="button" @click="handleLogin">
-          进入系统
+          进入平台
         </el-button>
       </el-form>
       <div class="login-note">
-        <span>演示账号：admin</span>
-        <span>演示密码：任意非空</span>
+        <span>公开版支持访客访问</span>
+        <span>企业用户可接入专属账号体系</span>
       </div>
       <div class="defense-info">
         <article>
-          <span>项目类型</span>
-          <b>数据分析 + 机器学习 + 可视化系统</b>
+          <span>能力范围</span>
+          <b>就业趋势洞察、薪资参考、技能趋势和职业建议</b>
         </article>
         <article>
-          <span>运行模式</span>
-          <b>前后端分离，后端异常时自动使用真实数据快照</b>
+          <span>数据口径</span>
+          <b>基于公开招聘样本生成的聚合分析结果</b>
         </article>
       </div>
     </section>
@@ -82,10 +82,10 @@
 
     <aside class="platform-sidebar">
       <div class="platform-brand">
-        <span>毕设</span>
+        <span>SP</span>
         <div>
-          <b>毕业设计系统</b>
-          <em>就业数据分析平台</em>
+          <b>Spark 职业洞察</b>
+          <em>就业数据决策平台</em>
         </div>
       </div>
       <button class="sidebar-toggle" type="button" :aria-label="isSidebarCollapsed ? '展开功能导航' : '收起功能导航'" @click="isSidebarCollapsed = !isSidebarCollapsed">
@@ -94,9 +94,9 @@
         <span>{{ isSidebarCollapsed ? '展开导航' : '收起导航' }}</span>
       </button>
       <div class="thesis-mini">
-        <span>课题编号</span>
-        <b>GEI-2026-01</b>
-        <em>指导答辩演示版</em>
+        <span>公开数据版</span>
+        <b>全国岗位观察</b>
+        <em>覆盖城市与行业趋势</em>
       </div>
       <nav class="module-nav" aria-label="功能模块">
         <button v-for="item in modules" :key="item.key" :class="{ active: activeModule === item.key }" type="button" :aria-label="item.label" :title="isSidebarCollapsed ? item.label : undefined" @click="activeModule = item.key">
@@ -118,7 +118,7 @@
           <h1>{{ activeModuleMeta.title }}</h1>
         </div>
         <div class="topbar__status">
-          <span>数据源：中国公共招聘网 + Kaggle 公开岗位数据</span>
+          <span>公开招聘样本 · 聚合趋势分析</span>
           <strong>{{ currentTime }}</strong>
         </div>
         <div class="user-card">
@@ -135,33 +135,33 @@
 
     <section v-if="activeModule === 'home'" class="portal-home">
       <section class="home-hero">
-        <span>本科毕业设计综合平台</span>
-        <h2>从真实岗位数据采集、清洗、建模到可视化决策的一体化系统</h2>
-        <p>当前项目不再只是态势大屏，而是具备登录入口、平台首页、业务分析、模型评估、报告管理和系统管理的完整就业数据分析系统。</p>
+        <span>就业市场总览</span>
+        <h2>把岗位、城市、薪资和技能趋势放在同一个决策视图里</h2>
+        <p>平台将公开招聘样本转化为可阅读的就业市场信号，帮助用户判断机会集中在哪里、薪资区间是否合理、下一步该补强哪些能力。</p>
         <div class="thesis-meta-grid">
           <article>
-            <span>研究对象</span>
-            <b>高校毕业生就业岗位</b>
+            <span>岗位规模</span>
+            <b>{{ overviewData.totalJobs.toLocaleString('zh-CN') }} 条样本</b>
           </article>
           <article>
-            <span>核心算法</span>
-            <b>随机森林薪资预测</b>
+            <span>城市覆盖</span>
+            <b>{{ overviewData.coveredCities }} 个城市</b>
           </article>
           <article>
-            <span>系统架构</span>
-            <b>Vue3 + Python FastAPI</b>
+            <span>薪资参考</span>
+            <b>{{ overviewData.salarySampleRows.toLocaleString('zh-CN') }} 条有效样本</b>
           </article>
         </div>
         <div class="home-actions">
-          <button type="button" @click="activeModule = 'dashboard'">打开态势大屏</button>
-          <button type="button" @click="activeModule = 'report'">查看答辩报告</button>
+          <button type="button" @click="activeModule = 'dashboard'">查看全国态势</button>
+          <button type="button" @click="activeModule = 'career'">生成职业建议</button>
         </div>
       </section>
       <section class="home-metrics">
-        <MetricCard label="岗位样本" :value="overviewData.totalJobs" suffix="条真实记录" icon="jobs" />
-        <MetricCard label="有效薪资" :value="overviewData.salarySampleRows" suffix="条样本" icon="salary" />
-        <MetricCard label="覆盖城市" :value="overviewData.coveredCities" suffix="个城市" :detail="`地图可定位 ${mappableCityCount} 个`" icon="city" />
-        <MetricCard label="模型 R2" :value="44.31" suffix="%" icon="fresh" :decimals="2" />
+        <MetricCard label="岗位样本" :value="overviewData.totalJobs" suffix="条记录" icon="jobs" />
+        <MetricCard label="薪资样本" :value="overviewData.salarySampleRows" suffix="条记录" icon="salary" />
+        <MetricCard label="覆盖城市" :value="overviewData.coveredCities" suffix="个城市" :detail="`地图展示 ${mappableCityCount} 个城市`" icon="city" />
+        <MetricCard label="应届友好" :value="overviewData.freshFriendlyIndex" suffix="指数" icon="fresh" :decimals="1" />
       </section>
       <section class="home-grid">
         <article v-for="item in projectEntrances" :key="item.key" class="home-entry" @click="activeModule = item.key">
@@ -171,32 +171,32 @@
         </article>
       </section>
       <section class="home-grid home-grid--narrow">
-        <ShellPanel title="项目完成度" subtitle="毕业设计检查项">
+        <ShellPanel title="市场重点" subtitle="当前值得关注的就业信号">
           <div class="progress-list">
-            <article v-for="item in graduationChecks" :key="item.label">
+            <article v-for="item in marketHighlights" :key="item.label">
               <b>{{ item.label }}</b>
               <span>{{ item.status }}</span>
               <div class="score-line"><i :style="{ width: `${item.progress}%` }"></i></div>
             </article>
           </div>
         </ShellPanel>
-        <ShellPanel title="近期岗位样本" subtitle="最新公开招聘记录">
+        <ShellPanel title="近期岗位样本" subtitle="最新招聘记录">
           <LiveJobTicker :jobs="liveJobData" />
         </ShellPanel>
       </section>
       <section class="home-longform">
-        <ShellPanel title="毕业设计验收说明" subtitle="面向答辩与服务器部署">
+        <ShellPanel title="核心能力" subtitle="对外可直接使用的功能">
           <div class="acceptance-grid">
-            <article v-for="item in acceptanceItems" :key="item.title">
+            <article v-for="item in platformCapabilities" :key="item.title">
               <b>{{ item.title }}</b>
               <span>{{ item.text }}</span>
               <em>{{ item.status }}</em>
             </article>
           </div>
         </ShellPanel>
-        <ShellPanel title="系统部署准备" subtitle="上线前检查">
+        <ShellPanel title="使用场景" subtitle="从观察到行动">
           <div class="deploy-list">
-            <article v-for="item in deployChecklist" :key="item.title">
+            <article v-for="item in userScenarios" :key="item.title">
               <span>{{ item.no }}</span>
               <b>{{ item.title }}</b>
               <em>{{ item.text }}</em>
@@ -215,7 +215,7 @@
           <MetricCard label="应届友好度" :value="overviewData.freshFriendlyIndex" suffix="指数" icon="fresh" :decimals="1" />
         </div>
 
-        <ShellPanel title="热门城市 TOP10" subtitle="真实样本排行" dense>
+        <ShellPanel title="热门城市 TOP10" subtitle="岗位样本排行" dense>
           <AutoRank :items="displayHotCities.hotCities" />
         </ShellPanel>
 
@@ -225,23 +225,23 @@
       </aside>
 
       <section class="center-stage">
-        <ShellPanel title="全国就业热度地图" :subtitle="activeProvinceLabel" eyebrow="态势感知主画布">
+        <ShellPanel title="全国就业热度地图" :subtitle="activeProvinceLabel" eyebrow="全国热度">
           <ChinaMap :provinces="provinceData" :cities="cityData" @province-change="activeProvince = $event" />
         </ShellPanel>
       </section>
 
       <aside class="right-column">
-        <ShellPanel title="薪资 · 学历 · 经验" subtitle="定时刷新">
+        <ShellPanel title="薪资 · 学历 · 经验" subtitle="结构分布">
           <DistributionCharts :analysis="analysisData" />
         </ShellPanel>
 
-        <ShellPanel title="技能需求热度" subtitle="TF-IDF / TextRank">
+        <ShellPanel title="技能需求热度" subtitle="岗位关键词">
           <SkillCloud :skills="analysisData.skills" />
         </ShellPanel>
       </aside>
 
       <section class="bottom-band">
-        <ShellPanel title="实时就业动态" subtitle="最新岗位样本">
+        <ShellPanel title="实时就业动态" subtitle="近期岗位样本">
           <LiveJobTicker :jobs="liveJobData" />
         </ShellPanel>
         <ShellPanel title="城市吸引力排行" subtitle="综合指数">
@@ -261,23 +261,23 @@
 
     <section v-else class="workbench" :class="`workbench--${activeModule}`">
       <template v-if="activeModule === 'city'">
-        <ShellPanel title="城市就业吸引力评估" :subtitle="`完整展示 ${cityData.length} 个真实样本城市`">
+        <ShellPanel title="城市就业吸引力评估" :subtitle="`${cityData.length} 个城市样本`">
           <div class="city-workbench">
             <article class="city-summary">
               <span>{{ cityData.length }}</span>
-              <b>完整城市清单</b>
-              <p>这里展示原始岗位数据中全部有岗位样本的城市，不再只展示地图可定位城市。</p>
+              <b>纳入评估城市</b>
+              <p>展示公开招聘样本中具备有效岗位记录的城市，便于比较岗位规模和薪资水平。</p>
             </article>
             <article class="city-summary">
               <span>{{ mappableCityCount }}</span>
-              <b>地图可定位城市</b>
-              <p>只有已维护经纬度的城市会进入态势大屏地图和流向线，避免无坐标点影响地图。</p>
+              <b>地图展示城市</b>
+              <p>具备地理坐标的城市会进入全国热度地图，用于观察区域机会分布。</p>
             </article>
             <article v-for="city in cityData" :key="city.city" class="city-card">
               <span>No.{{ city.rankNo }}</span>
               <h3>
                 {{ city.city }}
-                <em v-if="!city.hasCoords">未定位</em>
+                <em v-if="!city.hasCoords">待上图</em>
               </h3>
               <p>{{ city.province }} · {{ city.jobCount.toLocaleString('zh-CN') }} 个岗位 · 平均薪资 {{ city.avgSalary.toLocaleString('zh-CN') }} 元</p>
               <div class="score-line">
@@ -290,7 +290,7 @@
             </article>
           </div>
         </ShellPanel>
-        <ShellPanel title="省份覆盖完整性" subtitle="全国省级行政区指标">
+        <ShellPanel title="省份机会分布" subtitle="全国省级区域指标">
           <div class="province-table">
             <article v-for="province in sortedProvinces" :key="province.province">
               <b>{{ province.province }}</b>
@@ -299,7 +299,7 @@
             </article>
           </div>
         </ShellPanel>
-        <ShellPanel title="城市选择建议" subtitle="面向毕业生投递策略">
+        <ShellPanel title="城市选择建议" subtitle="投递优先级参考">
           <div class="insight-list">
             <article v-for="item in cityInsights" :key="item.title">
               <b>{{ item.title }}</b>
@@ -312,12 +312,12 @@
 
       <template v-if="activeModule === 'salary'">
         <ShellPanel title="岗位薪资预测" subtitle="城市 / 行业 / 学历 / 经验 / 技能">
-          <DecisionPanel :cities="cityData" :industries="overviewData.hotIndustries" :skills="analysisData.skills" />
+          <DecisionPanel mode="salary" :cities="cityData" :industries="overviewData.hotIndustries" :skills="analysisData.skills" />
         </ShellPanel>
         <ShellPanel title="薪资结构分析" subtitle="分布动态刷新">
           <DistributionCharts :analysis="analysisData" />
         </ShellPanel>
-        <ShellPanel title="预测解释因子" subtitle="答辩可解释">
+        <ShellPanel title="薪资影响因素" subtitle="区间参考依据">
           <div class="explain-grid">
             <article v-for="item in salaryFactors" :key="item.title">
               <b>{{ item.title }}</b>
@@ -337,7 +337,7 @@
       </template>
 
       <template v-if="activeModule === 'skills'">
-        <ShellPanel title="技能需求挖掘" subtitle="jieba / TF-IDF / TextRank / 词频">
+        <ShellPanel title="技能需求趋势" subtitle="岗位关键词热度">
           <SkillCloud :skills="analysisData.skills" />
         </ShellPanel>
         <ShellPanel title="技能热度排行" subtitle="岗位描述关键词">
@@ -350,7 +350,7 @@
             </article>
           </div>
         </ShellPanel>
-        <ShellPanel title="技能提升建议" subtitle="面向毕业生">
+        <ShellPanel title="技能提升建议" subtitle="面向求职准备">
           <div class="advice-list">
             <article>
               <b>生产制造方向</b>
@@ -378,8 +378,8 @@
       </template>
 
       <template v-if="activeModule === 'career'">
-        <ShellPanel title="毕业生职业推荐" subtitle="专业 / 学历 / 技能 / 城市偏好 / 行业偏好">
-          <DecisionPanel :cities="cityData" :industries="overviewData.hotIndustries" :skills="analysisData.skills" />
+        <ShellPanel title="职业路径推荐" subtitle="专业 / 学历 / 技能 / 城市偏好 / 行业偏好">
+          <DecisionPanel mode="career" :cities="cityData" :industries="overviewData.hotIndustries" :skills="analysisData.skills" />
         </ShellPanel>
         <ShellPanel title="推荐方向矩阵" subtitle="岗位方向与城市组合">
           <div class="path-grid">
@@ -420,7 +420,7 @@
       </template>
 
       <template v-if="activeModule === 'data'">
-        <ShellPanel title="数据治理与模型流水线" subtitle="公开岗位数据到平台指标库">
+        <ShellPanel title="数据处理概览" subtitle="公开岗位样本到趋势指标">
           <div class="pipeline">
             <article v-for="(step, index) in pipelineSteps" :key="step.title">
               <span>{{ index + 1 }}</span>
@@ -429,11 +429,11 @@
             </article>
           </div>
         </ShellPanel>
-        <ShellPanel title="数据覆盖说明" subtitle="避免缺失省份影响答辩">
+        <ShellPanel title="数据覆盖说明" subtitle="公开样本统计口径">
           <div class="coverage-note">
-            <p>当前展示数据由 Kaggle China Jobs Data、Kaggle Job Posting Data in China 和中国公共招聘网公开岗位合并生成，共 {{ overviewData.totalJobs.toLocaleString('zh-CN') }} 条岗位；样本时间范围为 {{ overviewData.publishStart || '未知' }} 至 {{ overviewData.publishEnd || '未知' }}，有真实样本的省级区域为 {{ overviewData.coveredRegions || sampledRegionCount }}/{{ overviewData.totalRegions || provinceData.length }}。</p>
-            <p>城市覆盖口径为原始岗位记录中的唯一城市数，共 {{ overviewData.coveredCities || cityData.length }} 个；其中 {{ mappableCityCount }} 个城市已维护经纬度，会用于地图散点和流向线。</p>
-            <p>样本不足地区在指标中显示“样本不足”，不再用虚构岗位数、薪资或热度补齐。</p>
+            <p>当前展示数据来自公开招聘样本的聚合分析，共 {{ overviewData.totalJobs.toLocaleString('zh-CN') }} 条岗位；样本时间范围为 {{ overviewData.publishStart || '未知' }} 至 {{ overviewData.publishEnd || '未知' }}，覆盖省级区域 {{ overviewData.coveredRegions || sampledRegionCount }}/{{ overviewData.totalRegions || provinceData.length }}。</p>
+            <p>城市覆盖口径为岗位记录中的唯一城市数，共 {{ overviewData.coveredCities || cityData.length }} 个；其中 {{ mappableCityCount }} 个城市进入地图展示。</p>
+            <p>样本不足地区会保持谨慎展示，避免用不可靠数据影响判断。</p>
           </div>
         </ShellPanel>
         <ShellPanel title="数据质量监控" subtitle="清洗后指标校验">
@@ -448,7 +448,7 @@
       </template>
 
       <template v-if="activeModule === 'model'">
-        <ShellPanel title="薪资预测模型评估" subtitle="RandomForestRegressor">
+        <ShellPanel title="薪资评估可信度" subtitle="参考结果质量">
           <div class="model-score-grid">
             <article v-for="metric in modelMetrics" :key="metric.label">
               <span>{{ metric.value }}</span>
@@ -457,7 +457,7 @@
             </article>
           </div>
         </ShellPanel>
-        <ShellPanel title="模型特征工程" subtitle="答辩说明">
+        <ShellPanel title="评估依据" subtitle="主要影响维度">
           <div class="feature-list">
             <article v-for="item in modelFeatures" :key="item.title">
               <b>{{ item.title }}</b>
@@ -465,7 +465,7 @@
             </article>
           </div>
         </ShellPanel>
-        <ShellPanel title="训练流程" subtitle="Python 数据处理流水线">
+        <ShellPanel title="指标生成流程" subtitle="从样本到分析结果">
           <div class="pipeline">
             <article v-for="(step, index) in trainingSteps" :key="step.title">
               <span>{{ index + 1 }}</span>
@@ -474,17 +474,17 @@
             </article>
           </div>
         </ShellPanel>
-        <ShellPanel title="模型应用范围" subtitle="使用边界">
+        <ShellPanel title="使用边界" subtitle="结果仅作决策参考">
           <div class="coverage-note">
-            <p>薪资预测模型面向公开岗位样本中的城市、行业、学历、经验、企业规模、岗位类别和技能描述进行区间估计，适合作为毕业生投递前的参考，不替代企业实际薪酬。</p>
-            <p>当前模型 R2 为 0.4431，说明公开岗位薪资受到城市、行业、经验等可解释变量影响，但仍存在企业福利、岗位级别、隐性奖金等外部因素。</p>
-            <p>系统保留启发式兜底预测逻辑，后端不可用时仍可基于当前真实城市薪资均值生成演示结果。</p>
+            <p>薪资评估面向公开岗位样本中的城市、行业、学历、经验、企业规模、岗位类别和技能描述进行区间估计，适合作为投递前参考，不替代企业实际薪酬。</p>
+            <p>公开薪资仍会受到企业福利、岗位级别、隐性奖金和招聘策略影响，平台会以区间方式呈现，避免给出绝对结论。</p>
+            <p>当样本量不足时，页面会降低置信度并提醒用户结合更多渠道判断。</p>
           </div>
         </ShellPanel>
       </template>
 
       <template v-if="activeModule === 'report'">
-        <ShellPanel title="毕业设计报告中心" subtitle="答辩材料组织">
+        <ShellPanel title="就业洞察报告" subtitle="关键结论整理">
           <div class="report-layout">
             <article v-for="item in reportSections" :key="item.title">
               <span>{{ item.index }}</span>
@@ -494,7 +494,7 @@
             </article>
           </div>
         </ShellPanel>
-        <ShellPanel title="系统功能清单" subtitle="验收点">
+        <ShellPanel title="平台能力清单" subtitle="核心服务">
           <div class="feature-list">
             <article v-for="item in systemFeatures" :key="item.title">
               <b>{{ item.title }}</b>
@@ -502,7 +502,7 @@
             </article>
           </div>
         </ShellPanel>
-        <ShellPanel title="答辩演示路线" subtitle="建议 5 分钟流程">
+        <ShellPanel title="分析路线" subtitle="从市场观察到行动建议">
           <div class="demo-route">
             <article v-for="item in demoRoute" :key="item.step">
               <span>{{ item.step }}</span>
@@ -514,7 +514,7 @@
       </template>
 
       <template v-if="activeModule === 'admin'">
-        <ShellPanel title="系统管理" subtitle="用户、权限与运行状态">
+        <ShellPanel title="平台状态" subtitle="访问与数据状态">
           <div class="admin-grid">
             <article v-for="item in adminCards" :key="item.title">
               <component :is="item.icon" :size="22" />
@@ -524,7 +524,7 @@
             </article>
           </div>
         </ShellPanel>
-        <ShellPanel title="用户角色管理" subtitle="毕业设计演示权限">
+        <ShellPanel title="访问角色" subtitle="不同用户的使用范围">
           <div class="role-table">
             <article v-for="role in roleRows" :key="role.name">
               <b>{{ role.name }}</b>
@@ -533,7 +533,7 @@
             </article>
           </div>
         </ShellPanel>
-        <ShellPanel title="运行监控" subtitle="前后端服务状态">
+        <ShellPanel title="服务监控" subtitle="平台可用性状态">
           <div class="quality-grid">
             <article v-for="item in runtimeStatus" :key="item.label">
               <span>{{ item.value }}</span>
@@ -550,7 +550,6 @@
 
 <script setup lang="ts">
 import {
-  BrainCircuit,
   ChartColumnIncreasing,
   Database,
   FileChartColumnIncreasing,
@@ -564,7 +563,6 @@ import {
   Route,
   SearchCode,
   ServerCog,
-  Settings,
   ShieldCheck,
   UserRound,
   UsersRound
@@ -586,23 +584,21 @@ import type { CityMetric, DashboardAnalysis, DashboardOverview, JobLiveItem, Pro
 type ModuleKey = 'home' | 'dashboard' | 'city' | 'salary' | 'skills' | 'career' | 'data' | 'model' | 'report' | 'admin'
 
 const modules = [
-  { key: 'home' as ModuleKey, label: '系统首页', icon: Home },
-  { key: 'dashboard' as ModuleKey, label: '态势大屏', icon: Gauge },
-  { key: 'city' as ModuleKey, label: '城市评估', icon: MapPinned },
-  { key: 'salary' as ModuleKey, label: '薪资预测', icon: ChartColumnIncreasing },
-  { key: 'skills' as ModuleKey, label: '技能挖掘', icon: SearchCode },
-  { key: 'career' as ModuleKey, label: '职业推荐', icon: Route },
-  { key: 'data' as ModuleKey, label: '数据治理', icon: Database },
-  { key: 'model' as ModuleKey, label: '模型中心', icon: BrainCircuit },
-  { key: 'report' as ModuleKey, label: '报告中心', icon: FileChartColumnIncreasing },
-  { key: 'admin' as ModuleKey, label: '系统管理', icon: Settings }
+  { key: 'home' as ModuleKey, label: '首页', icon: Home },
+  { key: 'dashboard' as ModuleKey, label: '全国态势', icon: Gauge },
+  { key: 'city' as ModuleKey, label: '城市机会', icon: MapPinned },
+  { key: 'salary' as ModuleKey, label: '薪资评估', icon: ChartColumnIncreasing },
+  { key: 'skills' as ModuleKey, label: '技能趋势', icon: SearchCode },
+  { key: 'career' as ModuleKey, label: '职业建议', icon: Route },
+  { key: 'data' as ModuleKey, label: '数据概览', icon: Database },
+  { key: 'report' as ModuleKey, label: '洞察报告', icon: FileChartColumnIncreasing }
 ]
 
-const isAuthenticated = ref(false)
+const isAuthenticated = ref(true)
 const loginForm = ref({
-  username: 'admin',
+  username: '访客',
   password: '123456',
-  role: '就业指导教师'
+  role: '公开访客'
 })
 const activeModule = ref<ModuleKey>('home')
 const isSidebarCollapsed = ref(false)
@@ -617,16 +613,16 @@ let clockTimer = 0
 let refreshTimer = 0
 
 const moduleMeta: Record<ModuleKey, { title: string; group: string }> = {
-  home: { title: '系统首页', group: '平台总览' },
-  dashboard: { title: '就业态势大屏', group: '态势感知' },
+  home: { title: '就业市场首页', group: '平台总览' },
+  dashboard: { title: '全国就业态势', group: '市场观察' },
   city: { title: '城市就业吸引力评估', group: '城市分析' },
-  salary: { title: '岗位薪资预测', group: '职业决策' },
-  skills: { title: '技能需求挖掘', group: '文本分析' },
-  career: { title: '毕业生职业推荐', group: '推荐决策' },
-  data: { title: '数据治理中心', group: '数据工程' },
-  model: { title: '模型评估中心', group: '机器学习' },
-  report: { title: '毕业设计报告中心', group: '答辩材料' },
-  admin: { title: '系统管理', group: '平台运维' }
+  salary: { title: '岗位薪资评估', group: '薪资参考' },
+  skills: { title: '技能需求趋势', group: '能力洞察' },
+  career: { title: '职业路径建议', group: '求职决策' },
+  data: { title: '数据概览', group: '样本透明度' },
+  model: { title: '薪资评估可信度', group: '质量说明' },
+  report: { title: '就业洞察报告', group: '结论整理' },
+  admin: { title: '平台状态', group: '服务状态' }
 }
 
 const currentTime = computed(() => {
@@ -667,7 +663,7 @@ const displayCityData = computed(() => cityData.value.map((item) => ({
 const displayTopCities = computed(() => displayCityData.value.slice(0, 6))
 const activeProvinceLabel = computed(() => {
   if (!activeProvince.value) {
-    return '省份轮播高亮'
+    return '省份热度轮播'
   }
   return `${activeProvince.value.province} · 热度 ${activeProvince.value.heatIndex}`
 })
@@ -688,71 +684,71 @@ const freshFriendlyCityNames = computed(() => [...cityData.value]
   .map((item) => item.city)
   .join('、'))
 const cityInsights = computed(() => [
-  { title: '样本规模城市', text: `${topCityNames.value || '当前高样本城市'}在当前真实样本中岗位规模靠前，适合优先观察。`, metric: '规模优先' },
+  { title: '样本规模城市', text: `${topCityNames.value || '当前高样本城市'}岗位规模靠前，适合优先观察机会密度。`, metric: '规模优先' },
   { title: '制造业承接城市', text: `${manufacturingCityNames.value || '制造业样本城市'}兼具岗位数量和制造业、专业技术岗位基础。`, metric: '产业匹配' },
-  { title: '应届友好城市', text: `${freshFriendlyCityNames.value || '应届友好城市'}的经验门槛相对友好，可作为毕业生稳妥投递池。`, metric: '门槛较低' },
-  { title: '地图定位口径', text: `城市评估展示 ${cityData.value.length} 个真实样本城市，地图仅使用 ${mappableCityCount.value} 个已维护经纬度的城市。`, metric: '口径一致' }
+  { title: '应届友好城市', text: `${freshFriendlyCityNames.value || '应届友好城市'}经验门槛相对友好，可作为稳妥投递池。`, metric: '门槛较低' },
+  { title: '地图展示口径', text: `城市评估展示 ${cityData.value.length} 个样本城市，地图展示 ${mappableCityCount.value} 个具备坐标的城市。`, metric: '口径一致' }
 ])
 const salaryBenchmarks = computed(() => [
-  { label: '主体区间', value: analysisData.value.salaryRanges[0]?.name ?? '未知', note: '当前清洗样本中占比最高，适合做毕业生保守薪资预期。' },
+  { label: '主体区间', value: analysisData.value.salaryRanges[0]?.name ?? '未知', note: '当前样本中占比最高，适合作为保守薪资预期。' },
   { label: '提升区间', value: analysisData.value.salaryRanges[1]?.name ?? '未知', note: '第二高占比区间，需要结合城市、行业和岗位技能判断。' },
   { label: '冲刺区间', value: '10K+', note: '占比较小，多出现在样本较少的一线城市或专业技术岗位。' },
   { label: '全样本均值', value: overviewData.value.averageSalary.toLocaleString('zh-CN'), note: `基于 ${overviewData.value.salarySampleRows.toLocaleString('zh-CN')} 条有效薪资样本解析得到。` }
 ])
 const qualityMetrics = computed(() => [
-  { label: '省级样本覆盖', value: `${overviewData.value.coveredRegions || sampledRegionCount.value}/${overviewData.value.totalRegions || provinceData.value.length}`, note: '只统计真实岗位样本，不用虚构数据补齐。' },
-  { label: '覆盖城市', value: `${overviewData.value.coveredCities || cityData.value.length}`, note: '来自合并后的真实岗位记录，城市评估页完整展示。' },
-  { label: '地图可定位城市', value: `${mappableCityCount.value}`, note: '已维护经纬度，可用于地图散点和就业流向线。' },
-  { label: '有效薪资样本', value: `${overviewData.value.salarySampleRows.toLocaleString('zh-CN')}`, note: '用于薪资分布和薪资模型训练。' }
+  { label: '省级样本覆盖', value: `${overviewData.value.coveredRegions || sampledRegionCount.value}/${overviewData.value.totalRegions || provinceData.value.length}`, note: '只统计公开岗位样本，样本不足地区谨慎展示。' },
+  { label: '覆盖城市', value: `${overviewData.value.coveredCities || cityData.value.length}`, note: '来自公开岗位记录，城市评估页完整展示。' },
+  { label: '地图展示城市', value: `${mappableCityCount.value}`, note: '具备地理坐标，可用于全国热度地图。' },
+  { label: '有效薪资样本', value: `${overviewData.value.salarySampleRows.toLocaleString('zh-CN')}`, note: '用于薪资分布和区间参考。' }
 ])
 const modelMetrics = computed(() => [
-  { label: 'MAE 平均绝对误差', value: '1,560.88', note: '预测薪资与真实薪资的平均绝对偏差，单位为元。' },
-  { label: 'RMSE 均方根误差', value: '2,678.21', note: '对大偏差更敏感，用于评估薪资区间波动。' },
-  { label: 'R2 拟合优度', value: '0.4431', note: '公开岗位薪资受城市、行业、经验和企业等多因素影响。' },
-  { label: '训练样本', value: `${overviewData.value.salarySampleRows.toLocaleString('zh-CN')}`, note: '使用清洗后的有效薪资岗位记录进行训练。' }
+  { label: '平均偏差', value: '1,560.88', note: '薪资参考与样本薪资的平均偏差，单位为元。' },
+  { label: '波动范围', value: '2,678.21', note: '用于衡量高低薪岗位带来的区间波动。' },
+  { label: '解释能力', value: '44.31%', note: '公开岗位薪资受城市、行业、经验和企业等多因素影响。' },
+  { label: '参考样本', value: `${overviewData.value.salarySampleRows.toLocaleString('zh-CN')}`, note: '使用有效薪资岗位记录生成参考区间。' }
 ])
 const runtimeStatus = computed(() => [
-  { label: '前端应用', value: '正常', note: 'Vue 3 + Element Plus + ECharts。' },
-  { label: '后端接口', value: '可降级', note: '接口不可用时自动使用本地真实快照数据。' },
-  { label: '数据快照', value: `${overviewData.value.coveredCities || cityData.value.length} 城市`, note: '当前已加载真实岗位聚合指标。' },
-  { label: '刷新策略', value: '30 秒', note: '大屏数据定时轮询，适合答辩演示。' }
+  { label: '平台访问', value: '正常', note: '核心页面可正常访问。' },
+  { label: '数据服务', value: '稳定', note: '聚合指标已加载，异常时保留最近一次有效快照。' },
+  { label: '数据快照', value: `${overviewData.value.coveredCities || cityData.value.length} 城市`, note: '当前已加载岗位聚合指标。' },
+  { label: '刷新策略', value: '30 秒', note: '就业态势页面定时刷新。' }
 ])
 
 const projectEntrances = [
-  { key: 'dashboard' as ModuleKey, title: '就业态势大屏', text: '全国岗位热度、省份地图、城市排行和实时岗位动态。', icon: Gauge },
-  { key: 'salary' as ModuleKey, title: '薪资预测决策', text: '按城市、行业、学历、经验和技能估算岗位薪资区间。', icon: ChartColumnIncreasing },
-  { key: 'career' as ModuleKey, title: '职业推荐', text: '根据专业、技能和城市偏好生成毕业生投递方向。', icon: Route },
-  { key: 'model' as ModuleKey, title: '模型评估中心', text: '展示模型指标、特征工程、训练流程和应用边界。', icon: BrainCircuit },
-  { key: 'data' as ModuleKey, title: '数据治理', text: '说明公开数据来源、清洗流程、覆盖口径和质量校验。', icon: Database },
-  { key: 'report' as ModuleKey, title: '报告中心', text: '组织毕业论文、答辩演示路线和系统验收功能点。', icon: FileChartColumnIncreasing }
+  { key: 'dashboard' as ModuleKey, title: '全国态势', text: '查看岗位热度、省份地图、城市排行和近期岗位动态。', icon: Gauge },
+  { key: 'city' as ModuleKey, title: '城市机会', text: '比较城市岗位规模、薪资水平和应届友好度。', icon: MapPinned },
+  { key: 'salary' as ModuleKey, title: '薪资评估', text: '按城市、行业、学历、经验和技能估算岗位薪资区间。', icon: ChartColumnIncreasing },
+  { key: 'skills' as ModuleKey, title: '技能趋势', text: '观察不同岗位描述中的高频能力要求。', icon: SearchCode },
+  { key: 'career' as ModuleKey, title: '职业建议', text: '根据专业、技能和城市偏好生成投递方向。', icon: Route },
+  { key: 'report' as ModuleKey, title: '洞察报告', text: '整理市场信号、城市机会和行动建议。', icon: FileChartColumnIncreasing }
 ]
 
-const graduationChecks = [
-  { label: '真实数据采集与清洗', status: '已完成', progress: 92 },
-  { label: '可视化态势大屏', status: '已完成', progress: 90 },
-  { label: '薪资预测模型', status: '已接入', progress: 82 },
-  { label: '职业推荐功能', status: '已接入', progress: 84 },
-  { label: '平台登录与系统页面', status: '本次新增', progress: 78 }
+const marketHighlights = [
+  { label: '城市机会集中度', status: '重点关注头部城市岗位密度', progress: 92 },
+  { label: '薪资参考完整度', status: '有效薪资样本支撑区间判断', progress: 88 },
+  { label: '应届友好程度', status: '经验门槛较低岗位可优先筛选', progress: 82 },
+  { label: '技能需求热度', status: '生产、销售、质量、沟通等词频较高', progress: 86 },
+  { label: '近期岗位活跃度', status: '持续追踪公开招聘样本变化', progress: 80 }
 ]
 
-const acceptanceItems = [
-  { title: '数据真实性', text: '系统指标来自公开岗位数据清洗结果，页面中保留数据来源、样本规模、城市覆盖和有效薪资样本说明。', status: '答辩重点' },
-  { title: '功能完整性', text: '覆盖登录、首页、态势大屏、城市评估、薪资预测、技能挖掘、职业推荐、数据治理、模型中心和报告中心。', status: '已覆盖' },
-  { title: '模型可解释性', text: '薪资预测展示模型评估指标、训练样本、特征工程和预测影响因子，便于论文和答辩说明。', status: '可截图' },
-  { title: '系统可部署性', text: '前端可构建为静态资源，后端由 Python FastAPI 提供接口，适合部署到个人服务器或云服务器。', status: '可部署' }
+const platformCapabilities = [
+  { title: '就业态势观察', text: '通过省份、城市、行业和岗位趋势，快速理解当前招聘市场热度。', status: '市场视图' },
+  { title: '城市机会比较', text: '综合岗位数量、薪资水平和应届友好度，为城市选择提供参考。', status: '城市评估' },
+  { title: '薪资区间参考', text: '按城市、行业、学历和经验生成薪资区间，辅助判断期望薪资是否合理。', status: '薪资参考' },
+  { title: '职业行动建议', text: '结合技能趋势和岗位方向，输出更清晰的投递和能力补强路径。', status: '行动建议' }
 ]
 
-const deployChecklist = [
-  { no: '01', title: '前端构建', text: '执行 npm run build 生成 dist 静态文件，部署到 Nginx 或静态托管目录。' },
-  { no: '02', title: '后端服务', text: '使用 Python FastAPI 启动接口服务，配置反向代理到 /api。' },
-  { no: '03', title: '数据快照', text: '确认 mockData 与后端 demo_data 均使用真实清洗后的岗位指标。' },
-  { no: '04', title: '演示口径', text: '答辩时说明澳门、台湾样本不足，不使用虚构数据补齐。' }
+const userScenarios = [
+  { no: '01', title: '选城市', text: '先看岗位规模和应届友好度，再结合薪资水平选择投递城市。' },
+  { no: '02', title: '定薪资', text: '用区间结果校准期望薪资，避免过低或过高影响沟通效率。' },
+  { no: '03', title: '补技能', text: '根据高频技能词调整简历关键词，并补充可证明的项目或实训经历。' },
+  { no: '04', title: '排优先级', text: '按城市、行业和匹配度建立投递清单，持续记录反馈并调整方向。' }
 ]
 
 const salaryFactors = [
   { title: '城市样本', text: '城市岗位数量和公开薪资均值共同影响预测，不再按单一一线城市口径估算。' },
   { title: '行业结构', text: '当前样本以生产制造、专业技术、销售服务、机械加工和生活服务岗位为主。' },
-  { title: '学历经验', text: '学历不限、大专、本科与经验不限岗位占比较高，适合分析毕业生可投范围。' },
+  { title: '学历经验', text: '学历不限、大专、本科与经验不限岗位占比较高，适合分析求职者可投范围。' },
   { title: '技能标签', text: '生产、管理、销售、机械、沟通、安全、质量、会计等词是当前真实样本高频需求。' }
 ]
 
@@ -764,7 +760,7 @@ const skillCombos = [
 ]
 
 const careerPaths = [
-  { score: 92, title: '生产制造与设备操作', text: '适合工科、机电、材料和应用技术类毕业生，重点关注安全、质量和设备基础。' },
+  { score: 92, title: '生产制造与设备操作', text: '适合工科、机电、材料和应用技术类求职者，重点关注安全、质量和设备基础。' },
   { score: 86, title: '销售与客户服务', text: '适合管理、营销、商科和服务类专业，岗位数量稳定，核心能力是沟通和执行。' },
   { score: 84, title: '机械电气与质量管理', text: '适合机械、电气、自动化相关专业，建议准备质检、维修和工艺改进经历。' },
   { score: 79, title: '财务行政与运营支持', text: '适合财会、工商管理、物流和信息管理专业，重点准备办公软件和流程意识。' }
@@ -816,56 +812,56 @@ const modelFeatures = [
   { title: '城市与省份特征', text: '使用城市薪资均值、岗位数量、省份热度作为区域就业环境变量。' },
   { title: '岗位结构特征', text: '提取行业、岗位类别、企业规模、学历和经验要求，支撑薪资区间预测。' },
   { title: '文本技能特征', text: '从岗位描述中抽取生产、管理、销售、机械、沟通、安全、质量等关键词。' },
-  { title: '可解释输出', text: '预测结果同时给出影响因子，便于毕业设计答辩解释模型逻辑。' }
+  { title: '影响因素输出', text: '薪资结果同时给出关键影响因素，帮助用户理解区间变化来源。' }
 ]
 
 const trainingSteps = [
-  { title: '读取数据', text: '加载 Kaggle 与中国公共招聘网合并后的 project_jobs_real.csv。' },
-  { title: '清洗编码', text: '解析薪资区间，处理缺失值，对城市、行业、学历和经验编码。' },
-  { title: '训练评估', text: '使用随机森林回归模型训练，输出 MAE、RMSE、R2 指标。' },
-  { title: '服务封装', text: '后端提供薪资预测接口，前端提供不可用时的真实数据兜底逻辑。' }
+  { title: '样本汇总', text: '汇总公开招聘岗位样本，并按城市、行业、薪资、学历和经验建立统一口径。' },
+  { title: '质量校验', text: '识别缺失值和异常薪资，确保进入页面的指标可用于对比。' },
+  { title: '指标计算', text: '生成城市吸引力、行业热度、技能热度和薪资区间参考。' },
+  { title: '结果更新', text: '在平台页面展示最新可用快照，并保留清晰的数据时间范围。' }
 ]
 
 const reportSections = [
-  { index: '01', title: '绪论与需求分析', text: '说明毕业生就业分析背景、研究意义、目标用户和功能需求。', status: '可写入论文' },
-  { index: '02', title: '数据采集与预处理', text: '描述 Kaggle 与公共招聘网数据来源、字段映射、清洗和质量控制。', status: '重点说明' },
-  { index: '03', title: '系统设计与实现', text: '展示前后端架构、模块设计、接口设计和可视化组件实现。', status: '已具备页面' },
-  { index: '04', title: '模型训练与评估', text: '说明薪资预测模型特征、训练过程、评估指标和误差分析。', status: '可截图' },
-  { index: '05', title: '系统测试与总结', text: '整理功能测试、页面截图、接口测试和后续优化方向。', status: '待补测试表' }
+  { index: '01', title: '市场总览', text: '概括岗位规模、城市覆盖、薪资样本和近期趋势。', status: '概览' },
+  { index: '02', title: '城市机会', text: '比较岗位数量、薪资水平、应届友好度和区域分布。', status: '城市' },
+  { index: '03', title: '行业与技能', text: '整理高频行业和能力关键词，辅助简历和学习计划调整。', status: '能力' },
+  { index: '04', title: '薪资参考', text: '展示不同城市、行业、学历和经验下的薪资区间。', status: '薪资' },
+  { index: '05', title: '行动建议', text: '形成投递优先级、能力补强和复盘节奏建议。', status: '行动' }
 ]
 
 const systemFeatures = [
-  { title: '登录与角色入口', text: '提供教师、学生、管理员角色入口，增强项目完整度和系统感。' },
-  { title: '业务分析模块', text: '包含态势大屏、城市评估、薪资预测、技能挖掘和职业推荐。' },
-  { title: '数据工程模块', text: '展示真实数据来源、清洗流程、覆盖口径和质量监控。' },
-  { title: '模型评估模块', text: '展示模型指标、特征工程、训练流程和使用边界。' },
-  { title: '报告与答辩模块', text: '提供论文结构、演示路线和系统验收点，方便毕业答辩。' }
+  { title: '公开访问入口', text: '支持访客查看核心市场指标，也可扩展为机构账号体系。' },
+  { title: '市场分析模块', text: '包含全国态势、城市机会、薪资评估、技能趋势和职业建议。' },
+  { title: '数据透明度', text: '展示样本时间范围、覆盖城市、有效薪资样本和质量口径。' },
+  { title: '薪资参考模块', text: '呈现薪资区间、影响因素和使用边界，避免绝对化判断。' },
+  { title: '洞察报告模块', text: '把关键趋势整理为可阅读的结论和行动建议。' }
 ]
 
 const demoRoute = [
-  { step: '1', title: '登录平台', text: '展示系统入口、角色和项目名称。' },
-  { step: '2', title: '系统首页', text: '说明项目数据规模、核心功能和完成度。' },
-  { step: '3', title: '态势大屏', text: '展示全国就业热度地图、城市排行和岗位趋势。' },
-  { step: '4', title: '预测推荐', text: '演示薪资预测和职业推荐的交互流程。' },
-  { step: '5', title: '数据模型', text: '说明真实数据来源、清洗流程和模型评估指标。' }
+  { step: '1', title: '看市场', text: '从首页了解岗位规模、城市覆盖和近期就业信号。' },
+  { step: '2', title: '选城市', text: '比较城市吸引力、薪资水平和应届友好度。' },
+  { step: '3', title: '定方向', text: '结合行业热度和技能趋势锁定职业路径。' },
+  { step: '4', title: '估薪资', text: '用区间结果校准期望薪资和投递优先级。' },
+  { step: '5', title: '做行动', text: '形成技能补强、简历关键词和投递节奏建议。' }
 ]
 
 const adminCards = [
-  { title: '用户权限', text: '教师、学生、管理员三类演示角色。', status: '已配置', icon: UsersRound },
-  { title: '数据快照', text: '真实岗位聚合指标加载与前端兜底。', status: '运行中', icon: Database },
-  { title: '模型服务', text: '薪资预测接口与本地预测逻辑。', status: '可调用', icon: ServerCog },
-  { title: '安全控制', text: '登录态、角色展示和退出流程。', status: '演示级', icon: ShieldCheck }
+  { title: '访问角色', text: '访客、求职用户和机构用户可按需扩展权限。', status: '可用', icon: UsersRound },
+  { title: '数据快照', text: '岗位聚合指标已加载，页面展示当前可用样本。', status: '运行中', icon: Database },
+  { title: '薪资服务', text: '薪资区间和影响因素可正常生成。', status: '可用', icon: ServerCog },
+  { title: '访问控制', text: '保留登录态、角色展示和退出流程。', status: '可用', icon: ShieldCheck }
 ]
 
 const roleRows = [
-  { name: '就业指导教师', scope: '查看态势、城市、薪资、技能和推荐结果', permission: '分析与指导' },
-  { name: '毕业生用户', scope: '使用薪资预测、职业推荐和技能提升建议', permission: '个人决策' },
-  { name: '系统管理员', scope: '查看数据治理、模型评估、运行状态和用户角色', permission: '系统维护' }
+  { name: '公开访客', scope: '查看市场概览、城市机会和岗位趋势', permission: '公开浏览' },
+  { name: '求职用户', scope: '使用薪资评估、职业建议和技能提升建议', permission: '个人决策' },
+  { name: '机构用户', scope: '查看数据概览、洞察报告和服务状态', permission: '组织分析' }
 ]
 
 function handleLogin() {
   if (!loginForm.value.username.trim()) {
-    loginForm.value.username = 'admin'
+    loginForm.value.username = '访客'
   }
   if (!loginForm.value.password.trim()) {
     loginForm.value.password = '123456'
@@ -920,8 +916,10 @@ onBeforeUnmount(() => {
   padding: var(--space-md);
   color: var(--text);
   background:
-    linear-gradient(135deg, color-mix(in oklch, var(--bg), white 3%), color-mix(in oklch, var(--bg-deep), white 5%)),
-    radial-gradient(circle at 80% 16%, color-mix(in oklch, var(--accent), transparent 90%), transparent 28rem);
+    linear-gradient(135deg, color-mix(in oklch, var(--bg), white 3%), color-mix(in oklch, var(--bg-deep), white 6%)),
+    linear-gradient(90deg, color-mix(in oklch, var(--accent), transparent 96%) 1px, transparent 1px),
+    linear-gradient(color-mix(in oklch, var(--accent), transparent 97%) 1px, transparent 1px);
+  background-size: auto, 44px 44px, 44px 44px;
 }
 
 .dashboard-shell.sidebar-collapsed {
@@ -940,10 +938,10 @@ onBeforeUnmount(() => {
   padding: clamp(1.5rem, 4vw, 4rem);
   color: var(--text);
   background:
-    linear-gradient(90deg, color-mix(in oklch, var(--accent), transparent 91%) 1px, transparent 1px),
-    linear-gradient(color-mix(in oklch, var(--accent), transparent 93%) 1px, transparent 1px),
-    linear-gradient(135deg, oklch(98% 0.007 248), var(--bg-deep));
-  background-size: 34px 34px, 34px 34px, auto;
+    linear-gradient(135deg, oklch(99% 0.004 238), var(--bg-deep)),
+    linear-gradient(90deg, color-mix(in oklch, var(--accent), transparent 94%) 1px, transparent 1px),
+    linear-gradient(color-mix(in oklch, var(--accent), transparent 96%) 1px, transparent 1px);
+  background-size: auto, 36px 36px, 36px 36px;
 }
 
 .backdrop {
@@ -951,15 +949,13 @@ onBeforeUnmount(() => {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(135deg, transparent 0 47%, color-mix(in oklch, var(--accent), transparent 92%) 47% 48%, transparent 48% 100%),
-    radial-gradient(circle at 16% 16%, color-mix(in oklch, var(--accent), transparent 90%), transparent 18rem),
-    radial-gradient(circle at 86% 82%, color-mix(in oklch, var(--accent-warm), transparent 90%), transparent 20rem);
-  background-size: 64px 64px, auto, auto;
-  opacity: 0.86;
+    linear-gradient(135deg, transparent 0 47%, color-mix(in oklch, var(--accent), transparent 94%) 47% 48%, transparent 48% 100%);
+  background-size: 72px 72px;
+  opacity: 0.48;
 }
 
 .backdrop::after {
-  content: "";
+  content: none;
   position: absolute;
   inset: auto 5% 7% auto;
   width: min(42vw, 34rem);
@@ -1033,7 +1029,7 @@ onBeforeUnmount(() => {
 .progress-list article {
   border: 1px solid color-mix(in oklch, var(--line), transparent 58%);
   border-radius: 8px;
-  background: linear-gradient(135deg, color-mix(in oklch, var(--panel), white 1%), color-mix(in oklch, var(--surface), white 2%));
+  background: linear-gradient(135deg, color-mix(in oklch, var(--panel), white 2%), color-mix(in oklch, var(--surface), white 3%));
   box-shadow: var(--shadow-panel);
 }
 
@@ -1422,8 +1418,8 @@ onBeforeUnmount(() => {
   max-width: 54rem;
   margin: 0;
   color: var(--text-strong);
-  font-size: clamp(1.8rem, 3.4vw, 3.4rem);
-  line-height: 1.08;
+  font-size: clamp(1.75rem, 2.8vw, 2.85rem);
+  line-height: 1.15;
 }
 
 .home-hero p {
@@ -1472,7 +1468,9 @@ onBeforeUnmount(() => {
 .home-metrics {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(7.6rem, auto);
   gap: var(--space-sm);
+  align-self: start;
 }
 
 .home-grid {
@@ -2112,6 +2110,21 @@ onBeforeUnmount(() => {
   font-style: normal;
 }
 
+.action-list span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.35rem;
+  min-height: 1.45rem;
+  border: 1px solid color-mix(in oklch, var(--official-blue), transparent 78%);
+  border-radius: 999px;
+  color: var(--official-blue);
+  background: color-mix(in oklch, var(--official-blue-soft), white 4%);
+  box-shadow: inset 0 1px 0 color-mix(in oklch, white, transparent 18%);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 .combo-grid article {
   min-height: 6.1rem;
 }
@@ -2228,6 +2241,452 @@ onBeforeUnmount(() => {
   padding: 0 var(--space-md) var(--space-md);
 }
 
+/* Official release polish */
+.dashboard-shell {
+  grid-template-columns: 16rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+  overflow-x: hidden;
+  background:
+    linear-gradient(180deg, color-mix(in oklch, var(--panel), white 1%) 0, color-mix(in oklch, var(--bg), white 1%) 18rem, var(--bg-deep) 100%),
+    linear-gradient(90deg, color-mix(in oklch, var(--official-blue), transparent 96%) 1px, transparent 1px),
+    linear-gradient(color-mix(in oklch, var(--official-blue), transparent 97%) 1px, transparent 1px);
+  background-size: auto, 48px 48px, 48px 48px;
+}
+
+.dashboard-shell.sidebar-collapsed {
+  grid-template-columns: 4.7rem minmax(0, 1fr);
+}
+
+.login-shell {
+  background:
+    linear-gradient(118deg, color-mix(in oklch, var(--official-blue-soft), white 5%) 0 36%, color-mix(in oklch, var(--panel), white 1%) 36% 100%),
+    linear-gradient(90deg, color-mix(in oklch, var(--official-blue), transparent 95%) 1px, transparent 1px),
+    linear-gradient(color-mix(in oklch, var(--official-blue), transparent 97%) 1px, transparent 1px);
+  background-size: auto, 40px 40px, 40px 40px;
+}
+
+.backdrop {
+  background:
+    linear-gradient(120deg, transparent 0 64%, color-mix(in oklch, var(--official-blue), transparent 95%) 64% 64.4%, transparent 64.4% 100%),
+    linear-gradient(90deg, color-mix(in oklch, var(--official-blue), transparent 97%) 1px, transparent 1px);
+  background-size: 88px 88px, 56px 56px;
+  opacity: 0.62;
+}
+
+.login-insights article,
+.login-card,
+.platform-sidebar,
+.thesis-card,
+.thesis-mini,
+.home-entry,
+.model-score-grid article,
+.report-layout article,
+.admin-grid article,
+.role-table article,
+.feature-list article,
+.demo-route article,
+.progress-list article,
+.city-strip article,
+.province-table article,
+.skill-table article,
+.explain-grid article,
+.path-grid article,
+.pipeline article,
+.advice-list article,
+.insight-list article,
+.benchmark-grid article,
+.combo-grid article,
+.action-list article,
+.gap-diagnosis article,
+.quality-grid article,
+.acceptance-grid article,
+.deploy-list article,
+.city-card {
+  border-color: color-mix(in oklch, var(--line), transparent 42%);
+  background: linear-gradient(180deg, color-mix(in oklch, var(--panel), white 2%), color-mix(in oklch, var(--surface), white 1%));
+  box-shadow: 0 0.55rem 1.25rem rgba(20, 52, 99, 0.055);
+}
+
+.platform-sidebar {
+  gap: 0.85rem;
+  padding: 0.85rem;
+  border-color: color-mix(in oklch, var(--official-blue), transparent 72%);
+  background:
+    linear-gradient(180deg, var(--panel), color-mix(in oklch, var(--official-blue-soft), white 4%)),
+    linear-gradient(90deg, color-mix(in oklch, var(--official-blue), transparent 86%) 0 3px, transparent 3px 100%);
+  box-shadow: var(--shadow-raised);
+}
+
+.platform-sidebar::before,
+.topbar::before,
+.home-hero::before {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.platform-sidebar::before {
+  inset: 0 auto 0 0;
+  width: 3px;
+  border-radius: 8px 0 0 8px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--official-blue), transparent 70%),
+    color-mix(in oklch, var(--official-gold), transparent 76%)
+  );
+}
+
+.platform-brand > span {
+  border: 1px solid color-mix(in oklch, var(--official-blue), transparent 72%);
+  color: var(--official-blue);
+  background: linear-gradient(135deg, color-mix(in oklch, var(--official-blue-soft), white 3%), var(--panel));
+  box-shadow: inset 0 1px 0 color-mix(in oklch, white, transparent 18%);
+}
+
+.platform-brand b {
+  color: var(--official-blue-deep);
+  font-size: 0.98rem;
+}
+
+.sidebar-toggle,
+.module-nav button,
+.sidebar-status,
+.user-card,
+.thesis-mini {
+  background: color-mix(in oklch, var(--panel), white 1%);
+}
+
+.sidebar-toggle {
+  min-height: 2.35rem;
+  border-color: color-mix(in oklch, var(--official-blue), transparent 78%);
+  color: var(--official-blue);
+}
+
+.module-nav {
+  gap: 0.38rem;
+  padding-right: 0.1rem;
+}
+
+.module-nav button {
+  min-height: 2.35rem;
+  padding: 0 0.7rem;
+  border-color: transparent;
+  border-left: 3px solid transparent;
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+.module-nav button svg {
+  flex: 0 0 auto;
+}
+
+.module-nav button:hover,
+.module-nav button.active {
+  border-color: color-mix(in oklch, var(--official-blue), transparent 76%);
+  border-left-color: var(--official-blue);
+  color: var(--official-blue-deep);
+  background: color-mix(in oklch, var(--official-blue-soft), white 2%);
+  transform: none;
+}
+
+.module-nav button.active {
+  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--official-blue), transparent 82%);
+}
+
+.thesis-mini,
+.sidebar-status {
+  border-color: color-mix(in oklch, var(--line), transparent 46%);
+}
+
+.thesis-mini {
+  background: linear-gradient(135deg, color-mix(in oklch, var(--official-blue-soft), white 2%), var(--panel));
+}
+
+.thesis-mini b,
+.sidebar-status b,
+.topbar__title span,
+.login-hero > span,
+.home-hero span {
+  color: var(--official-blue);
+}
+
+.platform-main {
+  gap: 1rem;
+}
+
+.topbar {
+  min-height: 4.9rem;
+  padding: 0.7rem 0.95rem;
+  border-color: color-mix(in oklch, var(--official-blue), transparent 72%);
+  background: linear-gradient(180deg, var(--panel), color-mix(in oklch, var(--surface), white 2%));
+  box-shadow: var(--shadow-panel);
+}
+
+.topbar::before {
+  inset: 0 0 auto;
+  height: 2px;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--official-blue), transparent 72%),
+    color-mix(in oklch, var(--official-gold), transparent 78%)
+  );
+}
+
+.topbar h1 {
+  color: var(--official-blue-deep);
+  font-size: 1.48rem;
+}
+
+.topbar__status strong {
+  color: var(--official-blue);
+}
+
+.user-card {
+  min-height: 3rem;
+  border-color: color-mix(in oklch, var(--line), transparent 48%);
+}
+
+.user-card button {
+  background: color-mix(in oklch, var(--official-blue-soft), white 5%);
+}
+
+.portal-home {
+  grid-template-columns: minmax(34rem, 1.08fr) minmax(24rem, 0.9fr);
+  gap: 1rem;
+}
+
+.home-hero {
+  position: relative;
+  min-height: 19rem;
+  padding: 2rem;
+  border-color: color-mix(in oklch, var(--official-blue), transparent 72%);
+  background:
+    linear-gradient(90deg, color-mix(in oklch, var(--official-blue), transparent 91%) 0 0.35rem, transparent 0.35rem 100%),
+    linear-gradient(135deg, var(--panel) 0%, color-mix(in oklch, var(--official-blue-soft), white 3%) 100%);
+  box-shadow: var(--shadow-raised);
+  overflow: hidden;
+}
+
+.home-hero::before {
+  inset: auto 0 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--official-blue), transparent 68%),
+    color-mix(in oklch, var(--accent-green), transparent 74%),
+    color-mix(in oklch, var(--official-gold), transparent 70%)
+  );
+}
+
+.home-hero h2 {
+  max-width: 44rem;
+  color: var(--official-blue-deep);
+  font-size: 2.48rem;
+  line-height: 1.18;
+}
+
+.home-hero p {
+  max-width: 45rem;
+  color: color-mix(in oklch, var(--text-muted), var(--official-blue-deep) 10%);
+}
+
+.thesis-meta-grid article {
+  border-left: 3px solid color-mix(in oklch, var(--official-blue), transparent 40%);
+  background: color-mix(in oklch, var(--panel), white 1%);
+}
+
+.thesis-meta-grid b {
+  color: var(--official-blue-deep);
+}
+
+.home-actions button {
+  min-height: 2.5rem;
+  border: 1px solid color-mix(in oklch, var(--official-blue), transparent 64%);
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--official-blue), color-mix(in oklch, var(--accent), white 8%));
+  box-shadow: 0 0.45rem 1rem color-mix(in oklch, var(--official-blue), transparent 86%);
+}
+
+.home-actions button + button {
+  color: var(--official-blue);
+  background: var(--panel);
+}
+
+.home-metrics {
+  grid-auto-rows: minmax(7.1rem, auto);
+}
+
+.home-grid:not(.home-grid--narrow) {
+  gap: 0.85rem;
+}
+
+.home-entry {
+  min-height: 7.7rem;
+  border-top: 3px solid color-mix(in oklch, var(--official-gold), transparent 24%);
+  background: linear-gradient(180deg, var(--panel), color-mix(in oklch, var(--official-blue-soft), white 4%));
+}
+
+.home-entry:hover {
+  border-color: color-mix(in oklch, var(--official-blue), transparent 54%);
+  border-top-color: var(--official-blue);
+  box-shadow: 0 0.85rem 1.7rem rgba(20, 52, 99, 0.09);
+  transform: translateY(-1px);
+}
+
+.home-entry svg,
+.admin-grid svg {
+  color: var(--official-gold);
+}
+
+.home-entry b,
+.progress-list b,
+.feature-list b,
+.model-score-grid b,
+.report-layout b,
+.demo-route b,
+.admin-grid b,
+.role-table b {
+  color: var(--official-blue-deep);
+}
+
+.screen-grid {
+  grid-template-columns: minmax(18rem, 21.5rem) minmax(34rem, 1fr) minmax(19rem, 23.5rem);
+  grid-template-rows: minmax(0, 1fr) clamp(9.5rem, 20vh, 11.5rem);
+  gap: 0.85rem;
+}
+
+.left-column,
+.right-column,
+.bottom-band {
+  gap: 0.85rem;
+}
+
+.bottom-band {
+  grid-template-columns: minmax(24rem, 1.05fr) minmax(27rem, 1fr) minmax(22rem, 0.82fr);
+}
+
+.score-line {
+  height: 0.34rem;
+  background: color-mix(in oklch, var(--line), transparent 58%);
+}
+
+.score-line i,
+.gap-meter i,
+.rank-row__bar i {
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--official-blue), white 12%),
+    color-mix(in oklch, var(--accent-green), white 12%),
+    color-mix(in oklch, var(--official-gold), white 10%)
+  );
+}
+
+.city-strip span,
+.pipeline span,
+.city-card > span,
+.deploy-list span {
+  border: 1px solid color-mix(in oklch, var(--official-blue), transparent 76%);
+  color: var(--official-blue);
+  background: color-mix(in oklch, var(--official-blue-soft), white 4%);
+  box-shadow: inset 0 1px 0 color-mix(in oklch, white, transparent 18%);
+}
+
+.city-strip em,
+.province-table span,
+.skill-table strong,
+.city-card footer b,
+.path-grid span,
+.benchmark-grid span,
+.quality-grid span,
+.model-score-grid span,
+.report-layout span,
+.demo-route span,
+.insight-list em,
+.combo-grid em {
+  color: var(--official-blue);
+}
+
+.province-table article,
+.skill-table article {
+  min-height: 2.5rem;
+  background: color-mix(in oklch, var(--panel), white 1%);
+}
+
+.workbench {
+  gap: 1rem;
+}
+
+@media (min-width: 1281px) {
+  .dashboard-shell:not(.sidebar-collapsed) .platform-main {
+    --main-scale: 0.86;
+    zoom: var(--main-scale);
+  }
+
+  .dashboard-shell.sidebar-collapsed .platform-main {
+    width: auto;
+    zoom: 1;
+  }
+
+  .dashboard-shell:not(.sidebar-collapsed) .screen-grid {
+    height: calc(116.28vh - 8.26rem);
+  }
+
+  .dashboard-shell:not(.sidebar-collapsed) .workbench {
+    min-height: calc(116.28vh - 8.26rem);
+  }
+
+  .dashboard-shell:not(.sidebar-collapsed) .workbench--salary {
+    min-height: calc(116.28vh - 8.26rem);
+  }
+}
+
+@media (min-width: 1500px) {
+  .dashboard-shell:not(.sidebar-collapsed) .platform-main {
+    --main-scale: 0.88;
+  }
+
+  .dashboard-shell:not(.sidebar-collapsed) .screen-grid {
+    height: calc(113.64vh - 8.07rem);
+  }
+
+  .dashboard-shell:not(.sidebar-collapsed) .workbench,
+  .dashboard-shell:not(.sidebar-collapsed) .workbench--salary {
+    min-height: calc(113.64vh - 8.07rem);
+  }
+}
+
+@media (min-width: 1800px) {
+  .dashboard-shell:not(.sidebar-collapsed) .platform-main {
+    --main-scale: 0.9;
+  }
+
+  .dashboard-shell:not(.sidebar-collapsed) .screen-grid {
+    height: calc(111.11vh - 7.89rem);
+  }
+
+  .dashboard-shell:not(.sidebar-collapsed) .workbench,
+  .dashboard-shell:not(.sidebar-collapsed) .workbench--salary {
+    min-height: calc(111.11vh - 7.89rem);
+  }
+}
+
+@media (min-width: 2200px) {
+  .dashboard-shell:not(.sidebar-collapsed) .platform-main {
+    --main-scale: 0.92;
+  }
+
+  .dashboard-shell:not(.sidebar-collapsed) .screen-grid {
+    height: calc(108.7vh - 7.72rem);
+  }
+
+  .dashboard-shell:not(.sidebar-collapsed) .workbench,
+  .dashboard-shell:not(.sidebar-collapsed) .workbench--salary {
+    min-height: calc(108.7vh - 7.72rem);
+  }
+}
+
 @media (max-width: 1280px) {
   .dashboard-shell,
   .login-shell {
@@ -2275,6 +2734,7 @@ onBeforeUnmount(() => {
   }
 
   .home-grid,
+  .home-grid:not(.home-grid--narrow),
   .home-grid--narrow,
   .home-longform,
   .bottom-band,
@@ -2311,12 +2771,29 @@ onBeforeUnmount(() => {
   }
 
   .login-insights,
+  .thesis-meta-grid,
   .home-metrics,
   .metric-grid,
   .benchmark-grid,
   .combo-grid,
   .quality-grid {
     grid-template-columns: 1fr;
+  }
+
+  .home-hero {
+    padding: var(--space-lg);
+  }
+
+  .home-hero h2 {
+    font-size: 2rem;
+  }
+
+  .home-actions button {
+    width: 100%;
+  }
+
+  .home-entry {
+    min-height: auto;
   }
 
   .report-layout article,

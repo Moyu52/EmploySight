@@ -51,12 +51,13 @@ const formatted = computed(() => {
   grid-template-columns: 2.6rem 1fr;
   align-items: center;
   gap: var(--space-sm);
-  min-height: 5.2rem;
+  min-height: 5.35rem;
   padding: var(--space-sm);
-  border: 1px solid color-mix(in oklch, var(--line), transparent 58%);
+  border: 1px solid color-mix(in oklch, var(--line), transparent 42%);
+  border-left: 3px solid color-mix(in oklch, var(--official-blue), transparent 24%);
   border-radius: 8px;
-  background: linear-gradient(150deg, color-mix(in oklch, var(--panel), white 2%), color-mix(in oklch, var(--surface), white 3%));
-  box-shadow: 0 0.55rem 1.4rem rgba(42, 60, 95, 0.07);
+  background: linear-gradient(180deg, color-mix(in oklch, var(--panel), white 2%), color-mix(in oklch, var(--surface), white 2%));
+  box-shadow: 0 0.55rem 1.3rem rgba(20, 52, 99, 0.06);
   contain: layout paint;
   overflow: hidden;
 }
@@ -66,7 +67,7 @@ const formatted = computed(() => {
   position: absolute;
   inset: 0 0 auto;
   height: 1px;
-  background: linear-gradient(90deg, color-mix(in oklch, var(--accent), transparent 44%), transparent);
+  background: linear-gradient(90deg, color-mix(in oklch, var(--official-blue), transparent 76%), transparent);
 }
 
 .metric-card__icon {
@@ -75,9 +76,10 @@ const formatted = computed(() => {
   width: 2.3rem;
   height: 2.3rem;
   border-radius: 8px;
-  color: oklch(98% 0.006 250);
-  background: linear-gradient(135deg, var(--accent), color-mix(in oklch, var(--accent), black 12%));
-  box-shadow: 0 0.45rem 0.95rem color-mix(in oklch, var(--accent), transparent 82%);
+  border: 1px solid color-mix(in oklch, var(--official-blue), transparent 76%);
+  color: var(--official-blue);
+  background: linear-gradient(135deg, color-mix(in oklch, var(--official-blue-soft), white 4%), var(--panel));
+  box-shadow: inset 0 1px 0 color-mix(in oklch, white, transparent 18%);
 }
 
 .metric-card__body {
@@ -88,12 +90,13 @@ const formatted = computed(() => {
 .metric-card span {
   color: var(--text-muted);
   font-size: 0.74rem;
+  font-weight: 700;
 }
 
 .metric-card strong {
   overflow: hidden;
-  color: var(--text-strong);
-  font-size: 1.45rem;
+  color: var(--official-blue-deep);
+  font-size: 1.5rem;
   line-height: 1.05;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -101,8 +104,9 @@ const formatted = computed(() => {
 }
 
 .metric-card small {
-  color: var(--accent);
+  color: var(--official-blue);
   font-size: 0.72rem;
+  font-weight: 700;
 }
 
 .metric-card em {

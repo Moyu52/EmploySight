@@ -1,19 +1,23 @@
 :root {
   color-scheme: light;
-  --bg: oklch(96% 0.013 252);
-  --bg-deep: oklch(90% 0.025 248);
-  --panel: oklch(99% 0.006 248);
-  --panel-strong: oklch(94% 0.017 250);
-  --surface: oklch(97% 0.011 248);
-  --line: oklch(66% 0.06 248);
-  --text: oklch(22% 0.048 252);
-  --text-strong: oklch(14% 0.058 255);
-  --text-muted: oklch(35% 0.045 248);
-  --accent: oklch(43% 0.13 256);
-  --accent-warm: oklch(63% 0.135 74);
-  --accent-hot: oklch(56% 0.15 28);
-  --accent-green: oklch(52% 0.11 162);
+  --bg: oklch(97.5% 0.011 247);
+  --bg-deep: oklch(93.8% 0.023 250);
+  --panel: oklch(99.3% 0.003 250);
+  --panel-strong: oklch(96.5% 0.012 250);
+  --surface: oklch(98.5% 0.007 248);
+  --line: oklch(77% 0.035 248);
+  --text: oklch(25% 0.04 252);
+  --text-strong: oklch(16% 0.048 255);
+  --text-muted: oklch(43% 0.038 250);
+  --accent: oklch(42% 0.14 252);
+  --accent-warm: oklch(62% 0.14 78);
+  --accent-hot: oklch(55% 0.16 32);
+  --accent-green: oklch(50% 0.12 158);
   --danger: oklch(55% 0.16 29);
+  --official-blue: oklch(35% 0.12 255);
+  --official-blue-deep: oklch(24% 0.09 258);
+  --official-blue-soft: oklch(94% 0.027 248);
+  --official-gold: oklch(66% 0.14 82);
   --space-xs: 0.5rem;
   --space-sm: 0.75rem;
   --space-md: 1rem;
@@ -21,7 +25,8 @@
   --space-xl: 2rem;
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
-  --shadow-panel: 0 1.2rem 2.8rem color-mix(in oklch, var(--accent), transparent 86%), 0 0.25rem 0.8rem rgba(38, 55, 92, 0.08);
+  --shadow-panel: 0 0.75rem 1.8rem rgba(20, 52, 99, 0.08), 0 1px 0 rgba(255, 255, 255, 0.92) inset;
+  --shadow-raised: 0 1rem 2.4rem rgba(20, 52, 99, 0.11);
   font-family: "Source Han Sans SC", "Noto Sans CJK SC", "Microsoft YaHei UI", "DengXian", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -43,7 +48,8 @@ body,
 
 body {
   margin: 0;
-  background: var(--bg);
+  background:
+    linear-gradient(180deg, oklch(99% 0.004 250), var(--bg) 42%, var(--bg-deep));
 }
 
 button,
@@ -67,7 +73,7 @@ button {
   min-height: 2.15rem;
   border-radius: 6px;
   background: color-mix(in oklch, var(--panel), transparent 2%);
-  box-shadow: 0 0 0 1px color-mix(in oklch, var(--line), transparent 56%) inset, 0 0.35rem 0.9rem rgba(42, 60, 95, 0.05);
+  box-shadow: 0 0 0 1px color-mix(in oklch, var(--line), transparent 50%) inset, 0 0.35rem 0.9rem rgba(20, 52, 99, 0.04);
 }
 
 .el-input__inner,
@@ -80,8 +86,8 @@ button {
 .el-button--primary {
   border: 0;
   color: oklch(98% 0.006 250);
-  background: linear-gradient(135deg, color-mix(in oklch, var(--accent), black 3%), color-mix(in oklch, var(--accent), var(--accent-warm) 28%));
-  box-shadow: 0 0.7rem 1.5rem color-mix(in oklch, var(--accent), transparent 76%);
+  background: linear-gradient(135deg, var(--official-blue), color-mix(in oklch, var(--accent), white 8%));
+  box-shadow: 0 0.45rem 1rem color-mix(in oklch, var(--official-blue), transparent 84%);
 }
 
 .el-button {

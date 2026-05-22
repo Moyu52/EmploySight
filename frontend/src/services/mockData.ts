@@ -5139,8 +5139,8 @@ export const mockSalaryPrediction: SalaryPrediction = {
   predictedMax: Math.round(overview.averageSalary * 1.24),
   predictedAvg: overview.averageSalary,
   confidence: 72.5,
-  modelName: 'RealDataBaseline',
-  explanation: '基于真实岗位样本平均薪资生成的前端兜底预测；后端可接入 data-processing 输出的模型文件。',
+  modelName: 'SalaryReference',
+  explanation: '基于岗位样本平均薪资生成的区间参考。',
   influenceFactors: ['真实样本平均薪资', '城市岗位样本', '行业样本', '学历经验分布', '技能文本']
 }
 
@@ -5152,7 +5152,7 @@ export const mockRecommendations: CareerRecommendation[] = [
     jobCategory: '生产制造与设备操作',
     matchScore: 82,
     salaryPotential: overview.averageSalary,
-    reason: '根据最新真实样本中的城市、行业和技能热度生成兜底推荐。',
+    reason: '根据最新样本中的城市、行业和技能热度生成推荐。',
     skillGaps: ['安全', '质量', '机械'],
     suggestions: ['优先选择真实样本岗位数较高的城市', '补齐安全、质量和设备基础', '投递前核对目标岗位薪资是否公开']
   }

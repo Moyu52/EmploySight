@@ -78,8 +78,8 @@ function fallbackSalaryPrediction(payload: SalaryPredictionRequest): SalaryPredi
     predictedMax: Math.round(predictedAvg * 1.24),
     predictedAvg,
     confidence: 72.5,
-    modelName: 'RealDataFallback',
-    explanation: '基于当前真实城市样本平均薪资生成的前端兜底预测。',
+    modelName: 'SalaryReference',
+    explanation: '基于当前城市样本平均薪资生成的区间参考。',
     influenceFactors: [`城市薪资基准：${payload.city}`, `行业结构：${payload.industry}`, `学历门槛：${payload.education}`, `经验要求：${payload.experience}`]
   }
 }

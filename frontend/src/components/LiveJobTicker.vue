@@ -60,19 +60,20 @@ const loopJobs = computed(() => shouldLoop.value ? [...props.jobs, ...props.jobs
   gap: var(--space-xs);
   min-height: 2.08rem;
   padding: 0 var(--space-sm);
-  border: 1px solid color-mix(in oklch, var(--line), transparent 48%);
+  border: 1px solid color-mix(in oklch, var(--line), transparent 38%);
+  border-left: 3px solid color-mix(in oklch, var(--official-blue), transparent 32%);
   border-radius: 6px;
-  background: color-mix(in oklch, var(--surface), white 2%);
+  background: color-mix(in oklch, var(--panel), white 1%);
 }
 
 .job-row time {
-  color: var(--accent);
+  color: var(--official-blue);
   font-size: 0.74rem;
   font-variant-numeric: tabular-nums;
 }
 
 .job-row strong {
-  color: var(--accent-warm);
+  color: var(--official-gold);
   font-size: 0.78rem;
 }
 
@@ -90,8 +91,9 @@ const loopJobs = computed(() => shouldLoop.value ? [...props.jobs, ...props.jobs
 }
 
 .job-row b {
-  color: var(--text);
+  color: var(--official-blue-deep);
   font-size: 0.78rem;
+  font-weight: 800;
 }
 
 .job-row span,
@@ -105,6 +107,7 @@ const loopJobs = computed(() => shouldLoop.value ? [...props.jobs, ...props.jobs
   font-size: 0.78rem;
   font-style: normal;
   text-align: right;
+  font-weight: 700;
 }
 
 @keyframes job-scroll {

@@ -1,7 +1,7 @@
 <template>
   <div class="decision-panel">
-    <el-tabs v-model="activeTab" stretch>
-      <el-tab-pane label="薪资预测" name="salary">
+    <el-tabs v-model="activeTab" :class="{ 'single-mode': props.mode !== 'both' }" stretch>
+      <el-tab-pane v-if="props.mode !== 'career'" label="薪资预测" name="salary">
         <el-form class="decision-form" label-position="top">
           <el-row :gutter="8">
             <el-col :span="12">
@@ -51,10 +51,10 @@
         <div v-if="salaryResult" class="result-block">
           <span>预测月薪区间</span>
           <strong>{{ salaryResult.predictedMin.toLocaleString('zh-CN') }} - {{ salaryResult.predictedMax.toLocaleString('zh-CN') }}</strong>
-          <p>{{ salaryResult.modelName }} · 置信度 {{ salaryResult.confidence }}%</p>
+          <p>参考置信度 {{ salaryResult.confidence }}%</p>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="职业推荐" name="career">
+      <el-tab-pane v-if="props.mode !== 'salary'" label="职业推荐" name="career">
         <el-form class="decision-form" label-position="top">
           <el-form-item label="专业">
             <el-input v-model="careerForm.major" size="small" />
@@ -86,12 +86,15 @@ import { Activity, Route } from 'lucide-vue-next'
 import { predictSalary, recommendCareer } from '../services/dashboard'
 import type { CareerRecommendation, CityMetric, RankItem, SalaryPrediction, SkillKeyword } from '../types/dashboard'
 
-const activeTab = ref('salary')
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   cities?: CityMetric[]
   industries?: RankItem[]
   skills?: SkillKeyword[]
-}>()
+  mode?: 'salary' | 'career' | 'both'
+}>(), {
+  mode: 'both'
+})
+const activeTab = ref(props.mode === 'career' ? 'career' : 'salary')
 
 const fallbackCities = ['西安', '北京', '重庆', '哈尔滨', '长春', '苏州', '大连', '西宁', '青岛', '常州']
 const fallbackIndustries = ['生产制造及有关人员', '专业技术人员', '销售人员', '机械冷加工人员', '社会生产服务和生活服务人员']
@@ -166,6 +169,10 @@ watch(skillOptions, (options) => {
   }
 }, { immediate: true })
 
+watch(() => props.mode, (mode) => {
+  activeTab.value = mode === 'career' ? 'career' : 'salary'
+}, { immediate: true })
+
 async function runSalary() {
   salaryResult.value = await predictSalary(salaryForm)
 }
@@ -192,10 +199,19 @@ runRecommend()
   height: 100%;
 }
 
+.decision-panel :deep(.el-tabs.single-mode .el-tabs__header) {
+  display: none;
+}
+
 .decision-panel :deep(.el-tabs__content),
 .decision-panel :deep(.el-tab-pane) {
   height: calc(100% - 2.65rem);
   min-height: 0;
+}
+
+.decision-panel :deep(.el-tabs.single-mode .el-tabs__content),
+.decision-panel :deep(.el-tabs.single-mode .el-tab-pane) {
+  height: 100%;
 }
 
 .decision-form {
@@ -224,8 +240,10 @@ runRecommend()
   gap: 0.12rem var(--space-xs);
   margin-top: var(--space-md);
   padding: var(--space-md);
+  border: 1px solid color-mix(in oklch, var(--official-blue), transparent 72%);
+  border-left: 3px solid var(--official-blue);
   border-radius: 7px;
-  background: color-mix(in oklch, var(--surface), transparent 12%);
+  background: color-mix(in oklch, var(--official-blue-soft), white 4%);
 }
 
 .result-block span,
@@ -237,8 +255,8 @@ runRecommend()
 
 .result-block strong {
   grid-row: span 2;
-  color: var(--accent-warm);
-  font-size: clamp(1.15rem, 1.7vw, 1.65rem);
+  color: var(--official-blue);
+  font-size: 1.48rem;
   font-variant-numeric: tabular-nums;
 }
 
@@ -254,12 +272,14 @@ runRecommend()
   display: grid;
   gap: 0.2rem;
   padding: 0.42rem var(--space-sm);
+  border: 1px solid color-mix(in oklch, var(--line), transparent 48%);
+  border-left: 3px solid color-mix(in oklch, var(--official-blue), transparent 32%);
   border-radius: 7px;
-  background: color-mix(in oklch, var(--surface), transparent 14%);
+  background: color-mix(in oklch, var(--panel), white 1%);
 }
 
 .recommend-item b {
-  color: var(--text);
+  color: var(--official-blue-deep);
   font-size: 0.78rem;
 }
 
@@ -274,11 +294,11 @@ runRecommend()
 }
 
 :deep(.el-tabs__item.is-active) {
-  color: var(--accent);
+  color: var(--official-blue);
 }
 
 :deep(.el-tabs__active-bar) {
-  background-color: var(--accent);
+  background-color: var(--official-blue);
 }
 
 :deep(.el-tabs__nav-wrap::after) {

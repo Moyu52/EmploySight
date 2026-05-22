@@ -102,7 +102,7 @@ function buildOption(): EChartsOption {
       max: maxHeat,
       show: false,
       inRange: {
-        color: ['#e9f1fb', '#9bb9df', '#4d7fc6', '#d29a2e']
+        color: ['#eef5ff', '#bfd2ed', '#6f99d4', '#d7b45d']
       }
     },
     geo: {
@@ -111,17 +111,17 @@ function buildOption(): EChartsOption {
       zoom: 1.16,
       center: [105.8, 36.2],
       itemStyle: {
-        areaColor: 'rgba(176, 202, 234, 0.82)',
-        borderColor: 'rgba(52, 79, 122, 0.58)',
+        areaColor: 'rgba(198, 218, 242, 0.84)',
+        borderColor: 'rgba(72, 111, 166, 0.46)',
         borderWidth: 1.08,
         shadowBlur: 8,
-        shadowColor: 'rgba(74, 101, 145, 0.14)'
+        shadowColor: 'rgba(36, 76, 133, 0.1)'
       },
       emphasis: {
         itemStyle: {
-          areaColor: '#ffbf5c',
-          shadowBlur: 24,
-          shadowColor: 'rgba(255, 207, 90, 0.64)'
+          areaColor: '#dfbd68',
+          shadowBlur: 16,
+          shadowColor: 'rgba(201, 149, 45, 0.28)'
         },
         label: {
           color: '#071326',
@@ -168,9 +168,9 @@ function buildOption(): EChartsOption {
           period: 4.8
         },
         itemStyle: {
-          color: 'rgba(210, 154, 46, 0.78)',
-          shadowBlur: 8,
-          shadowColor: 'rgba(210, 154, 46, 0.28)'
+          color: 'rgba(215, 180, 93, 0.78)',
+          shadowBlur: 6,
+          shadowColor: 'rgba(201, 149, 45, 0.2)'
         },
         zlevel: 2
       },
@@ -182,11 +182,11 @@ function buildOption(): EChartsOption {
         silent: true,
         lineStyle: {
           width: 1.6,
-          color: 'rgba(45, 95, 189, 0.16)',
-          opacity: 0.42,
+          color: 'rgba(88, 133, 198, 0.16)',
+          opacity: 0.34,
           curveness: 0.24,
-          shadowBlur: 6,
-          shadowColor: 'rgba(45, 95, 189, 0.2)'
+          shadowBlur: 4,
+          shadowColor: 'rgba(36, 87, 168, 0.14)'
         },
         zlevel: 1
       },
@@ -201,11 +201,11 @@ function buildOption(): EChartsOption {
           trailLength: 0.16,
           symbol: 'path://M0,-5 L12,0 L0,5 L3,0 Z',
           symbolSize: 7,
-          color: 'rgba(31, 75, 148, 0.5)'
+          color: 'rgba(36, 87, 168, 0.5)'
         },
         lineStyle: {
           width: 0.9,
-          color: 'rgba(31, 75, 148, 0.34)',
+          color: 'rgba(36, 87, 168, 0.34)',
           opacity: 0.48,
           curveness: 0.24,
           shadowBlur: 0
@@ -318,10 +318,10 @@ onBeforeUnmount(() => {
   bottom: calc(var(--space-md) + 0.25rem);
   width: min(18.25rem, calc(100% - 2.5rem));
   padding: var(--space-sm);
-  border: 1px solid color-mix(in oklch, var(--accent), transparent 58%);
+  border: 1px solid color-mix(in oklch, var(--official-blue), transparent 58%);
   border-radius: 8px;
-  background: linear-gradient(135deg, color-mix(in oklch, var(--panel), white 2%), color-mix(in oklch, var(--surface), white 2%));
-  box-shadow: 0 0.85rem 2rem rgba(42, 60, 95, 0.12);
+  background: linear-gradient(180deg, color-mix(in oklch, var(--panel), white 2%), color-mix(in oklch, var(--surface), white 2%));
+  box-shadow: 0 0.85rem 2rem rgba(20, 52, 99, 0.12);
 }
 
 .province-card span,
@@ -334,7 +334,7 @@ onBeforeUnmount(() => {
 .province-card strong {
   display: block;
   margin-top: 0.15rem;
-  color: var(--accent);
+  color: var(--official-blue);
   font-size: 1.22rem;
 }
 
@@ -352,7 +352,7 @@ onBeforeUnmount(() => {
 }
 
 .province-card b {
-  color: var(--accent);
+  color: var(--official-blue);
   font-size: 0.92rem;
   font-variant-numeric: tabular-nums;
 }

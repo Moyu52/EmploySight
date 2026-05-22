@@ -29,8 +29,8 @@ const props = withDefaults(defineProps<{
   duration: 18
 })
 
-const shouldLoop = computed(() => props.items.length > 4)
-const loopItems = computed(() => shouldLoop.value ? [...props.items, ...props.items] : props.items)
+const shouldLoop = computed(() => false)
+const loopItems = computed(() => props.items)
 
 function rankNo(index: number) {
   return props.items.length > 0 ? (index % props.items.length) + 1 : index + 1
@@ -76,9 +76,9 @@ function formatValue(value: number) {
   gap: var(--space-xs);
   min-height: 2.34rem;
   padding: 0 var(--space-xs);
-  border: 1px solid color-mix(in oklch, var(--line), transparent 42%);
+  border: 1px solid color-mix(in oklch, var(--line), transparent 38%);
   border-radius: 6px;
-  background: color-mix(in oklch, var(--surface), transparent 16%);
+  background: color-mix(in oklch, var(--panel), white 1%);
 }
 
 .rank-row__no {
@@ -87,9 +87,11 @@ function formatValue(value: number) {
   width: 1.45rem;
   height: 1.45rem;
   border-radius: 50%;
-  color: var(--text-strong);
-  background: color-mix(in oklch, var(--accent), transparent 74%);
+  border: 1px solid color-mix(in oklch, var(--official-blue), transparent 74%);
+  color: var(--official-blue);
+  background: color-mix(in oklch, var(--official-blue-soft), white 4%);
   font-size: 0.74rem;
+  font-weight: 800;
   font-variant-numeric: tabular-nums;
 }
 
@@ -109,9 +111,9 @@ function formatValue(value: number) {
 
 .rank-row b {
   overflow: hidden;
-  color: var(--text);
+  color: var(--official-blue-deep);
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -124,7 +126,7 @@ function formatValue(value: number) {
 }
 
 .rank-row strong {
-  color: var(--accent-warm);
+  color: var(--official-blue);
   font-size: 0.78rem;
   text-align: right;
   font-variant-numeric: tabular-nums;
@@ -141,7 +143,12 @@ function formatValue(value: number) {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--accent), var(--accent-warm));
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--official-blue), white 12%),
+    color-mix(in oklch, var(--accent-green), white 12%),
+    color-mix(in oklch, var(--official-gold), white 10%)
+  );
   transform-origin: left center;
   animation: bar-in 900ms var(--ease-out-quint) both;
 }

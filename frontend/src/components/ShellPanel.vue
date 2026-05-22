@@ -29,11 +29,24 @@ defineProps<{
   flex-direction: column;
   overflow: hidden;
   min-height: 0;
-  border: 1px solid color-mix(in oklch, var(--line), transparent 58%);
+  border: 1px solid color-mix(in oklch, var(--line), transparent 42%);
   border-radius: 8px;
-  background: linear-gradient(135deg, color-mix(in oklch, var(--panel), white 1%), color-mix(in oklch, var(--surface), white 2%));
+  background: linear-gradient(180deg, color-mix(in oklch, var(--panel), white 2%), color-mix(in oklch, var(--surface), white 1%));
   box-shadow: var(--shadow-panel);
   min-width: 0;
+}
+
+.shell-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, var(--official-blue), transparent 78%),
+    color-mix(in oklch, var(--official-gold), transparent 82%)
+  );
+  opacity: 0.9;
 }
 
 .shell-panel::after {
@@ -57,8 +70,9 @@ defineProps<{
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-md);
-  padding: var(--space-md) var(--space-md) var(--space-sm);
-  border-bottom: 1px solid color-mix(in oklch, var(--line), transparent 70%);
+  padding: 0.92rem var(--space-md) var(--space-sm);
+  border-bottom: 1px solid color-mix(in oklch, var(--line), transparent 56%);
+  background: linear-gradient(180deg, color-mix(in oklch, var(--panel), white 1%), transparent);
 }
 
 .shell-panel__body {
@@ -85,7 +99,7 @@ defineProps<{
 
 .shell-panel h2 {
   margin: 0.1rem 0 0;
-  color: var(--text-strong);
+  color: var(--official-blue-deep);
   font-size: 1rem;
   font-weight: 800;
 }

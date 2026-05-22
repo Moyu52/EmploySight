@@ -79,9 +79,9 @@ function salaryOption(): EChartsOption {
         itemStyle: {
           borderRadius: [4, 4, 0, 0],
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: '#d29a2e' },
-            { offset: 0.48, color: '#2d5fbd' },
-            { offset: 1, color: '#41a980' }
+            { offset: 0, color: '#d7b45d' },
+            { offset: 0.48, color: '#5f8fd0' },
+            { offset: 1, color: '#63ad92' }
           ])
         }
       }
@@ -124,7 +124,7 @@ function pieOption(title: string, data: { name: string; value: number }[], title
           borderWidth: 2,
           borderColor: '#f7fbff'
         },
-        color: ['#2d5fbd', '#d29a2e', '#d86b4a', '#41a980', '#7b86d9'],
+        color: ['#5f8fd0', '#d7b45d', '#d98668', '#63ad92', '#8d98d6'],
         animationDurationUpdate: 850,
         animationEasingUpdate: 'quarticOut'
       }
@@ -188,8 +188,8 @@ onBeforeUnmount(() => {
 .chart {
   min-height: 0;
   border-radius: 6px;
-  border: 1px solid color-mix(in oklch, var(--line), transparent 68%);
-  background: linear-gradient(145deg, color-mix(in oklch, var(--surface), white 3%), color-mix(in oklch, var(--panel), white 2%));
+  border: 1px solid color-mix(in oklch, var(--line), transparent 50%);
+  background: linear-gradient(180deg, color-mix(in oklch, var(--panel), white 2%), color-mix(in oklch, var(--surface), white 1%));
   box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--line), transparent 80%);
 }
 

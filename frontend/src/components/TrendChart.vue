@@ -20,7 +20,7 @@ let timer = 0
 function option(): EChartsOption {
   const start = Math.max(0, props.trends.length - activeWindow.value)
   const view = props.trends.slice(start)
-  const colors = ['#2d5fbd', '#b17a16', '#287c62']
+  const colors = ['#5f8fd0', '#d7a94a', '#63ad92']
   return {
     color: colors,
     grid: { left: 46, right: 34, top: 30, bottom: 26 },

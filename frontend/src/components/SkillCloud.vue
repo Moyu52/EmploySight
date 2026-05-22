@@ -67,23 +67,28 @@ function pillStyle(item: SkillKeyword, index: number) {
   min-width: 0;
   min-height: 3.8rem;
   padding: var(--space-xs) var(--space-sm);
-  border: 1px solid color-mix(in oklch, var(--accent), transparent 48%);
+  border: 1px solid color-mix(in oklch, var(--official-blue), transparent 56%);
+  border-left: 3px solid color-mix(in oklch, var(--official-blue), transparent 28%);
   border-radius: 7px;
   color: var(--text);
   background:
-    linear-gradient(135deg, color-mix(in oklch, var(--accent), transparent 92%), color-mix(in oklch, var(--panel), white 2%)),
-    color-mix(in oklch, var(--accent), transparent calc(100% - (var(--pill-alpha) * 45%)));
-  box-shadow: 0 0.45rem 1rem rgba(42, 60, 95, 0.07);
+    linear-gradient(135deg, color-mix(in oklch, var(--official-blue-soft), white 2%), color-mix(in oklch, var(--panel), white 2%)),
+    color-mix(in oklch, var(--official-blue), transparent calc(100% - (var(--pill-alpha) * 35%)));
+  box-shadow: 0 0.45rem 1rem rgba(20, 52, 99, 0.06);
   cursor: default;
   overflow: hidden;
-  animation: skill-float 4.8s var(--ease-out-quint) infinite;
-  animation-delay: var(--pill-delay);
+  transition: border-color 180ms var(--ease-out-quint), transform 180ms var(--ease-out-quint);
+}
+
+.skill-pill:hover {
+  border-color: color-mix(in oklch, var(--official-blue), transparent 28%);
+  transform: translateY(-1px);
 }
 
 .skill-pill span {
   grid-column: 1 / -1;
   min-width: 0;
-  color: var(--text-strong);
+  color: var(--official-blue-deep);
   font-size: var(--pill-size);
   font-weight: 800;
   line-height: 1.05;
@@ -96,19 +101,9 @@ function pillStyle(item: SkillKeyword, index: number) {
 }
 
 .skill-pill strong {
-  color: var(--accent-warm);
+  color: var(--official-blue);
   font-size: 0.72rem;
   font-variant-numeric: tabular-nums;
-}
-
-@keyframes skill-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-0.24rem);
-  }
 }
 
 @media (max-height: 820px) {
