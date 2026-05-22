@@ -29,8 +29,8 @@ const props = withDefaults(defineProps<{
   duration: 18
 })
 
-const shouldLoop = computed(() => false)
-const loopItems = computed(() => props.items)
+const shouldLoop = computed(() => props.items.length > 5)
+const loopItems = computed(() => (shouldLoop.value ? [...props.items, ...props.items] : props.items))
 
 function rankNo(index: number) {
   return props.items.length > 0 ? (index % props.items.length) + 1 : index + 1

@@ -120,3 +120,44 @@ export interface CareerRecommendation {
   skillGaps: string[]
   suggestions: string[]
 }
+
+export interface AdminSession {
+  token: string
+  username: string
+  expiresAt: string
+}
+
+export interface AdminAuditRecord {
+  id: string
+  username: string
+  loginTime: string
+  reportedIp: string
+  observedIp: string
+  userAgent: string
+  source: string
+  status: string
+  note: string
+}
+
+export interface AdminDeleteAuditResult {
+  deletedId: string
+  backupFile: string
+}
+
+export interface AdminDeleteSecurityError {
+  remainingAttempts: number
+  maxAttempts: number
+  banned: boolean
+  blockedUntil: string
+}
+
+export interface AdminBannedIpRecord {
+  ip: string
+  attempts: number
+  blockedUntil: string
+}
+
+export interface AdminUnbanIpResult {
+  ip: string
+  unbanned: boolean
+}

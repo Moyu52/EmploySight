@@ -38,31 +38,41 @@
       <div class="login-card__head">
         <LockKeyhole :size="22" />
         <div>
-          <span>平台访问</span>
-          <h2>进入职业洞察平台</h2>
+          <span>身份访问</span>
+          <h2>选择身份进入平台</h2>
+        </div>
+      </div>
+      <div class="identity-guide" aria-label="登录身份说明">
+        <div class="identity-guide__row">
+          <UserRound :size="18" />
+          <div>
+            <b>普通用户</b>
+            <span>使用默认账号或自定义账号，可进入就业趋势、薪资评估、技能趋势和职业建议模块。</span>
+          </div>
+        </div>
+        <div class="identity-guide__row identity-guide__row--admin">
+          <ShieldCheck :size="18" />
+          <div>
+            <b>管理员身份</b>
+            <span>账号填写 <code>admin</code>，输入后端配置的管理员密码后进入平台状态与登录 IP 审计。</span>
+          </div>
         </div>
       </div>
       <el-form class="login-form" label-position="top" @submit.prevent="handleLogin">
         <el-form-item label="账号">
-          <el-input v-model="loginForm.username" size="large" placeholder="请输入访问账号" />
+          <el-input v-model="loginForm.username" size="large" placeholder="普通账号任意填写；管理员请输入 admin" />
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="loginForm.password" size="large" type="password" show-password placeholder="请输入访问密码" />
+          <el-input v-model="loginForm.password" size="large" type="password" show-password placeholder="普通账号可用默认密码；管理员请输入管理员密码" />
         </el-form-item>
-        <el-form-item label="登录角色">
-          <el-select v-model="loginForm.role" size="large">
-            <el-option label="公开访客" value="公开访客" />
-            <el-option label="求职用户" value="求职用户" />
-            <el-option label="机构用户" value="机构用户" />
-          </el-select>
-        </el-form-item>
+        <p v-if="loginError" class="login-error">{{ loginError }}</p>
         <el-button class="login-button" type="primary" size="large" native-type="button" @click="handleLogin">
-          进入平台
+          按身份进入平台
         </el-button>
       </el-form>
       <div class="login-note">
-        <span>公开版支持访客访问</span>
-        <span>企业用户可接入专属账号体系</span>
+        <span>普通账号访问分析平台</span>
+        <span>admin 账号解锁管理员审计</span>
       </div>
       <div class="defense-info">
         <article>
@@ -94,9 +104,9 @@
         <span>{{ isSidebarCollapsed ? '展开导航' : '收起导航' }}</span>
       </button>
       <div class="thesis-mini">
-        <span>公开数据版</span>
+        <span>统一访问</span>
         <b>全国岗位观察</b>
-        <em>覆盖城市与行业趋势</em>
+        <em>覆盖市场、城市、薪资、技能与平台状态</em>
       </div>
       <nav class="module-nav" aria-label="功能模块">
         <button v-for="item in modules" :key="item.key" :class="{ active: activeModule === item.key }" type="button" :aria-label="item.label" :title="isSidebarCollapsed ? item.label : undefined" @click="activeModule = item.key">
@@ -125,7 +135,7 @@
           <UserRound :size="18" />
           <div>
             <b>{{ loginForm.username }}</b>
-            <span>{{ loginForm.role }}</span>
+            <span>统一平台账号</span>
           </div>
           <button type="button" title="退出登录" @click="logout">
             <LogOut :size="16" />
@@ -136,7 +146,7 @@
     <section v-if="activeModule === 'home'" class="portal-home">
       <section class="home-hero">
         <span>就业市场总览</span>
-        <h2>把岗位、城市、薪资和技能趋势放在同一个决策视图里</h2>
+        <h2>把岗位、城市、薪资、技能和平台状态放在同一个决策视图里</h2>
         <p>平台将公开招聘样本转化为可阅读的就业市场信号，帮助用户判断机会集中在哪里、薪资区间是否合理、下一步该补强哪些能力。</p>
         <div class="thesis-meta-grid">
           <article>
@@ -158,10 +168,10 @@
         </div>
       </section>
       <section class="home-metrics">
-        <MetricCard label="岗位样本" :value="overviewData.totalJobs" suffix="条记录" icon="jobs" />
-        <MetricCard label="薪资样本" :value="overviewData.salarySampleRows" suffix="条记录" icon="salary" />
-        <MetricCard label="覆盖城市" :value="overviewData.coveredCities" suffix="个城市" :detail="`地图展示 ${mappableCityCount} 个城市`" icon="city" />
-        <MetricCard label="应届友好" :value="overviewData.freshFriendlyIndex" suffix="指数" icon="fresh" :decimals="1" />
+        <MetricCard label="岗位样本" :value="overviewData.totalJobs" suffix="条记录" icon="jobs" prominent />
+        <MetricCard label="薪资样本" :value="overviewData.salarySampleRows" suffix="条记录" icon="salary" prominent />
+        <MetricCard label="覆盖城市" :value="overviewData.coveredCities" suffix="个城市" :detail="`地图展示 ${mappableCityCount} 个城市`" icon="city" prominent />
+        <MetricCard label="应届友好" :value="overviewData.freshFriendlyIndex" suffix="指数" icon="fresh" :decimals="1" prominent />
       </section>
       <section class="home-grid">
         <article v-for="item in projectEntrances" :key="item.key" class="home-entry" @click="activeModule = item.key">
@@ -524,12 +534,90 @@
             </article>
           </div>
         </ShellPanel>
-        <ShellPanel title="访问角色" subtitle="不同用户的使用范围">
+        <ShellPanel title="登录 IP 审计" subtitle="管理员安全记录">
+          <div v-if="adminSession" class="audit-console">
+            <div class="audit-toolbar">
+              <el-input v-model="adminAuditQuery" size="large" clearable placeholder="按用户名、IP、状态搜索" @keyup.enter="loadAdminAuditRecords" />
+              <el-input v-model="adminDeletePassword" size="large" type="password" show-password placeholder="删除密码" />
+              <button type="button" :disabled="adminAuditLoading" @click="loadAdminAuditRecords">
+                {{ adminAuditLoading ? '读取中' : '刷新' }}
+              </button>
+            </div>
+            <div class="audit-summary">
+              <article>
+                <span>{{ adminAuditStats.total }}</span>
+                <b>审计记录</b>
+              </article>
+              <article>
+                <span>{{ adminAuditStats.uniqueObservedIps }}</span>
+                <b>后端记录 IP</b>
+              </article>
+              <article>
+                <span>{{ adminAuditStats.failedAttempts }}</span>
+                <b>失败尝试</b>
+              </article>
+              <article>
+                <span>{{ adminBannedIps.length }}</span>
+                <b>封禁 IP</b>
+              </article>
+            </div>
+            <div class="unban-panel">
+              <div>
+                <b>解除封禁 IP</b>
+                <span>用于删除密码输错达到上限后的临时封禁解除，解除密码单独校验。</span>
+              </div>
+              <el-input v-model="adminUnbanPassword" size="large" type="password" show-password placeholder="解除封禁密码" />
+            </div>
+            <div class="banned-ip-list">
+              <article v-for="item in adminBannedIps" :key="item.ip">
+                <b>{{ item.ip }}</b>
+                <span>失败 {{ item.attempts }} 次 · 封禁至 {{ formatAuditTime(item.blockedUntil) }}</span>
+                <button type="button" :disabled="adminAuditLoading" @click="unbanIp(item.ip)">解除封禁</button>
+              </article>
+              <div v-if="!adminBannedIps.length" class="audit-empty">暂无被封禁 IP</div>
+            </div>
+            <p class="audit-note">
+              上报 IP 来自代理请求头，可能不可信；后端记录 IP 来自服务端请求对象，仍会受可信代理配置影响，用户使用 VPN 时通常为 VPN 出口。
+            </p>
+            <p class="audit-warning">
+              删除密码最多可连续输错 3 次；输错时会提示剩余机会，达到上限后当前 IP 将被临时封禁，防止暴力破解删除密码。
+            </p>
+            <p v-if="adminUnbanMessage" class="audit-message">{{ adminUnbanMessage }}</p>
+            <p v-if="adminAuditMessage" class="audit-message">{{ adminAuditMessage }}</p>
+            <div class="audit-table">
+              <div class="audit-table__head">
+                <span>用户</span>
+                <span>时间</span>
+                <span>上报 IP</span>
+                <span>后端记录 IP</span>
+                <span>来源</span>
+                <span>状态</span>
+                <span>操作</span>
+              </div>
+              <article v-for="record in adminAuditRecords" :key="record.id">
+                <b>{{ record.username }}</b>
+                <span>{{ formatAuditTime(record.loginTime) }}</span>
+                <span>{{ record.reportedIp || '未记录' }}</span>
+                <span>{{ record.observedIp || '未记录' }}</span>
+                <em>{{ auditSourceLabel(record.source) }}</em>
+                <em :class="{ failed: record.status === 'failed' }">{{ auditStatusLabel(record.status) }}</em>
+                <button type="button" :disabled="adminAuditLoading" @click="removeAuditRecord(record.id)">删除</button>
+              </article>
+              <div v-if="!adminAuditRecords.length" class="audit-empty">暂无审计记录</div>
+            </div>
+          </div>
+          <div v-else class="audit-locked">
+            <ShieldCheck :size="24" />
+            <b>管理员审计未解锁</b>
+            <span>使用 admin 账号登录后，可查看登录时间、上报 IP、后端记录 IP，并通过删除密码备份后删除记录。</span>
+          </div>
+        </ShellPanel>
+        <ShellPanel title="统一访问" subtitle="单一账号的使用范围">
           <div class="role-table">
-            <article v-for="role in roleRows" :key="role.name">
-              <b>{{ role.name }}</b>
-              <span>{{ role.scope }}</span>
-              <em>{{ role.permission }}</em>
+            <article v-for="item in accessRows" :key="item.name">
+              <b>{{ item.name }}</b>
+              <span>{{ item.scope }}</span>
+              <em>{{ item.permission }}</em>
             </article>
           </div>
         </ShellPanel>
@@ -567,6 +655,7 @@ import {
   UserRound,
   UsersRound
 } from 'lucide-vue-next'
+import { ElMessageBox } from 'element-plus'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import AutoRank from './components/AutoRank.vue'
 import ChinaMap from './components/ChinaMap.vue'
@@ -577,9 +666,32 @@ import MetricCard from './components/MetricCard.vue'
 import ShellPanel from './components/ShellPanel.vue'
 import SkillCloud from './components/SkillCloud.vue'
 import TrendChart from './components/TrendChart.vue'
-import { fetchAnalysis, fetchCities, fetchLiveJobs, fetchOverview, fetchProvinces } from './services/dashboard'
+import {
+  ApiRequestError,
+  deleteAdminAuditRecord,
+  fetchAdminBannedIps,
+  fetchAdminAuditRecords,
+  fetchAnalysis,
+  fetchCities,
+  fetchLiveJobs,
+  fetchOverview,
+  fetchProvinces,
+  isAdminDeleteSecurityError,
+  loginAdmin,
+  recordPlatformLogin,
+  unbanAdminIp
+} from './services/dashboard'
 import { analysis, cityMetrics, liveJobs, overview, provinceMetrics } from './services/mockData'
-import type { CityMetric, DashboardAnalysis, DashboardOverview, JobLiveItem, ProvinceMetric } from './types/dashboard'
+import type {
+  AdminAuditRecord,
+  AdminBannedIpRecord,
+  AdminSession,
+  CityMetric,
+  DashboardAnalysis,
+  DashboardOverview,
+  JobLiveItem,
+  ProvinceMetric
+} from './types/dashboard'
 
 type ModuleKey = 'home' | 'dashboard' | 'city' | 'salary' | 'skills' | 'career' | 'data' | 'model' | 'report' | 'admin'
 
@@ -591,15 +703,26 @@ const modules = [
   { key: 'skills' as ModuleKey, label: '技能趋势', icon: SearchCode },
   { key: 'career' as ModuleKey, label: '职业建议', icon: Route },
   { key: 'data' as ModuleKey, label: '数据概览', icon: Database },
-  { key: 'report' as ModuleKey, label: '洞察报告', icon: FileChartColumnIncreasing }
+  { key: 'model' as ModuleKey, label: '模型评估', icon: ServerCog },
+  { key: 'report' as ModuleKey, label: '洞察报告', icon: FileChartColumnIncreasing },
+  { key: 'admin' as ModuleKey, label: '平台状态', icon: ShieldCheck }
 ]
 
 const isAuthenticated = ref(false)
 const loginForm = ref({
-  username: '访客',
-  password: '123456',
-  role: '公开访客'
+  username: '用户',
+  password: '123456'
 })
+const loginError = ref('')
+const adminSession = ref<AdminSession | null>(null)
+const adminAuditRecords = ref<AdminAuditRecord[]>([])
+const adminAuditQuery = ref('')
+const adminAuditLoading = ref(false)
+const adminDeletePassword = ref('')
+const adminAuditMessage = ref('')
+const adminBannedIps = ref<AdminBannedIpRecord[]>([])
+const adminUnbanPassword = ref('')
+const adminUnbanMessage = ref('')
 const activeModule = ref<ModuleKey>('home')
 const isSidebarCollapsed = ref(false)
 const overviewData = ref<DashboardOverview>(overview)
@@ -636,6 +759,12 @@ const currentTime = computed(() => {
 })
 
 const activeModuleMeta = computed(() => moduleMeta[activeModule.value])
+const adminAuditStats = computed(() => ({
+  total: adminAuditRecords.value.length,
+  uniqueObservedIps: new Set(adminAuditRecords.value.map((item) => item.observedIp).filter(Boolean)).size,
+  failedAttempts: adminAuditRecords.value.filter((item) => item.status === 'failed').length
+}))
+
 function cleanDisplayName(value: string) {
   return value
     .replace(/省省$/u, '省')
@@ -720,6 +849,9 @@ const projectEntrances = [
   { key: 'salary' as ModuleKey, title: '薪资评估', text: '按城市、行业、学历、经验和技能估算岗位薪资区间。', icon: ChartColumnIncreasing },
   { key: 'skills' as ModuleKey, title: '技能趋势', text: '观察不同岗位描述中的高频能力要求。', icon: SearchCode },
   { key: 'career' as ModuleKey, title: '职业建议', text: '根据专业、技能和城市偏好生成投递方向。', icon: Route },
+  { key: 'data' as ModuleKey, title: '数据概览', text: '查看样本来源、处理流程、覆盖范围和质量口径。', icon: Database },
+  { key: 'model' as ModuleKey, title: '模型评估', text: '查看薪资参考模型的误差、特征和可信度边界。', icon: ServerCog },
+  { key: 'admin' as ModuleKey, title: '平台状态', text: '查看统一入口、数据服务、薪资服务和运行状态。', icon: ShieldCheck },
   { key: 'report' as ModuleKey, title: '洞察报告', text: '整理市场信号、城市机会和行动建议。', icon: FileChartColumnIncreasing }
 ]
 
@@ -831,7 +963,7 @@ const reportSections = [
 ]
 
 const systemFeatures = [
-  { title: '公开访问入口', text: '支持访客查看核心市场指标，也可扩展为机构账号体系。' },
+  { title: '统一访问入口', text: '支持单一账号查看核心市场指标和完整分析模块。' },
   { title: '市场分析模块', text: '包含全国态势、城市机会、薪资评估、技能趋势和职业建议。' },
   { title: '数据透明度', text: '展示样本时间范围、覆盖城市、有效薪资样本和质量口径。' },
   { title: '薪资参考模块', text: '呈现薪资区间、影响因素和使用边界，避免绝对化判断。' },
@@ -847,31 +979,208 @@ const demoRoute = [
 ]
 
 const adminCards = [
-  { title: '访问角色', text: '访客、求职用户和机构用户可按需扩展权限。', status: '可用', icon: UsersRound },
+  { title: '统一入口', text: '单一账号进入完整平台，所有分析入口统一展示。', status: '可用', icon: UsersRound },
   { title: '数据快照', text: '岗位聚合指标已加载，页面展示当前可用样本。', status: '运行中', icon: Database },
   { title: '薪资服务', text: '薪资区间和影响因素可正常生成。', status: '可用', icon: ServerCog },
-  { title: '访问控制', text: '保留登录态、角色展示和退出流程。', status: '可用', icon: ShieldCheck }
+  { title: '访问控制', text: '保留登录态、账号展示和退出流程。', status: '可用', icon: ShieldCheck }
 ]
 
-const roleRows = [
-  { name: '公开访客', scope: '查看市场概览、城市机会和岗位趋势', permission: '公开浏览' },
-  { name: '求职用户', scope: '使用薪资评估、职业建议和技能提升建议', permission: '个人决策' },
-  { name: '机构用户', scope: '查看数据概览、洞察报告和服务状态', permission: '组织分析' }
+const accessRows = [
+  { name: '市场洞察', scope: '查看首页、全国就业态势、城市机会和技能趋势', permission: '统一开放' },
+  { name: '个人决策', scope: '使用薪资评估、职业路径建议和技能提升建议', permission: '统一开放' },
+  { name: '平台管理', scope: '查看数据概览、模型评估、洞察报告和平台状态', permission: '统一开放' }
 ]
 
-function handleLogin() {
+function auditSourceLabel(source: string) {
+  return source === 'admin' ? '管理员' : '平台'
+}
+
+function auditStatusLabel(status: string) {
+  return status === 'failed' ? '失败' : '成功'
+}
+
+function formatAuditTime(value: string) {
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) {
+    return value
+  }
+  return new Intl.DateTimeFormat('zh-CN', {
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  }).format(date)
+}
+
+function formatBlockedUntil(value: string) {
+  if (!value) {
+    return ''
+  }
+  return formatAuditTime(value)
+}
+
+function adminDeleteErrorMessage(error: unknown) {
+  if (error instanceof ApiRequestError && isAdminDeleteSecurityError(error.detail)) {
+    const detail = error.detail
+    if (detail.banned) {
+      const blockedUntil = formatBlockedUntil(detail.blockedUntil)
+      return blockedUntil
+        ? `删除密码错误次数过多，当前 IP 已被封禁，请在 ${blockedUntil} 后再试。`
+        : '删除密码错误次数过多，当前 IP 已被封禁，请稍后再试。'
+    }
+    return `删除密码错误，还剩 ${detail.remainingAttempts} 次机会，否则当前 IP 将会被封禁。`
+  }
+  if (error instanceof ApiRequestError && error.status === 404) {
+    return '删除失败，该审计记录不存在或已被删除。'
+  }
+  if (error instanceof ApiRequestError && error.status === 401) {
+    return '删除失败，管理员会话已失效，请重新登录。'
+  }
+  return '删除失败，请检查删除密码或管理员会话。'
+}
+
+async function loadAdminAuditRecords() {
+  if (!adminSession.value) {
+    return
+  }
+  adminAuditLoading.value = true
+  adminAuditMessage.value = ''
+  try {
+    adminAuditRecords.value = await fetchAdminAuditRecords(adminSession.value.token, adminAuditQuery.value)
+    adminBannedIps.value = await fetchAdminBannedIps(adminSession.value.token)
+  } catch {
+    adminAuditMessage.value = '审计记录读取失败，请确认后端服务和管理员会话仍然有效。'
+  } finally {
+    adminAuditLoading.value = false
+  }
+}
+
+async function unbanIp(ip: string) {
+  if (!adminSession.value) {
+    adminUnbanMessage.value = '请先使用管理员账号登录。'
+    return
+  }
+  if (!adminUnbanPassword.value.trim()) {
+    adminUnbanMessage.value = '解除封禁前需要输入解除封禁密码。'
+    return
+  }
+  try {
+    await ElMessageBox.confirm(
+      `确认解除 ${ip} 的删除操作封禁吗？`,
+      '确认解除封禁',
+      {
+        confirmButtonText: '确认解除',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    )
+  } catch {
+    adminUnbanMessage.value = '已取消解除封禁操作。'
+    return
+  }
+
+  adminAuditLoading.value = true
+  adminUnbanMessage.value = ''
+  try {
+    const result = await unbanAdminIp(adminSession.value.token, ip, adminUnbanPassword.value)
+    adminUnbanMessage.value = result.unbanned ? `已解除 ${result.ip} 的封禁。` : `${result.ip} 当前没有封禁记录。`
+    adminBannedIps.value = await fetchAdminBannedIps(adminSession.value.token)
+  } catch (error) {
+    if (error instanceof ApiRequestError && error.status === 403) {
+      adminUnbanMessage.value = '解除封禁密码错误。'
+    } else if (error instanceof ApiRequestError && error.status === 401) {
+      adminUnbanMessage.value = '解除失败，管理员会话已失效，请重新登录。'
+    } else {
+      adminUnbanMessage.value = '解除封禁失败，请稍后重试。'
+    }
+  } finally {
+    adminAuditLoading.value = false
+  }
+}
+
+async function removeAuditRecord(recordId: string) {
+  if (!adminSession.value) {
+    adminAuditMessage.value = '请先使用管理员账号登录。'
+    return
+  }
+  if (!adminDeletePassword.value.trim()) {
+    adminAuditMessage.value = '删除记录前需要输入删除密码。'
+    return
+  }
+  const record = adminAuditRecords.value.find((item) => item.id === recordId)
+  try {
+    await ElMessageBox.confirm(
+      `确认删除 ${record?.username || '该用户'} 的这条登录审计记录吗？删除前系统会自动备份审计文件。`,
+      '确认删除审计记录',
+      {
+        confirmButtonText: '确认删除',
+        cancelButtonText: '取消',
+        type: 'warning',
+        distinguishCancelAndClose: true
+      }
+    )
+  } catch {
+    adminAuditMessage.value = '已取消删除操作。'
+    return
+  }
+  adminAuditLoading.value = true
+  adminAuditMessage.value = ''
+  try {
+    const result = await deleteAdminAuditRecord(adminSession.value.token, recordId, adminDeletePassword.value)
+    adminAuditMessage.value = `记录已删除，备份文件：${result.backupFile}`
+    await loadAdminAuditRecords()
+  } catch (error) {
+    adminAuditMessage.value = adminDeleteErrorMessage(error)
+    if (error instanceof ApiRequestError && isAdminDeleteSecurityError(error.detail) && error.detail.banned && adminSession.value) {
+      adminBannedIps.value = await fetchAdminBannedIps(adminSession.value.token).catch(() => adminBannedIps.value)
+    }
+  } finally {
+    adminAuditLoading.value = false
+  }
+}
+
+async function handleLogin() {
+  loginError.value = ''
   if (!loginForm.value.username.trim()) {
-    loginForm.value.username = '访客'
+    loginForm.value.username = '用户'
   }
   if (!loginForm.value.password.trim()) {
     loginForm.value.password = '123456'
   }
+  const username = loginForm.value.username.trim()
+  const password = loginForm.value.password
+
+  if (username.toLowerCase() === 'admin') {
+    try {
+      loginForm.value.username = 'admin'
+      adminSession.value = await loginAdmin('admin', password)
+      isAuthenticated.value = true
+      activeModule.value = 'admin'
+      await loadAdminAuditRecords()
+    } catch {
+      adminSession.value = null
+      loginError.value = '管理员账号或密码错误，或后端服务未启动。'
+    }
+    return
+  }
+
+  adminSession.value = null
+  adminAuditRecords.value = []
   isAuthenticated.value = true
   activeModule.value = 'home'
+  void recordPlatformLogin(username).catch(() => undefined)
 }
 
 function logout() {
   isAuthenticated.value = false
+  adminSession.value = null
+  adminAuditRecords.value = []
+  adminBannedIps.value = []
+  adminDeletePassword.value = ''
+  adminUnbanPassword.value = ''
+  adminAuditMessage.value = ''
+  adminUnbanMessage.value = ''
 }
 
 async function loadDashboard() {
@@ -1041,6 +1350,7 @@ onBeforeUnmount(() => {
 }
 
 .thesis-card div,
+.identity-guide__row,
 .defense-info article,
 .thesis-meta-grid article {
   display: grid;
@@ -1048,13 +1358,16 @@ onBeforeUnmount(() => {
 }
 
 .thesis-card span,
+.identity-guide__row span,
 .defense-info span,
 .thesis-meta-grid span {
   color: var(--text-muted);
   font-size: 0.72rem;
+  line-height: 1.55;
 }
 
 .thesis-card b,
+.identity-guide__row b,
 .defense-info b,
 .thesis-meta-grid b {
   color: var(--text-strong);
@@ -1123,9 +1436,63 @@ onBeforeUnmount(() => {
   font-size: 1.35rem;
 }
 
+.identity-guide {
+  display: grid;
+  gap: var(--space-xs);
+}
+
+.identity-guide__row {
+  grid-template-columns: 2.15rem minmax(0, 1fr);
+  align-items: start;
+  padding: 0.75rem;
+  border: 1px solid color-mix(in oklch, var(--line), transparent 54%);
+  border-radius: 7px;
+  background: color-mix(in oklch, var(--panel), white 1%);
+}
+
+.identity-guide__row svg {
+  display: block;
+  margin-top: 0.1rem;
+  color: var(--accent);
+}
+
+.identity-guide__row--admin {
+  border-color: color-mix(in oklch, var(--official-gold), transparent 58%);
+  background:
+    linear-gradient(90deg, color-mix(in oklch, var(--official-gold), transparent 86%) 0 0.18rem, transparent 0.18rem 100%),
+    color-mix(in oklch, var(--official-blue-soft), white 4%);
+}
+
+.identity-guide__row--admin svg,
+.identity-guide__row--admin b {
+  color: var(--official-blue-deep);
+}
+
+.identity-guide code {
+  padding: 0.08rem 0.32rem;
+  border: 1px solid color-mix(in oklch, var(--official-blue), transparent 72%);
+  border-radius: 5px;
+  color: var(--official-blue-deep);
+  background: color-mix(in oklch, var(--panel), white 2%);
+  font-family: "Cascadia Mono", "Consolas", monospace;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
 .login-form {
   display: grid;
   gap: var(--space-xs);
+}
+
+.login-error {
+  margin: 0;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid color-mix(in oklch, var(--accent-hot), transparent 58%);
+  border-radius: 7px;
+  color: var(--accent-hot);
+  background: color-mix(in oklch, var(--accent-hot), transparent 94%);
+  font-size: 0.82rem;
+  line-height: 1.5;
 }
 
 .login-button {
@@ -1468,9 +1835,11 @@ onBeforeUnmount(() => {
 .home-metrics {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-auto-rows: minmax(7.6rem, auto);
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
   gap: var(--space-sm);
-  align-self: start;
+  align-self: stretch;
+  min-height: 0;
 }
 
 .home-grid {
@@ -1593,6 +1962,10 @@ onBeforeUnmount(() => {
   grid-column: span 2;
 }
 
+.workbench--admin > :nth-child(2) {
+  grid-column: span 2;
+}
+
 .workbench--model,
 .workbench--report,
 .workbench--admin {
@@ -1624,6 +1997,220 @@ onBeforeUnmount(() => {
 
 .center-stage :deep(.shell-panel) {
   height: 100%;
+}
+
+.audit-console {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.audit-toolbar {
+  display: grid;
+  grid-template-columns: minmax(16rem, 1fr) minmax(12rem, 0.5fr) auto;
+  gap: var(--space-sm);
+  align-items: center;
+}
+
+.audit-toolbar button,
+.audit-table button {
+  min-height: 2.35rem;
+  border: 1px solid color-mix(in oklch, var(--accent), transparent 58%);
+  border-radius: 7px;
+  color: var(--text-strong);
+  background: color-mix(in oklch, var(--surface), white 2%);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.audit-toolbar button {
+  padding: 0 var(--space-md);
+  color: oklch(98% 0.006 250);
+  background: linear-gradient(135deg, var(--accent), color-mix(in oklch, var(--accent), black 12%));
+}
+
+.audit-toolbar button:disabled,
+.audit-table button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.audit-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-sm);
+}
+
+.audit-summary article,
+.banned-ip-list article,
+.audit-table article,
+.audit-locked {
+  display: grid;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  border: 1px solid color-mix(in oklch, var(--line), transparent 58%);
+  border-radius: 8px;
+  background: linear-gradient(135deg, color-mix(in oklch, var(--panel), white 2%), color-mix(in oklch, var(--surface), white 3%));
+  box-shadow: var(--shadow-panel);
+}
+
+.unban-panel {
+  display: grid;
+  grid-template-columns: minmax(16rem, 1fr) minmax(14rem, 0.52fr);
+  gap: var(--space-sm);
+  align-items: center;
+  padding: var(--space-md);
+  border: 1px solid color-mix(in oklch, var(--accent-hot), transparent 68%);
+  border-radius: 8px;
+  background: color-mix(in oklch, var(--accent-hot), transparent 96%);
+}
+
+.unban-panel div {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.unban-panel b,
+.banned-ip-list b {
+  color: var(--text-strong);
+}
+
+.unban-panel span,
+.banned-ip-list span {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.banned-ip-list {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.banned-ip-list article {
+  grid-template-columns: minmax(8rem, 0.5fr) minmax(14rem, 1fr) auto;
+  align-items: center;
+  box-shadow: none;
+}
+
+.banned-ip-list button {
+  min-height: 2rem;
+  padding: 0 var(--space-sm);
+  border: 1px solid color-mix(in oklch, var(--accent-hot), transparent 62%);
+  border-radius: 7px;
+  color: var(--accent-hot);
+  background: color-mix(in oklch, var(--panel), white 2%);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.banned-ip-list button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.audit-summary span {
+  color: var(--accent-warm);
+  font-size: 1.55rem;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+
+.audit-summary b,
+.audit-locked b {
+  color: var(--text-strong);
+}
+
+.audit-note,
+.audit-warning,
+.audit-message {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.audit-warning {
+  color: var(--accent-hot);
+}
+
+.audit-message {
+  color: var(--accent-warm);
+}
+
+.audit-table {
+  display: grid;
+  gap: 0.45rem;
+  overflow-x: auto;
+}
+
+.audit-table__head,
+.audit-table article {
+  display: grid;
+  grid-template-columns: minmax(6rem, 0.7fr) minmax(8rem, 0.8fr) minmax(9rem, 1fr) minmax(9rem, 1fr) minmax(5rem, 0.55fr) minmax(4.5rem, 0.45fr) minmax(4.8rem, 0.45fr);
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 58rem;
+}
+
+.audit-table__head {
+  padding: 0 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  font-weight: 800;
+}
+
+.audit-table article {
+  padding: 0.75rem;
+  box-shadow: none;
+}
+
+.audit-table b {
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+.audit-table span,
+.audit-table em,
+.audit-empty,
+.audit-locked span {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.audit-table em {
+  color: var(--accent);
+  font-style: normal;
+  font-weight: 800;
+}
+
+.audit-table em.failed {
+  color: var(--accent-hot);
+}
+
+.audit-table button {
+  min-height: 2rem;
+  color: var(--accent-hot);
+  border-color: color-mix(in oklch, var(--accent-hot), transparent 62%);
+  background: color-mix(in oklch, var(--accent-hot), transparent 94%);
+}
+
+.audit-empty {
+  padding: var(--space-md);
+  border: 1px dashed color-mix(in oklch, var(--line), transparent 46%);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.audit-locked {
+  justify-items: start;
+}
+
+.audit-locked svg {
+  color: var(--accent-warm);
 }
 
 .right-column :deep(.shell-panel),
@@ -2515,7 +3102,7 @@ onBeforeUnmount(() => {
 }
 
 .home-metrics {
-  grid-auto-rows: minmax(7.1rem, auto);
+  grid-auto-rows: minmax(0, 1fr);
 }
 
 .home-grid:not(.home-grid--narrow) {
@@ -2737,12 +3324,19 @@ onBeforeUnmount(() => {
   .home-grid--narrow,
   .home-longform,
   .bottom-band,
+  .audit-toolbar,
+  .audit-summary,
+  .unban-panel,
   .explain-grid,
   .model-score-grid,
   .report-layout,
   .admin-grid,
   .acceptance-grid {
     grid-template-columns: 1fr;
+  }
+
+  .workbench--admin > :nth-child(2) {
+    grid-column: span 1;
   }
 
   .home-grid--narrow {
@@ -2772,6 +3366,7 @@ onBeforeUnmount(() => {
   .login-insights,
   .thesis-meta-grid,
   .home-metrics,
+  .audit-summary,
   .metric-grid,
   .benchmark-grid,
   .combo-grid,
@@ -2799,6 +3394,7 @@ onBeforeUnmount(() => {
   .feature-list article,
   .demo-route article,
   .role-table article,
+  .banned-ip-list article,
   .deploy-list article {
     grid-template-columns: 1fr;
   }

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import dashboard, prediction, recommendation
+from app.routers import admin, dashboard, prediction, recommendation
 
 
 app = FastAPI(
@@ -21,6 +21,7 @@ app.add_middleware(
 app.include_router(dashboard.router, prefix="/api/dashboard", tags=["dashboard"])
 app.include_router(prediction.router, prefix="/api/predict", tags=["prediction"])
 app.include_router(recommendation.router, prefix="/api/recommend", tags=["recommendation"])
+app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
 
 
 @app.get("/api/health")

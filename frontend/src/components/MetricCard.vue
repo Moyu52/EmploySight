@@ -1,7 +1,7 @@
 <template>
-  <div class="metric-card">
+  <div class="metric-card" :class="{ 'metric-card--prominent': prominent }">
     <div class="metric-card__icon">
-      <component :is="iconComponent" :size="18" />
+      <component :is="iconComponent" :size="prominent ? 23 : 18" />
     </div>
     <div class="metric-card__body">
       <span>{{ label }}</span>
@@ -24,6 +24,7 @@ const props = defineProps<{
   detail?: string
   icon: 'jobs' | 'salary' | 'city' | 'fresh'
   decimals?: number
+  prominent?: boolean
 }>()
 
 const iconMap = {
@@ -116,5 +117,57 @@ const formatted = computed(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.metric-card--prominent {
+  grid-template-columns: 3.6rem minmax(0, 1fr);
+  gap: 1rem;
+  min-height: 100%;
+  padding: 1.25rem;
+}
+
+.metric-card--prominent .metric-card__icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 10px;
+}
+
+.metric-card--prominent .metric-card__body {
+  gap: 0.12rem;
+}
+
+.metric-card--prominent span {
+  color: color-mix(in oklch, var(--text-muted), var(--official-blue-deep) 12%);
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.metric-card--prominent strong {
+  font-size: clamp(2rem, 2.2vw, 2.65rem);
+  line-height: 1;
+}
+
+.metric-card--prominent small {
+  font-size: 0.92rem;
+}
+
+.metric-card--prominent em {
+  font-size: 0.78rem;
+}
+
+@media (max-width: 760px) {
+  .metric-card--prominent {
+    grid-template-columns: 3rem minmax(0, 1fr);
+    padding: var(--space-md);
+  }
+
+  .metric-card--prominent .metric-card__icon {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+
+  .metric-card--prominent strong {
+    font-size: 1.8rem;
+  }
 }
 </style>

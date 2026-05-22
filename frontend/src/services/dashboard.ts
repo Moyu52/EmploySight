@@ -1,4 +1,10 @@
 import type {
+  AdminAuditRecord,
+  AdminBannedIpRecord,
+  AdminDeleteAuditResult,
+  AdminDeleteSecurityError,
+  AdminSession,
+  AdminUnbanIpResult,
   CareerRecommendation,
   CareerRecommendationRequest,
   CityMetric,
@@ -25,6 +31,18 @@ interface ApiResponse<T> {
   data: T
 }
 
+export class ApiRequestError<T = unknown> extends Error {
+  status: number
+  detail: T | null
+
+  constructor(message: string, status: number, detail: T | null = null) {
+    super(message)
+    this.name = 'ApiRequestError'
+    this.status = status
+    this.detail = detail
+  }
+}
+
 async function request<T>(url: string, fallback: T, options?: RequestInit): Promise<T> {
   try {
     const response = await fetch(url, {
@@ -41,6 +59,26 @@ async function request<T>(url: string, fallback: T, options?: RequestInit): Prom
   } catch {
     return fallback
   }
+}
+
+async function requestStrict<T>(url: string, options?: RequestInit): Promise<T> {
+  const requestOptions = options ?? {}
+  const response = await fetch(url, {
+    ...requestOptions,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(requestOptions.headers ?? {})
+    }
+  })
+  const body = (await response.json().catch(() => null)) as ApiResponse<T> | null
+  if (!response.ok || !body) {
+    const rawDetail = body && 'detail' in body ? (body as unknown as { detail?: unknown }).detail : null
+    const message = typeof rawDetail === 'object' && rawDetail && 'message' in rawDetail
+      ? String((rawDetail as { message?: unknown }).message)
+      : body?.message || `Request failed: ${response.status}`
+    throw new ApiRequestError(message, response.status, rawDetail ?? null)
+  }
+  return body.data
 }
 
 function isCurrentOverview(data: DashboardOverview) {
@@ -120,4 +158,63 @@ export function recommendCareer(payload: CareerRecommendationRequest) {
     method: 'POST',
     body: JSON.stringify(payload)
   })
+}
+
+export function loginAdmin(username: string, password: string) {
+  return requestStrict<AdminSession>('/api/admin/login', {
+    method: 'POST',
+    body: JSON.stringify({ username, password })
+  })
+}
+
+export function recordPlatformLogin(username: string) {
+  return requestStrict<AdminAuditRecord>('/api/admin/login-events', {
+    method: 'POST',
+    body: JSON.stringify({ username })
+  })
+}
+
+export function fetchAdminAuditRecords(token: string, query = '') {
+  const params = query.trim() ? `?q=${encodeURIComponent(query.trim())}` : ''
+  return requestStrict<AdminAuditRecord[]>(`/api/admin/login-events${params}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export function fetchAdminBannedIps(token: string) {
+  return requestStrict<AdminBannedIpRecord[]>('/api/admin/banned-ips', {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
+
+export function deleteAdminAuditRecord(token: string, recordId: string, deletePassword: string) {
+  return requestStrict<AdminDeleteAuditResult>(`/api/admin/login-events/${recordId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ deletePassword })
+  })
+}
+
+export function unbanAdminIp(token: string, ip: string, unbanPassword: string) {
+  return requestStrict<AdminUnbanIpResult>('/api/admin/unban-ip', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ ip, unbanPassword })
+  })
+}
+
+export function isAdminDeleteSecurityError(value: unknown): value is AdminDeleteSecurityError & { message?: string } {
+  return Boolean(value)
+    && typeof value === 'object'
+    && typeof (value as AdminDeleteSecurityError).remainingAttempts === 'number'
+    && typeof (value as AdminDeleteSecurityError).maxAttempts === 'number'
+    && typeof (value as AdminDeleteSecurityError).banned === 'boolean'
 }

@@ -21,6 +21,7 @@ frontend/.vite/
 *.log
 backend/*.log
 frontend/*.log
+backend/data/
 tmp-layout-report*.json
 
 # Local assistant/tooling state

@@ -9,6 +9,65 @@ class ApiResponse(BaseModel):
     data: Any
 
 
+class AdminLoginRequest(BaseModel):
+    username: str = Field(min_length=1, max_length=80)
+    password: str = Field(min_length=1, max_length=200)
+
+
+class AdminLoginResponse(BaseModel):
+    token: str
+    username: str
+    expiresAt: str
+
+
+class PlatformLoginEventRequest(BaseModel):
+    username: str = Field(min_length=1, max_length=80)
+
+
+class AdminAuditRecord(BaseModel):
+    id: str
+    username: str
+    loginTime: str
+    reportedIp: str
+    observedIp: str
+    userAgent: str
+    source: str
+    status: str
+    note: str
+
+
+class AdminDeleteAuditRequest(BaseModel):
+    deletePassword: str = Field(min_length=1, max_length=200)
+
+
+class AdminDeleteAuditResponse(BaseModel):
+    deletedId: str
+    backupFile: str
+
+
+class AdminDeleteSecurityError(BaseModel):
+    remainingAttempts: int
+    maxAttempts: int
+    banned: bool = False
+    blockedUntil: str = ""
+
+
+class AdminBannedIpRecord(BaseModel):
+    ip: str
+    attempts: int
+    blockedUntil: str
+
+
+class AdminUnbanIpRequest(BaseModel):
+    ip: str = Field(min_length=1, max_length=80)
+    unbanPassword: str = Field(min_length=1, max_length=200)
+
+
+class AdminUnbanIpResponse(BaseModel):
+    ip: str
+    unbanned: bool
+
+
 class RankItem(BaseModel):
     name: str
     value: float

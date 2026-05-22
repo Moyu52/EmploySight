@@ -22,6 +22,15 @@ class Settings(BaseSettings):
     openrouter_app_name: str = "EmploySight"
     openrouter_site_url: str = ""
     ai_timeout_seconds: int = 20
+    admin_username: str = "admin"
+    admin_password: str = "admin123"
+    admin_security_pepper: str = ""
+    admin_delete_password_hash: str = ""
+    admin_unban_password_hash: str = ""
+    admin_delete_max_attempts: int = 3
+    admin_delete_ban_minutes: int = 30
+    audit_log_path: str = "data/admin_login_audit.jsonl"
+    audit_backup_dir: str = "data/admin_login_backups"
     mysql_url: str = Field(
         default="mysql+pymysql://root:root@localhost:3306/graduate_employment?charset=utf8mb4",
         description="SQLAlchemy MySQL connection string",

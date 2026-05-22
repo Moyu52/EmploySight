@@ -33,6 +33,8 @@ function pillStyle(item: SkillKeyword, index: number) {
   return {
     '--pill-size': `${size.toFixed(2)}rem`,
     '--pill-delay': delay,
+    '--pill-duration': `${(4.8 + (index % 5) * 0.45).toFixed(2)}s`,
+    '--pill-drift': index % 2 === 0 ? '1' : '-1',
     '--pill-alpha': `${Math.min(0.42, 0.16 + heat / 430)}`,
     '--pill-columns': highHeat ? 'span 2' : 'span 1'
   }
@@ -77,12 +79,15 @@ function pillStyle(item: SkillKeyword, index: number) {
   box-shadow: 0 0.45rem 1rem rgba(20, 52, 99, 0.06);
   cursor: default;
   overflow: hidden;
-  transition: border-color 180ms var(--ease-out-quint), transform 180ms var(--ease-out-quint);
+  animation: skill-drift var(--pill-duration) ease-in-out var(--pill-delay) infinite alternate;
+  will-change: transform;
+  transition: border-color 180ms var(--ease-out-quint), filter 180ms var(--ease-out-quint);
 }
 
 .skill-pill:hover {
   border-color: color-mix(in oklch, var(--official-blue), transparent 28%);
-  transform: translateY(-1px);
+  filter: brightness(1.02);
+  animation-play-state: paused;
 }
 
 .skill-pill span {
@@ -106,6 +111,15 @@ function pillStyle(item: SkillKeyword, index: number) {
   font-variant-numeric: tabular-nums;
 }
 
+@keyframes skill-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(calc(var(--pill-drift) * 0.16rem), -0.18rem, 0);
+  }
+}
+
 @media (max-height: 820px) {
   .skill-cloud {
     grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
@@ -126,6 +140,13 @@ function pillStyle(item: SkillKeyword, index: number) {
   .skill-pill small,
   .skill-pill strong {
     font-size: 0.58rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skill-pill {
+    animation: none;
+    will-change: auto;
   }
 }
 </style>

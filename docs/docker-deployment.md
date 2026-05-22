@@ -44,7 +44,7 @@ MYSQL_PASSWORD: employsight_password
 
 当前后端默认不直接读取 MySQL，但不要把默认密码用于公开服务器的生产数据库。
 
-`v3.0.3` 起，后端支持通过 OpenRouter 生成 AI 职业推荐和薪资解释。密钥只应通过后端环境变量传入，不能写入前端代码或提交到 Git。
+`v4.0.0` 起，后端继续支持通过 OpenRouter 生成 AI 职业推荐和薪资解释，并新增管理员登录审计、删除密码防爆破、临时封禁 IP 和解除封禁能力。AI 密钥、管理员安全 pepper 和密码哈希都只应通过后端环境变量传入，不能写入前端代码或提交真实值到 Git。
 
 ## 2. 服务器软件检测
 
@@ -228,6 +228,15 @@ AI_MODEL=openai/gpt-oss-120b:free
 OPENROUTER_APP_NAME=EmploySight
 OPENROUTER_SITE_URL=
 AI_TIMEOUT_SECONDS=20
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=admin123
+ADMIN_SECURITY_PEPPER=替换为随机 pepper
+ADMIN_DELETE_PASSWORD_HASH=pbkdf2_sha256$v1$600000$替换为salt$替换为hash
+ADMIN_UNBAN_PASSWORD_HASH=pbkdf2_sha256$v1$600000$替换为salt$替换为hash
+ADMIN_DELETE_MAX_ATTEMPTS=3
+ADMIN_DELETE_BAN_MINUTES=30
+AUDIT_LOG_PATH=data/admin_login_audit.jsonl
+AUDIT_BACKUP_DIR=data/admin_login_backups
 ```
 
 再启动容器：
@@ -236,7 +245,7 @@ AI_TIMEOUT_SECONDS=20
 docker compose up -d --build
 ```
 
-如果不填写 `AI_API_KEY`，或者 OpenRouter 返回额度不足、限流、模型不可用，后端会自动使用本地规则兜底，页面仍然可以正常使用。
+如果不填写 `AI_API_KEY`，或者 OpenRouter 返回额度不足、限流、模型不可用，后端会自动使用本地规则兜底，页面仍然可以正常使用。管理员删除和解除封禁操作依赖 `ADMIN_SECURITY_PEPPER`、`ADMIN_DELETE_PASSWORD_HASH` 和 `ADMIN_UNBAN_PASSWORD_HASH`；生产环境必须生成自己的值。
 
 查看容器：
 
@@ -579,7 +588,9 @@ curl -s http://127.0.0.1/api/dashboard/overview
 - [ ] `curl http://127.0.0.1:8000/api/health` 正常。
 - [ ] `curl http://127.0.0.1/api/dashboard/overview` 返回真实岗位数量。
 - [ ] 如启用 AI，根目录 `.env` 已填写 `AI_API_KEY`，并确认没有提交真实密钥。
+- [ ] 如启用管理员删除审计记录，根目录 `.env` 已填写 `ADMIN_SECURITY_PEPPER`、`ADMIN_DELETE_PASSWORD_HASH`、`ADMIN_UNBAN_PASSWORD_HASH`，并确认没有提交真实值。
 - [ ] `POST /api/recommend/career` 返回 3 条职业推荐。
+- [ ] `admin` 账号可查看登录 IP 审计；删除密码输错 3 次会封禁 IP，解除封禁操作可用。
 - [ ] 浏览器访问 `http://服务器IP/` 页面正常。
 - [ ] 首次访问先进入登录页，点击“进入平台”后进入系统。
 - [ ] 浏览器 Network 中 `/api/dashboard/*` 请求返回 200。

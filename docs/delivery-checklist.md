@@ -38,6 +38,8 @@
 | OpenRouter AI 接入 | `backend/app/services/ai_client.py`，`backend/app/core/config.py`，`docker-compose.yml` |
 | AI 不可用兜底 | `backend/app/services/prediction.py`，`backend/app/services/recommendation.py` |
 | 登录默认入口 | `frontend/src/App.vue`，默认 `isAuthenticated = false` |
+| 管理员登录审计与 IP 封禁 | `backend/app/routers/admin.py`，`backend/app/services/audit_log.py`，`frontend/src/App.vue` |
+| 管理员删除/解除封禁密码哈希 | `backend/app/core/passwords.py`，`backend/app/core/config.py` |
 | ECharts 中国地图、飞线、涟漪、轮播高亮 | `frontend/src/components/ChinaMap.vue`，`frontend/src/assets/china.geo.json` |
 | 数字翻牌 | `frontend/src/components/MetricCard.vue`，`frontend/src/composables/useAnimatedNumber.ts` |
 | 排行榜自动滚动 | `frontend/src/components/AutoRank.vue` |
@@ -93,6 +95,6 @@ python data-processing\pipeline.py --input data-processing\sample_jobs.csv --out
 
 前端支持后端接口不可用时回退到由真实快照生成的兜底数据；当前已验证前端能通过 Vite 代理调用 Python FastAPI 接口。当前真实快照覆盖 37772 条岗位记录，大陆 31 个省级区域均有样本，澳门和台湾显示“样本不足”，不使用虚构岗位数、薪资或热度补齐。
 
-`v3.0.3` 的 AI 能力通过后端环境变量启用。真实密钥只放在本地 `backend/.env` 或部署用根目录 `.env`，不要提交到 Git。OpenRouter 返回额度不足、限流或模型不可用时，职业推荐和薪资解释接口会保留本地规则结果。
+`v4.0.0` 的 AI 能力和管理员安全能力都通过后端环境变量启用。真实密钥、`ADMIN_SECURITY_PEPPER`、`ADMIN_DELETE_PASSWORD_HASH`、`ADMIN_UNBAN_PASSWORD_HASH` 只放在本地 `backend/.env` 或部署用根目录 `.env`，不要提交到 Git。OpenRouter 返回额度不足、限流或模型不可用时，职业推荐和薪资解释接口会保留本地规则结果。
 
 数据处理测试样例 `sample_jobs.csv` 只有 10 条记录，仅用于验证脚本能运行；真实论文实验应使用 `data-processing/data/project_jobs_real.csv` 和 `data-processing/output/` 下的最新输出。如果真实数据中某省岗位样本不足，应在页面和论文中标注“样本不足/置信度较低”，不应直接留空。
