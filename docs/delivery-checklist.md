@@ -10,7 +10,7 @@
 - 大屏预览截图：`docs/dashboard-preview.png`
 - Python FastAPI 后端：`backend/`
 - Vue3 + TypeScript + ECharts 多模块前端平台：`frontend/`
-- ZenMux/Gemini AI 推荐配置示例：`.env.example`、`backend/.env.example`
+- OpenRouter AI 推荐配置示例：`.env.example`、`backend/.env.example`
 - 真实中国地图 GeoJSON：`frontend/src/assets/china.geo.json`
 - MySQL 数据库 SQL：`database/schema.sql`、`database/seed.sql`
 - 数据处理与模型训练：`data-processing/pipeline.py`
@@ -35,7 +35,7 @@
 | Python 后端接口 | `backend/app/main.py`，`backend/app/routers/` |
 | 薪资预测接口 | `POST /api/predict/salary`，`backend/app/services/prediction.py` |
 | 职业推荐接口 | `POST /api/recommend/career`，`backend/app/services/recommendation.py` |
-| ZenMux/Gemini AI 接入 | `backend/app/services/ai_client.py`，`backend/app/core/config.py`，`docker-compose.yml` |
+| OpenRouter AI 接入 | `backend/app/services/ai_client.py`，`backend/app/core/config.py`，`docker-compose.yml` |
 | AI 不可用兜底 | `backend/app/services/prediction.py`，`backend/app/services/recommendation.py` |
 | 登录默认入口 | `frontend/src/App.vue`，默认 `isAuthenticated = false` |
 | ECharts 中国地图、飞线、涟漪、轮播高亮 | `frontend/src/components/ChinaMap.vue`，`frontend/src/assets/china.geo.json` |
@@ -93,6 +93,6 @@ python data-processing\pipeline.py --input data-processing\sample_jobs.csv --out
 
 前端支持后端接口不可用时回退到由真实快照生成的兜底数据；当前已验证前端能通过 Vite 代理调用 Python FastAPI 接口。当前真实快照覆盖 37772 条岗位记录，大陆 31 个省级区域均有样本，澳门和台湾显示“样本不足”，不使用虚构岗位数、薪资或热度补齐。
 
-`v3.0.3` 的 AI 能力通过后端环境变量启用。真实密钥只放在本地 `backend/.env` 或部署用根目录 `.env`，不要提交到 Git。ZenMux 返回余额不足、限流或模型不可用时，职业推荐和薪资解释接口会保留本地规则结果。
+`v3.0.3` 的 AI 能力通过后端环境变量启用。真实密钥只放在本地 `backend/.env` 或部署用根目录 `.env`，不要提交到 Git。OpenRouter 返回额度不足、限流或模型不可用时，职业推荐和薪资解释接口会保留本地规则结果。
 
 数据处理测试样例 `sample_jobs.csv` 只有 10 条记录，仅用于验证脚本能运行；真实论文实验应使用 `data-processing/data/project_jobs_real.csv` 和 `data-processing/output/` 下的最新输出。如果真实数据中某省岗位样本不足，应在页面和论文中标注“样本不足/置信度较低”，不应直接留空。

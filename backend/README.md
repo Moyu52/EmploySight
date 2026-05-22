@@ -1,6 +1,6 @@
 # Python 后端接口
 
-本目录使用 FastAPI 实现就业态势感知平台后端，不使用 Java。当前版本为 `v3.0.3`，职业推荐和薪资解释支持通过 ZenMux 调用 Gemini，未配置或调用失败时自动回退本地规则。
+本目录使用 FastAPI 实现就业态势感知平台后端，不使用 Java。当前版本为 `v3.0.3`，职业推荐和薪资解释支持通过 OpenRouter 调用 OpenAI-compatible Chat Completions，未配置或调用失败时自动回退本地规则。
 
 ## 启动
 
@@ -13,18 +13,19 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 ## AI 配置
 
-职业推荐和薪资预测解释支持通过 ZenMux 调用 Gemini。复制 `backend/.env.example` 为 `backend/.env`，填写：
+职业推荐和薪资预测解释支持通过 OpenRouter。复制 `backend/.env.example` 为 `backend/.env`，填写：
 
 ```env
-ZENMUX_API_KEY=你的 ZenMux API Key
-ZENMUX_BASE_URL=https://zenmux.ai/api/v1
-ZENMUX_MODEL=google/gemini-3.5-flash-free
 AI_ENABLED=true
+AI_API_KEY=你的 OpenRouter API Key
+AI_BASE_URL=https://openrouter.ai/api/v1
+AI_MODEL=openai/gpt-oss-120b:free
+OPENROUTER_APP_NAME=EmploySight
 ```
 
-未填写 `ZENMUX_API_KEY` 或调用失败时，接口会自动使用本地规则兜底。
+未填写 `AI_API_KEY` 或调用失败时，接口会自动使用本地规则兜底。
 
-常见调用失败场景包括 ZenMux 账户余额不足、模型不可用、网络超时或 SDK 未安装。生产部署时不要把密钥写到前端，只放在后端 `.env` 或 Docker Compose 环境变量中。
+常见调用失败场景包括 OpenRouter 额度不足、模型不可用、网络超时或 SDK 未安装。生产部署时不要把密钥写到前端，只放在后端 `.env` 或 Docker Compose 环境变量中。
 
 ## 核心接口
 

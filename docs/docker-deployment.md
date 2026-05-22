@@ -44,7 +44,7 @@ MYSQL_PASSWORD: employsight_password
 
 当前后端默认不直接读取 MySQL，但不要把默认密码用于公开服务器的生产数据库。
 
-`v3.0.3` 起，后端支持通过 ZenMux 调用 Gemini 生成 AI 职业推荐和薪资解释。密钥只应通过后端环境变量传入，不能写入前端代码或提交到 Git。
+`v3.0.3` 起，后端支持通过 OpenRouter 生成 AI 职业推荐和薪资解释。密钥只应通过后端环境变量传入，不能写入前端代码或提交到 Git。
 
 ## 2. 服务器软件检测
 
@@ -218,13 +218,15 @@ docker compose up -d --build
 cp .env.example .env
 ```
 
-然后编辑 `.env`，填写 ZenMux Key：
+然后编辑 `.env`，填写 OpenRouter Key：
 
 ```env
 AI_ENABLED=true
-ZENMUX_API_KEY=你的 ZenMux API Key
-ZENMUX_BASE_URL=https://zenmux.ai/api/v1
-ZENMUX_MODEL=google/gemini-3.5-flash-free
+AI_API_KEY=你的 OpenRouter API Key
+AI_BASE_URL=https://openrouter.ai/api/v1
+AI_MODEL=openai/gpt-oss-120b:free
+OPENROUTER_APP_NAME=EmploySight
+OPENROUTER_SITE_URL=
 AI_TIMEOUT_SECONDS=20
 ```
 
@@ -234,7 +236,7 @@ AI_TIMEOUT_SECONDS=20
 docker compose up -d --build
 ```
 
-如果不填写 `ZENMUX_API_KEY`，或者 ZenMux 返回余额不足、限流、模型不可用，后端会自动使用本地规则兜底，页面仍然可以正常使用。
+如果不填写 `AI_API_KEY`，或者 OpenRouter 返回额度不足、限流、模型不可用，后端会自动使用本地规则兜底，页面仍然可以正常使用。
 
 查看容器：
 
@@ -438,7 +440,7 @@ publishEnd = 2026-05-19
 
 ### 8.3 验证 AI 职业推荐接口
 
-配置 `ZENMUX_API_KEY` 后，可以测试职业推荐接口：
+配置 `AI_API_KEY` 后，可以测试职业推荐接口：
 
 ```bash
 curl -s http://127.0.0.1:8000/api/recommend/career \
@@ -576,7 +578,7 @@ curl -s http://127.0.0.1/api/dashboard/overview
 - [ ] `docker compose ps` 中 `frontend`、`backend` 为运行状态。
 - [ ] `curl http://127.0.0.1:8000/api/health` 正常。
 - [ ] `curl http://127.0.0.1/api/dashboard/overview` 返回真实岗位数量。
-- [ ] 如启用 AI，根目录 `.env` 已填写 `ZENMUX_API_KEY`，并确认没有提交真实密钥。
+- [ ] 如启用 AI，根目录 `.env` 已填写 `AI_API_KEY`，并确认没有提交真实密钥。
 - [ ] `POST /api/recommend/career` 返回 3 条职业推荐。
 - [ ] 浏览器访问 `http://服务器IP/` 页面正常。
 - [ ] 首次访问先进入登录页，点击“进入平台”后进入系统。

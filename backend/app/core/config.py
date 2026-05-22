@@ -10,9 +10,17 @@ class Settings(BaseSettings):
     demo_mode: bool = True
     model_version: str = "random-forest-demo-v1"
     ai_enabled: bool = True
+    ai_api_key: str = ""
+    ai_base_url: str = "https://openrouter.ai/api/v1"
+    ai_model: str = "openai/gpt-oss-120b:free"
     zenmux_api_key: str = ""
     zenmux_base_url: str = "https://zenmux.ai/api/v1"
     zenmux_model: str = "google/gemini-3.5-flash-free"
+    openrouter_api_key: str = ""
+    openrouter_base_url: str = "https://openrouter.ai/api/v1"
+    openrouter_model: str = "openai/gpt-oss-120b:free"
+    openrouter_app_name: str = "EmploySight"
+    openrouter_site_url: str = ""
     ai_timeout_seconds: int = 20
     mysql_url: str = Field(
         default="mysql+pymysql://root:root@localhost:3306/graduate_employment?charset=utf8mb4",

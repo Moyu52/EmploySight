@@ -2,7 +2,7 @@
 
 本项目是一个面向高校毕业生、就业指导老师和高校就业管理部门的智能化就业决策支持平台。系统提供“就业态势感知 + 城市评估 + 薪资预测 + 技能挖掘 + AI 职业推荐 + 数据治理”的完整毕业设计实现，后端使用 Python FastAPI，不使用 Java。当前大屏数据已由 Kaggle 与中国公共招聘网真实岗位快照生成，真实数据来源、官网地址和校验方法见 `docs/data-source-verification.md`。
 
-当前版本：`v3.0.3`。本版本接入 ZenMux/Gemini 生成职业路径建议和薪资解释，补齐登录页默认入口，并保留本地规则兜底，避免 AI 服务不可用时影响平台访问。
+当前版本：`v3.0.3`。本版本接入 OpenRouter 生成职业路径建议和薪资解释，补齐登录页默认入口，并保留本地规则兜底，避免 AI 服务不可用时影响平台访问。
 
 ## 项目结构
 
@@ -22,7 +22,7 @@
 - 登录入口：默认先进入平台访问页，选择账号、密码和角色后进入系统，退出后回到登录页。
 - 薪资预测：基于城市、行业、学历、经验、公司规模、岗位类别和技能标签预测岗位薪资区间，并在配置 AI 后生成解释。
 - 技能挖掘：对岗位标题和描述进行中文分词、TF-IDF、TextRank 与技能词统计，形成技能热度排行。
-- 职业推荐：按专业、学历、技能、期望城市和行业输出岗位方向、目标城市和技能提升建议；配置 ZenMux 后由 Gemini 生成更完整的推荐理由和行动建议。
+- 职业推荐：按专业、学历、技能、期望城市和行业输出岗位方向、目标城市和技能提升建议；配置 OpenRouter 后生成更完整的推荐理由和行动建议。
 - 数据治理：展示 Kaggle CSV 到指标库、模型和接口的处理流程，说明数据覆盖和样本置信度口径。
 
 ## 数据覆盖
@@ -59,18 +59,19 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 默认地址：`http://localhost:8000/api`
 
-AI 职业推荐与薪资解释需要在 `backend/.env` 中配置 ZenMux：
+AI 职业推荐与薪资解释需要在 `backend/.env` 中配置 OpenRouter：
 
 ```env
-ZENMUX_API_KEY=你的 ZenMux API Key
-ZENMUX_BASE_URL=https://zenmux.ai/api/v1
-ZENMUX_MODEL=google/gemini-3.5-flash-free
 AI_ENABLED=true
+AI_API_KEY=你的 OpenRouter API Key
+AI_BASE_URL=https://openrouter.ai/api/v1
+AI_MODEL=openai/gpt-oss-120b:free
+OPENROUTER_APP_NAME=EmploySight
 ```
 
-Docker Compose 部署时，把同样的 `ZENMUX_API_KEY` 填到项目根目录 `.env`。未配置密钥时系统会继续使用本地规则推荐。
+Docker Compose 部署时，把同样的 `AI_API_KEY` 填到项目根目录 `.env`。未配置密钥时系统会继续使用本地规则推荐。
 
-如果 ZenMux 返回余额不足、限流或模型不可用，后端接口仍会返回本地规则结果，前端页面不会中断。
+如果 OpenRouter 返回额度不足、限流或模型不可用，后端接口仍会返回本地规则结果，前端页面不会中断。
 
 ### 数据库
 

@@ -43,11 +43,18 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-button class="decision-button" size="small" type="primary" :loading="salaryLoading" @click="runSalary">
+          <el-button class="decision-button" size="small" type="primary" :loading="salaryLoading" :disabled="salaryLoading" @click="runSalary">
             <Activity :size="15" />
             预测薪资
           </el-button>
         </el-form>
+        <div v-if="salaryLoading" class="ai-status" role="status" aria-live="polite">
+          <Activity class="ai-status__icon" :size="15" />
+          <div>
+            <b>AI 薪资解释生成中</b>
+            <span>正在结合城市薪资基准、岗位类别和技能因素生成分析，通常需要 10-30 秒，请稍候。</span>
+          </div>
+        </div>
         <div v-if="salaryResult" class="result-block">
           <span>预测月薪区间</span>
           <strong>{{ salaryResult.predictedMin.toLocaleString('zh-CN') }} - {{ salaryResult.predictedMax.toLocaleString('zh-CN') }}</strong>
@@ -68,11 +75,18 @@
               <el-option v-for="skill in skillOptions" :key="skill" :label="skill" :value="skill" />
             </el-select>
           </el-form-item>
-          <el-button class="decision-button" size="small" type="primary" :loading="recommendLoading" @click="runRecommend">
+          <el-button class="decision-button" size="small" type="primary" :loading="recommendLoading" :disabled="recommendLoading" @click="runRecommend">
             <Route :size="15" />
             生成建议
           </el-button>
         </el-form>
+        <div v-if="recommendLoading" class="ai-status" role="status" aria-live="polite">
+          <Activity class="ai-status__icon" :size="15" />
+          <div>
+            <b>AI 职业路径生成中</b>
+            <span>正在综合专业画像、技能标签和公开招聘样本生成建议，通常需要 10-30 秒，请勿重复点击。</span>
+          </div>
+        </div>
         <div class="recommend-list">
           <article v-for="item in recommendations" :key="item.direction" class="recommend-item">
             <div class="recommend-head">
@@ -276,6 +290,46 @@ runRecommend()
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+}
+
+.ai-status {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+  padding: 0.52rem var(--space-sm);
+  border: 1px solid color-mix(in oklch, var(--official-blue), transparent 76%);
+  border-radius: 7px;
+  background: color-mix(in oklch, var(--official-blue-soft), white 5%);
+}
+
+.ai-status__icon {
+  color: var(--official-blue);
+  animation: ai-status-spin 1s linear infinite;
+}
+
+.ai-status div {
+  display: grid;
+  gap: 0.08rem;
+  min-width: 0;
+}
+
+.ai-status b {
+  color: var(--official-blue-deep);
+  font-size: 0.74rem;
+}
+
+.ai-status span {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  line-height: 1.45;
+}
+
+@keyframes ai-status-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .result-block {

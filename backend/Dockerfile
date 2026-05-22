@@ -2,13 +2,14 @@ FROM python:3.11-slim
 
 LABEL org.opencontainers.image.title="EmploySight Backend"
 LABEL org.opencontainers.image.version="3.0.3"
-LABEL org.opencontainers.image.description="FastAPI backend with local fallback and optional ZenMux/Gemini AI insights"
+LABEL org.opencontainers.image.description="FastAPI backend with local fallback and optional OpenRouter AI insights"
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV AI_ENABLED=true
-ENV ZENMUX_BASE_URL=https://zenmux.ai/api/v1
-ENV ZENMUX_MODEL=google/gemini-3.5-flash-free
+ENV AI_BASE_URL=https://openrouter.ai/api/v1
+ENV AI_MODEL=openai/gpt-oss-120b:free
+ENV OPENROUTER_APP_NAME=EmploySight
 ENV AI_TIMEOUT_SECONDS=20
 
 WORKDIR /app
